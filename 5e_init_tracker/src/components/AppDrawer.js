@@ -159,7 +159,29 @@ export default function PersistentDrawerLeft() {
                 })}
             >
                 <div className={classes.drawerHeader} />
-                <CharacterCard></CharacterCard>
+                <List>
+                    <ListItem >
+                        <CharacterCard></CharacterCard>
+                    </ListItem>
+                    <ListItem >
+                        <CharacterCard></CharacterCard>
+                    </ListItem>
+                    <ListItem >
+                        <CharacterCard></CharacterCard>
+                    </ListItem>
+                    <ListItem >
+                        <CharacterCard></CharacterCard>
+                    </ListItem>
+                    <ListItem >
+                        <CharacterCard></CharacterCard>
+                    </ListItem>
+                    <ListItem >
+                        <CharacterCard></CharacterCard>
+                    </ListItem>
+                    <ListItem >
+                        <CharacterCard></CharacterCard>
+                    </ListItem>
+                </List>
             </main>
         </div>
     );
