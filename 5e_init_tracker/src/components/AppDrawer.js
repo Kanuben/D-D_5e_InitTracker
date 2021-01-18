@@ -18,6 +18,7 @@ import MenuBookIcon from '@material-ui/icons/MenuBook';
 import clsx from 'clsx';
 import React from 'react';
 import { ReactComponent as Logo } from "../assets/download.svg";
+import CharacterCard from './CharacterCard';
 
 
 
@@ -110,7 +111,7 @@ export default function PersistentDrawerLeft() {
                         edge="start"
                         className={clsx(classes.menuButton, open && classes.hide)}
                     >
-                        <SvgIcon style={{ fontSize: 50 }} color="action">
+                        <SvgIcon style={{ fontSize: 40 }} color="action">
                             <Logo />
                         </SvgIcon>
                     </IconButton>
@@ -158,7 +159,7 @@ export default function PersistentDrawerLeft() {
                 })}
             >
                 <div className={classes.drawerHeader} />
-
+                <CharacterCard></CharacterCard>
             </main>
         </div>
     );
