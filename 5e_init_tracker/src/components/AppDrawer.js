@@ -14,11 +14,14 @@ import Typography from "@material-ui/core/Typography";
 import AccessibilityIcon from "@material-ui/icons/Accessibility";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import DeleteIcon from "@material-ui/icons/Delete";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import clsx from "clsx";
-import React, { useState } from "react";
+import React from "react";
 import { ReactComponent as Logo } from "../assets/download.svg";
-import CharacterCard from "./CharacterCard";
+import InitiativeTracker from "./InitiativeTracker";
+import PeopleIcon from '@material-ui/icons/People';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
 
 const drawerWidth = 240;
 
@@ -83,35 +86,7 @@ export default function PersistentDrawerLeft() {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-  const [characterList, setCharList] = React.useState([
-    {
-      isPlayer: false,
-      img:
-        "https://c1.scryfall.com/file/scryfall-cards/art_crop/front/5/2/52e7c608-d224-472b-8736-273874211f24.jpg?1562912268",
-      name: "Leige of the Pit",
-      role: "Demon",
-      level: 69,
-      status: "Ballin",
-      ac: 99,
-      damage: 0,
-      initiative: 20,
-      initBonus: 3,
-    },
-    {
-      isPlayer: true,
-      img:
-        "https://9b16f79ca967fd0708d1-2713572fef44aa49ec323e813b06d2d9.ssl.cf2.rackcdn.com/300x_a1-1_cTC/6r800k6d-JPG-1579105478.jpg",
-      name: "Jimbo Jones",
-      role: "Rouge Plumber",
-      level: 3,
-      status: ["Redneck", "Camoflauge"],
-      ac: 3,
-      damage: 0,
-      initiative: 12,
-      initBonus: 0,
-    },
-  ]);
-
+ 
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -166,6 +141,15 @@ export default function PersistentDrawerLeft() {
         </div>
         <Divider />
         <List>
+          {["Load Party","Add Character"].map((text,index) => (
+            <ListItem button key={text}>
+              <ListItemIcon>{index % 2 === 0 ?  <PeopleIcon /> : <PersonAddIcon />}</ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItem>
+          ))}
+        </List>
+        <Divider />
+        <List>
           {["Bestiary"].map((text) => (
             <ListItem button key={text}>
               <ListItemIcon>{<MenuBookIcon />}</ListItemIcon>
@@ -173,16 +157,7 @@ export default function PersistentDrawerLeft() {
             </ListItem>
           ))}
         </List>
-        <Divider />
-        <List>
-          {["Example"].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{<AccessibilityIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
+      
       </Drawer>
       <main
         className={clsx(classes.content, {
@@ -190,16 +165,7 @@ export default function PersistentDrawerLeft() {
         })}
       >
         <div className={classes.drawerHeader} />
-        <List>
-          {characterList.map((character, index) => (
-            <ListItem>
-              <CharacterCard
-                {...character}
-                index={index}
-              ></CharacterCard>
-            </ListItem>
-          ))}
-        </List>
+        <InitiativeTracker></InitiativeTracker>
       </main>
     </div>
   );
