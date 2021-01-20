@@ -20,8 +20,9 @@ import clsx from "clsx";
 import React from "react";
 import { ReactComponent as Logo } from "../assets/download.svg";
 import InitiativeTracker from "./InitiativeTracker";
-import PeopleIcon from '@material-ui/icons/People';
-import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import PeopleIcon from "@material-ui/icons/People";
+import PersonAddIcon from "@material-ui/icons/PersonAdd";
+import MenuOpenIcon from "@material-ui/icons/MenuOpen";
 
 const drawerWidth = 240;
 
@@ -86,7 +87,7 @@ export default function PersistentDrawerLeft() {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
- 
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -112,9 +113,7 @@ export default function PersistentDrawerLeft() {
             edge="start"
             className={clsx(classes.menuButton, open && classes.hide)}
           >
-            <SvgIcon style={{ fontSize: 40 }} color="action">
-              <Logo />
-            </SvgIcon>
+            <MenuOpenIcon style={{ fontSize: 40 }} />
           </IconButton>
           <Typography variant="h6" noWrap>
             Initiative Tracker
@@ -141,9 +140,11 @@ export default function PersistentDrawerLeft() {
         </div>
         <Divider />
         <List>
-          {["Load Party","Add Character"].map((text,index) => (
+          {["Load Party", "Add Character"].map((text, index) => (
             <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ?  <PeopleIcon /> : <PersonAddIcon />}</ListItemIcon>
+              <ListItemIcon>
+                {index % 2 === 0 ? <PeopleIcon /> : <PersonAddIcon />}
+              </ListItemIcon>
               <ListItemText primary={text} />
             </ListItem>
           ))}
@@ -157,7 +158,6 @@ export default function PersistentDrawerLeft() {
             </ListItem>
           ))}
         </List>
-      
       </Drawer>
       <main
         className={clsx(classes.content, {
