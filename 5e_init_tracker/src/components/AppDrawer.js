@@ -1,188 +1,206 @@
-import AppBar from '@material-ui/core/AppBar';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Divider from '@material-ui/core/Divider';
-import Drawer from '@material-ui/core/Drawer';
-import IconButton from '@material-ui/core/IconButton';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import SvgIcon from '@material-ui/core/SvgIcon';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import AccessibilityIcon from '@material-ui/icons/Accessibility';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import MenuBookIcon from '@material-ui/icons/MenuBook';
-import clsx from 'clsx';
-import React from 'react';
+import AppBar from "@material-ui/core/AppBar";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Divider from "@material-ui/core/Divider";
+import Drawer from "@material-ui/core/Drawer";
+import IconButton from "@material-ui/core/IconButton";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import SvgIcon from "@material-ui/core/SvgIcon";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
+import AccessibilityIcon from "@material-ui/icons/Accessibility";
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import MenuBookIcon from "@material-ui/icons/MenuBook";
+import clsx from "clsx";
+import React, { useState } from "react";
 import { ReactComponent as Logo } from "../assets/download.svg";
-import CharacterCard from './CharacterCard';
-
-
+import CharacterCard from "./CharacterCard";
 
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        display: 'flex',
-    },
-    appBar: {
-        transition: theme.transitions.create(['margin', 'width'], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-        }),
-    },
-    appBarShift: {
-        width: `calc(100% - ${drawerWidth}px)`,
-        marginLeft: drawerWidth,
-        transition: theme.transitions.create(['margin', 'width'], {
-            easing: theme.transitions.easing.easeOut,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-    },
-    menuButton: {
-        marginRight: theme.spacing(2),
-    },
-    hide: {
-        display: 'none',
-    },
-    drawer: {
-        width: drawerWidth,
-        flexShrink: 0,
-    },
-    drawerPaper: {
-        width: drawerWidth,
-    },
-    drawerHeader: {
-        display: 'flex',
-        alignItems: 'center',
-        padding: theme.spacing(0, 1),
-        // necessary for content to be below app bar
-        ...theme.mixins.toolbar,
-        justifyContent: 'flex-end',
-    },
-    content: {
-        flexGrow: 1,
-        padding: theme.spacing(3),
-        transition: theme.transitions.create('margin', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-        }),
-        marginLeft: -drawerWidth,
-    },
-    contentShift: {
-        transition: theme.transitions.create('margin', {
-            easing: theme.transitions.easing.easeOut,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-        marginLeft: 0,
-    },
+  root: {
+    display: "flex",
+  },
+  appBar: {
+    transition: theme.transitions.create(["margin", "width"], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+  },
+  appBarShift: {
+    width: `calc(100% - ${drawerWidth}px)`,
+    marginLeft: drawerWidth,
+    transition: theme.transitions.create(["margin", "width"], {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  hide: {
+    display: "none",
+  },
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0,
+  },
+  drawerPaper: {
+    width: drawerWidth,
+  },
+  drawerHeader: {
+    display: "flex",
+    alignItems: "center",
+    padding: theme.spacing(0, 1),
+    // necessary for content to be below app bar
+    ...theme.mixins.toolbar,
+    justifyContent: "flex-end",
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+    transition: theme.transitions.create("margin", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    marginLeft: -drawerWidth,
+  },
+  contentShift: {
+    transition: theme.transitions.create("margin", {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    marginLeft: 0,
+  },
 }));
 
 export default function PersistentDrawerLeft() {
-    const classes = useStyles();
-    const theme = useTheme();
-    const [open, setOpen] = React.useState(false);
+  const classes = useStyles();
+  const theme = useTheme();
+  const [open, setOpen] = React.useState(false);
+  const [characterList, setCharList] = React.useState([
+    {
+      isPlayer: false,
+      img:
+        "https://c1.scryfall.com/file/scryfall-cards/art_crop/front/5/2/52e7c608-d224-472b-8736-273874211f24.jpg?1562912268",
+      name: "Leige of the Pit",
+      role: "Demon",
+      level: 69,
+      status: "Ballin",
+      ac: 99,
+      damage: 0,
+      initiative: 20,
+      initBonus: 3,
+    },
+    {
+      isPlayer: true,
+      img:
+        "https://9b16f79ca967fd0708d1-2713572fef44aa49ec323e813b06d2d9.ssl.cf2.rackcdn.com/300x_a1-1_cTC/6r800k6d-JPG-1579105478.jpg",
+      name: "Jimbo Jones",
+      role: "Rouge Plumber",
+      level: 3,
+      status: ["Redneck", "Camoflauge"],
+      ac: 3,
+      damage: 0,
+      initiative: 12,
+      initBonus: 0,
+    },
+  ]);
 
-    const handleDrawerOpen = () => {
-        setOpen(true);
-    };
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
 
-    const handleDrawerClose = () => {
-        setOpen(false);
-    };
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
 
-    return (
-        <div className={classes.root}>
-            <CssBaseline />
-            <AppBar
-                position="fixed"
-                className={clsx(classes.appBar, {
-                    [classes.appBarShift]: open,
-                })}
-            >
-                <Toolbar>
-                    <IconButton
-                        color="inherit"
-                        aria-label="open drawer"
-                        onClick={handleDrawerOpen}
-                        edge="start"
-                        className={clsx(classes.menuButton, open && classes.hide)}
-                    >
-                        <SvgIcon style={{ fontSize: 40 }} color="action">
-                            <Logo />
-                        </SvgIcon>
-                    </IconButton>
-                    <Typography variant="h6" noWrap>
-                        Initiative Tracker
+  return (
+    <div className={classes.root}>
+      <CssBaseline />
+      <AppBar
+        position="fixed"
+        className={clsx(classes.appBar, {
+          [classes.appBarShift]: open,
+        })}
+      >
+        <Toolbar>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={handleDrawerOpen}
+            edge="start"
+            className={clsx(classes.menuButton, open && classes.hide)}
+          >
+            <SvgIcon style={{ fontSize: 40 }} color="action">
+              <Logo />
+            </SvgIcon>
+          </IconButton>
+          <Typography variant="h6" noWrap>
+            Initiative Tracker
           </Typography>
-                </Toolbar>
-            </AppBar>
-            <Drawer
-                className={classes.drawer}
-                variant="persistent"
-                anchor="left"
-                open={open}
-                classes={{
-                    paper: classes.drawerPaper,
-                }}
-            >
-                <div className={classes.drawerHeader}>
-                    <IconButton onClick={handleDrawerClose}>
-                        {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-                    </IconButton>
-                </div>
-                <Divider />
-                <List>
-                    {['Bestiary',].map((text, index) => (
-                        <ListItem button key={text}>
-                            <ListItemIcon>{<MenuBookIcon />}</ListItemIcon>
-                            <ListItemText primary={text} />
-                        </ListItem>
-                    ))}
-                </List>
-                <Divider />
-                <List>
-                    {['Example',].map((text, index) => (
-                        <ListItem button key={text}>
-                            <ListItemIcon>{<AccessibilityIcon />}</ListItemIcon>
-                            <ListItemText primary={text} />
-                        </ListItem>
-                    ))}
-                </List>
-            </Drawer>
-            <main
-                className={clsx(classes.content, {
-                    [classes.contentShift]: open,
-                })}
-            >
-                <div className={classes.drawerHeader} />
-                <List>
-                    <ListItem >
-                        <CharacterCard></CharacterCard>
-                    </ListItem>
-                    <ListItem >
-                        <CharacterCard></CharacterCard>
-                    </ListItem>
-                    <ListItem >
-                        <CharacterCard></CharacterCard>
-                    </ListItem>
-                    <ListItem >
-                        <CharacterCard></CharacterCard>
-                    </ListItem>
-                    <ListItem >
-                        <CharacterCard></CharacterCard>
-                    </ListItem>
-                    <ListItem >
-                        <CharacterCard></CharacterCard>
-                    </ListItem>
-                    <ListItem >
-                        <CharacterCard></CharacterCard>
-                    </ListItem>
-                </List>
-            </main>
+        </Toolbar>
+      </AppBar>
+      <Drawer
+        className={classes.drawer}
+        variant="persistent"
+        anchor="left"
+        open={open}
+        classes={{
+          paper: classes.drawerPaper,
+        }}
+      >
+        <div className={classes.drawerHeader}>
+          <IconButton onClick={handleDrawerClose}>
+            {theme.direction === "ltr" ? (
+              <ChevronLeftIcon />
+            ) : (
+              <ChevronRightIcon />
+            )}
+          </IconButton>
         </div>
-    );
+        <Divider />
+        <List>
+          {["Bestiary"].map((text) => (
+            <ListItem button key={text}>
+              <ListItemIcon>{<MenuBookIcon />}</ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItem>
+          ))}
+        </List>
+        <Divider />
+        <List>
+          {["Example"].map((text, index) => (
+            <ListItem button key={text}>
+              <ListItemIcon>{<AccessibilityIcon />}</ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItem>
+          ))}
+        </List>
+        <Divider />
+      </Drawer>
+      <main
+        className={clsx(classes.content, {
+          [classes.contentShift]: open,
+        })}
+      >
+        <div className={classes.drawerHeader} />
+        <List>
+          {characterList.map((character, index) => (
+            <ListItem>
+              <CharacterCard
+                {...character}
+                index={index}
+              ></CharacterCard>
+            </ListItem>
+          ))}
+        </List>
+      </main>
+    </div>
+  );
 }
