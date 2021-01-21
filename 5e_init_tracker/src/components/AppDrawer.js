@@ -8,21 +8,18 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import SvgIcon from "@material-ui/core/SvgIcon";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import AccessibilityIcon from "@material-ui/icons/Accessibility";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import DeleteIcon from "@material-ui/icons/Delete";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
-import clsx from "clsx";
-import React from "react";
-import { ReactComponent as Logo } from "../assets/download.svg";
-import InitiativeTracker from "./InitiativeTracker";
+import MenuOpenIcon from "@material-ui/icons/MenuOpen";
 import PeopleIcon from "@material-ui/icons/People";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
-import MenuOpenIcon from "@material-ui/icons/MenuOpen";
+import clsx from "clsx";
+import React from "react";
+import loadFile from "../services/FileService";
+import InitiativeTracker from "./InitiativeTracker";
 
 const drawerWidth = 240;
 
@@ -87,6 +84,7 @@ export default function PersistentDrawerLeft() {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [characterList, setCharacterList] = React.useState();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -94,6 +92,17 @@ export default function PersistentDrawerLeft() {
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  const handleRemove = (id) => {
+    const newList = characterList.filter((item) => item.id !== id);
+    setCharacterList(newList);
+  };
+
+  const handleLoad = () => {
+    loadFile((result) => {
+      setCharacterList(result);
+    });
   };
 
   return (
@@ -140,10 +149,21 @@ export default function PersistentDrawerLeft() {
         </div>
         <Divider />
         <List>
-          {["Load Party", "Add Character"].map((text, index) => (
+          {["Load Party"].map((text, index) => (
+            <ListItem button key={text} onClick={handleLoad}>
+              <ListItemIcon>
+                <PeopleIcon />
+              </ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItem>
+          ))}
+          <input type="file" id="my_file" style={{ display: "none" }}></input>
+        </List>
+        <List>
+          {["Add Character"].map((text, index) => (
             <ListItem button key={text}>
               <ListItemIcon>
-                {index % 2 === 0 ? <PeopleIcon /> : <PersonAddIcon />}
+                <PersonAddIcon />
               </ListItemIcon>
               <ListItemText primary={text} />
             </ListItem>
@@ -165,7 +185,10 @@ export default function PersistentDrawerLeft() {
         })}
       >
         <div className={classes.drawerHeader} />
-        <InitiativeTracker></InitiativeTracker>
+        <InitiativeTracker
+          handleRemove={handleRemove}
+          charList={characterList}
+        ></InitiativeTracker>
       </main>
     </div>
   );
