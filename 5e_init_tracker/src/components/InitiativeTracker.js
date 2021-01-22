@@ -2,6 +2,7 @@ import { Toolbar } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
+import Slide from "@material-ui/core/Slide";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import SvgIcon from "@material-ui/core/SvgIcon";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
@@ -32,7 +33,12 @@ function InitiativeTracker(props) {
           </IconButton>
         </div>
         <div>
-          <IconButton aria-label="advance">
+          <IconButton
+            onClick={() => {
+              props.handleInitAdvance();
+            }}
+            aria-label="advance"
+          >
             <ArrowUpwardIcon style={{ fontSize: 40 }} />
           </IconButton>
         </div>
@@ -41,17 +47,23 @@ function InitiativeTracker(props) {
       {props.charList && (
         <List>
           {props.charList.map((character, index) => (
-            <ListItem key={character.id}>
-              <CharacterCard {...character} index={index}></CharacterCard>
-              <IconButton
-                onClick={() => {
-                  props.handleRemove(character.id);
-                }}
-                aria-label="delete"
-              >
-                <DeleteIcon fontSize="large" />
-              </IconButton>
-            </ListItem>
+            <Slide
+              direction="up"
+              in={true}
+              mountOnEnter
+            >
+              <ListItem key={character.id}>
+                <CharacterCard {...character} index={index}></CharacterCard>
+                <IconButton
+                  onClick={() => {
+                    props.handleRemove(character);
+                  }}
+                  aria-label="delete"
+                >
+                  <DeleteIcon fontSize="large" />
+                </IconButton>
+              </ListItem>
+            </Slide>
           ))}
         </List>
       )}

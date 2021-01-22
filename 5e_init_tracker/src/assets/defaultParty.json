@@ -15,11 +15,25 @@
   "isPlayer": true,
   "img": "https://9b16f79ca967fd0708d1-2713572fef44aa49ec323e813b06d2d9.ssl.cf2.rackcdn.com/300x_a1-1_cTC/6r800k6d-JPG-1579105478.jpg",
   "name": "Jimbo Jones",
-  "role": "Rouge Plumber",
+  "role": "Rogue Plumber",
   "level": 3,
   "status": ["Redneck", "Camoflauge"],
   "ac": 3,
   "damage": 0,
   "initiative": 12,
   "initBonus": 0
-}]
+}
+, {
+  "id": 2,
+  "isPlayer": true,
+  "img": "https://i.imgur.com/CrILrEh.jpg",
+  "name": "Frink Frank",
+  "role": "Wizard",
+  "level": 3,
+  "status": ["Drinkin"],
+  "ac": 12,
+  "damage": 5,
+  "initiative": 15,
+  "initBonus": 1
+}
+]

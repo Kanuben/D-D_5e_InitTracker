@@ -2,12 +2,14 @@ import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
+import Grow from '@material-ui/core/Grow';
 import IconButton from "@material-ui/core/IconButton";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
+import SvgIcon from "@material-ui/core/SvgIcon";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
@@ -18,10 +20,9 @@ import PeopleIcon from "@material-ui/icons/People";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import clsx from "clsx";
 import React from "react";
+import { ReactComponent as Dragon } from "../assets/dragon.svg";
 import loadFile from "../services/FileService";
 import InitiativeTracker from "./InitiativeTracker";
-import { ReactComponent as Dragon } from "../assets/dragon.svg";
-import SvgIcon from "@material-ui/core/SvgIcon";
 
 const drawerWidth = 240;
 
@@ -85,7 +86,7 @@ const useStyles = makeStyles((theme) => ({
     "justify-content": "center",
     "align-items": "center",
     height: "80vh",
-    'flex-direction': 'column'
+    "flex-direction": "column",
   },
 }));
 
@@ -103,13 +104,22 @@ export default function PersistentDrawerLeft() {
     setOpen(false);
   };
 
-  const handleRemove = (id) => {
-    const newList = characterList.filter((item) => item.id !== id);
+  const handleRemove = (character) => {
+    const newList = characterList.filter((item) => item !== character);
+    setCharacterList(newList);
+  };
+
+  const handleInitAdvance = () => {
+    let newList = Object.create(characterList);
+    newList.push(newList.shift());
     setCharacterList(newList);
   };
 
   const handleLoad = () => {
     loadFile((result) => {
+      result.sort(function (a, b) {
+        return b.initiative - a.initiative;
+      });
       setCharacterList(result);
     });
   };
@@ -195,22 +205,27 @@ export default function PersistentDrawerLeft() {
       >
         <div className={classes.drawerHeader} />
         {characterList.length != 0 && (
-        <InitiativeTracker
-          handleRemove={handleRemove}
-          charList={characterList}
-        ></InitiativeTracker>
+          <InitiativeTracker
+            handleRemove={handleRemove}
+            handleInitAdvance={handleInitAdvance}
+            charList={characterList}
+          ></InitiativeTracker>
         )}
         {characterList.length == 0 && (
-        <div className={classes.placeholder}>
-          <div>
-            <SvgIcon style={{ fontSize: 500 }} color="action">
-              <Dragon />
-            </SvgIcon>
+          <div className={classes.placeholder}>
+            <Grow in={true}>
+              <div>
+                <SvgIcon style={{ fontSize: 500 }} color="action">
+                  <Dragon />
+                </SvgIcon>
+              </div>
+            </Grow>
+            <div>
+              <p style={{ fontSize: "2em" }}>
+                The inn is empty. Recruit some more adventurers.
+              </p>
+            </div>
           </div>
-          <div>
-            <p style={{ fontSize: '2em' }}>The inn is empty. Recruit some more adventurers.</p>
-          </div>
-        </div>
         )}
       </main>
     </div>
