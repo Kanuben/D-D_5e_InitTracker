@@ -41,7 +41,7 @@ function InitiativeTracker(props) {
       {props.charList && (
         <List>
           {props.charList.map((character, index) => (
-            <ListItem>
+            <ListItem key={character.id}>
               <CharacterCard {...character} index={index}></CharacterCard>
               <IconButton
                 onClick={() => {

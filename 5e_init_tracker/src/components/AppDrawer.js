@@ -20,6 +20,8 @@ import clsx from "clsx";
 import React from "react";
 import loadFile from "../services/FileService";
 import InitiativeTracker from "./InitiativeTracker";
+import { ReactComponent as Dragon } from "../assets/dragon.svg";
+import SvgIcon from "@material-ui/core/SvgIcon";
 
 const drawerWidth = 240;
 
@@ -78,13 +80,20 @@ const useStyles = makeStyles((theme) => ({
     }),
     marginLeft: 0,
   },
+  placeholder: {
+    display: "flex",
+    "justify-content": "center",
+    "align-items": "center",
+    height: "80vh",
+    'flex-direction': 'column'
+  },
 }));
 
 export default function PersistentDrawerLeft() {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-  const [characterList, setCharacterList] = React.useState();
+  const [characterList, setCharacterList] = React.useState([]);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -185,10 +194,24 @@ export default function PersistentDrawerLeft() {
         })}
       >
         <div className={classes.drawerHeader} />
+        {characterList.length != 0 && (
         <InitiativeTracker
           handleRemove={handleRemove}
           charList={characterList}
         ></InitiativeTracker>
+        )}
+        {characterList.length == 0 && (
+        <div className={classes.placeholder}>
+          <div>
+            <SvgIcon style={{ fontSize: 500 }} color="action">
+              <Dragon />
+            </SvgIcon>
+          </div>
+          <div>
+            <p style={{ fontSize: '2em' }}>The inn is empty. Recruit some more adventurers.</p>
+          </div>
+        </div>
+        )}
       </main>
     </div>
   );
