@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function InitiativeTracker(props) {
+export default function InitiativeTracker(props) {
   const classes = useStyles();
   const theme = useTheme();
 
@@ -71,4 +71,3 @@ function InitiativeTracker(props) {
   );
 }
 
-export default InitiativeTracker;

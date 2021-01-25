@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function CharacterCard(props) {
+export default function CharacterCard(props) {
   const classes = useStyles();
 
   return (
@@ -111,4 +111,3 @@ function CharacterCard(props) {
   );
 }
 
-export default CharacterCard;

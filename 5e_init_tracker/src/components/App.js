@@ -1,7 +1,6 @@
 import AppDrawer from "./AppDrawer";
 
-function App() {
+export default function App() {
   return <AppDrawer />;
 }
 
-export default App;
