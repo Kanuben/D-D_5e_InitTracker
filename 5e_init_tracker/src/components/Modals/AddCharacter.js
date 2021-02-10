@@ -129,9 +129,11 @@ const DialogActions = withStyles (theme => ({
 export default function AddCharacter (props) {
   const [open, setOpen] = React.useState (false);
   const [searchText, setSearchText] = React.useState ('');
+  const [selectedList, setSelectedList] = React.useState([]);
 
   const handleClickOpen = () => {
     setOpen (true);
+    setSelectedList([]);
   };
   const handleClose = () => {
     setOpen (false);
@@ -142,6 +144,19 @@ export default function AddCharacter (props) {
   let setText = e => {
     setSearchText (e.target.value);
   };
+
+  const addToSelectedList = character => {
+    console.log(character);
+    let templist = Object.create(selectedList);
+    templist.push(character);
+    setSelectedList(templist);
+  }
+
+  const removeFromSelectedList = character => {
+    const newList = selectedList.filter (item => item !== character);
+    setSelectedList (newList);
+  }
+
 
   return (
     <div>
@@ -160,7 +175,10 @@ export default function AddCharacter (props) {
       >
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
           Add Character
-          <div className={classes.search}>
+
+        </DialogTitle>
+
+        <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
@@ -174,13 +192,9 @@ export default function AddCharacter (props) {
               inputProps={{'aria-label': 'search'}}
             />
           </div>
-        </DialogTitle>
         <DialogContent dividers>
 
-          <div>
-            SELECTED LIST HERE
-          </div>
-          <Divider />
+
           <List>
             {props.charList
               .filter (character =>
@@ -189,12 +203,25 @@ export default function AddCharacter (props) {
               .map ((character, index) => (
                 <Slide direction="up" in={true} mountOnEnter>
                   <ListItem key={character.id}>
-                    <SimpleCharacterCard {...character} index={index} />
+                    <SimpleCharacterCard character={character} index={index} addToSelectedList={addToSelectedList} selected={false}/>
+                  </ListItem>
+                </Slide>
+              ))}
+          </List>
+          <div>
+            SELECTED LIST HERE
+            <List>
+            {selectedList.map ((character, index) => (
+                <Slide direction="up" in={true} mountOnEnter>
+                  <ListItem key={character.id}>
+                    <SimpleCharacterCard character={character} index={index} selected={true} removeFromSelectedList={removeFromSelectedList} />
                   </ListItem>
                 </Slide>
               ))}
           </List>
 
+          </div>
+          <Divider />
         </DialogContent>
         <DialogActions>
           <Button autoFocus onClick={handleClose} color="primary">

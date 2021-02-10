@@ -46,35 +46,42 @@ const useStyles = makeStyles (theme => ({
 }));
 
 export default function CharacterCard (props) {
-  const [BgColor, setbgColor] = React.useState (false);
   const classes = useStyles ();
 
-  function handleBgColor () {
-    if (BgColor === true) setbgColor (false);
-    else setbgColor (true);
-  }
 
-  const selected = '#3f51b5';
-  const unselected = 'white';
+  console.log (props);
 
   return (
     <Card
       className={classes.cardwidth}
-      style={{backgroundColor: BgColor ? selected : unselected}}
-      onClick={handleBgColor}
+      onClick={() => {
+        console.log(props.selected);
+        if(props.selected === false){
+        props.addToSelectedList (props.character);
+        }
+        else{
+          props.removeFromSelectedList(props.character);
+        }
+      }}
     >
       <CardContent>
         <div className={classes.align_center}>
           <Grid container spacing={5}>
             <Grid className={classes.col} item xs>
-              <Avatar className={classes.char_portrait} src={props.img} />
+              <Avatar
+                className={classes.char_portrait}
+                src={props.character.img}
+              />
               <div className={classes.charname}>
                 <Typography variant="h6" gutterBottom>
-                  {props.name}
+                  {props.character.name}
                 </Typography>
                 <Typography variant="subtitle2" gutterBottom>
-                  {props.role}: {props.isPlayer ? 'LVL ' : 'CR '}
-                  {props.level}
+                  {props.character.role}
+                  :
+                  {' '}
+                  {props.character.isPlayer ? 'LVL ' : 'CR '}
+                  {props.character.level}
                 </Typography>
               </div>
             </Grid>
