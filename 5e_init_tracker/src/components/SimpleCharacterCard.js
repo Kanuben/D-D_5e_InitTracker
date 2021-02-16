@@ -48,9 +48,6 @@ const useStyles = makeStyles (theme => ({
 export default function CharacterCard (props) {
   const classes = useStyles ();
 
-
-  console.log (props);
-
   return (
     <Card
       className={classes.cardwidth}
