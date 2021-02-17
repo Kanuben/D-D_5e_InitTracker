@@ -43,8 +43,8 @@ const useStyles = makeStyles((theme) => ({
   },
   dialogSize: {
     minHeight: "65%",
-    minWidth: "30%",
-    maxWidth: "30%",
+    minWidth: "40%",
+    maxWidth: "40%",
     maxHeight: "65%",
   },
 }));
@@ -177,10 +177,10 @@ export default function AddCharacter(props) {
               renderOption={(char) => (
                 <React.Fragment>
                   <Avatar src={char.img} />
-                  <span>{char.name}</span>
+                  <span style={{padding: "1em"}}>{char.name}</span>
                 </React.Fragment>
               )}
-              style={{ width: 300 }}
+              style={{ width: "80%" }}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -203,7 +203,7 @@ export default function AddCharacter(props) {
           {selectedList.length == 0 && (
             <div className={classes.placeholder}>
               <div>
-                <SvgIcon style={{ fontSize: 500 }} color="action">
+                <SvgIcon style={{ fontSize: "40em" }} color="action">
                   <Dragon />
                 </SvgIcon>
               </div>
