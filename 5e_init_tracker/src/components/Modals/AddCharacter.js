@@ -1,29 +1,24 @@
 import { ListItem } from "@material-ui/core";
+import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import MuiDialogActions from "@material-ui/core/DialogActions";
 import MuiDialogContent from "@material-ui/core/DialogContent";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
-import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
-import InputBase from "@material-ui/core/InputBase";
 import List from "@material-ui/core/List";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
 import Slide from "@material-ui/core/Slide";
-import { fade, makeStyles, withStyles } from "@material-ui/core/styles";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
+import SvgIcon from "@material-ui/core/SvgIcon";
+import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
-import PersonIcon from "@material-ui/icons/Person";
-import SearchIcon from "@material-ui/icons/Search";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 import React from "react";
+import { ReactComponent as Dragon } from "../../assets/dragon.svg";
 import SimpleCharacterCard from "../SimpleCharacterCard";
 
 const useStyles = makeStyles((theme) => ({
-  column: {
-    width: '50%',
-    float: "left",
-  },
   root: {
     flexGrow: 1,
   },
@@ -37,48 +32,19 @@ const useStyles = makeStyles((theme) => ({
       display: "block",
     },
   },
-  search: {
-    position: "relative",
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.black, 0.15),
-    "&:hover": {
-      backgroundColor: fade(theme.palette.common.black, 0.25),
-    },
-    marginLeft: 0,
-    [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing(1),
-      width: "auto",
-    },
-  },
-  searchIcon: {
-    padding: theme.spacing(0, 2),
-    height: "100%",
-    position: "absolute",
-    pointerEvents: "none",
+  flex: {
     display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
   },
-  inputRoot: {
-    color: "inherit",
-  },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      width: "12ch",
-      "&:focus": {
-        width: "20ch",
-      },
-    },
+  placeholder: {
+    display: "flex",
+    "justify-content": "center",
+    "align-items": "center",
+    "flex-direction": "column",
   },
   dialogSize: {
     minHeight: "65%",
-    minWidth: "50%",
-    maxWidth: "50%",
+    minWidth: "30%",
+    maxWidth: "30%",
     maxHeight: "65%",
   },
 }));
@@ -130,36 +96,43 @@ const DialogActions = withStyles((theme) => ({
 export default function AddCharacter(props) {
   const open = props.openAddCharacter;
   const onClose = props.onClose;
-  const [searchText, setSearchText] = React.useState("");
+  const [selectedChar, setSelectedChar] = React.useState({});
   const [selectedList, setSelectedList] = React.useState([]);
-  const [id,setId] = React.useState(0);
+  const [id, setId] = React.useState(0);
+
+  const classes = useStyles();
 
   const handleClose = () => {
     onClose();
   };
 
-  const addCharacters = () =>{
+  const handleSelectedChar = (e, val) => {
+    setSelectedChar(val);
+  };
+
+  const addCharacters = () => {
     let newList = [];
     Object.assign(newList, props.initList);
     newList.push(...selectedList);
     props.setInitiativeList(newList);
     setSelectedList([]);
     handleClose();
-  }
-
-  const classes = useStyles();
-
-  let setText = (e) => {
-    setSearchText(e.target.value);
   };
 
-  const addToSelectedList = (character) => {
+  const addToSelectedList = (selectedChar) => {
     let tempList = Object.create(selectedList);
-    let tempChar = {};
-    Object.assign(tempChar,character); 
-    tempChar.id = generateId(character);
-    tempList.push(tempChar);
-    setSelectedList(tempList);
+    let filteredCharList = props.charList.filter(
+      (char) => char == selectedChar
+    );
+    if (filteredCharList.length != 0) {
+      let tempChar = {};
+      Object.assign(tempChar, ...filteredCharList);
+      tempChar.id = generateId(tempChar);
+      tempList.push(tempChar);
+      setSelectedList(tempList);
+    } else {
+      return;
+    }
   };
 
   const removeFromSelectedList = (character) => {
@@ -169,8 +142,8 @@ export default function AddCharacter(props) {
 
   function generateId(character) {
     let tempId = id;
-    props.initList.forEach(char => {
-      if(char.id > tempId){
+    props.initList.forEach((char) => {
+      if (char.id > tempId) {
         tempId = char.id;
       }
     });
@@ -186,64 +159,79 @@ export default function AddCharacter(props) {
         aria-labelledby="customized-dialog-title"
         open={open}
         fullWidth={true}
+        classes={{ paper: classes.dialogSize }}
       >
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
           Add Character
         </DialogTitle>
 
-        <div className={classes.search}>
-          <div className={classes.searchIcon}>
-            <SearchIcon />
-          </div>
-          <InputBase
-            placeholder="Search…"
-            onChange={setText}
-            classes={{
-              root: classes.inputRoot,
-              input: classes.inputInput,
-            }}
-            inputProps={{ "aria-label": "search" }}
-          />
-        </div>
         <DialogContent>
-          <div className={classes.column}>
-            <List>
-              {props.charList
-                .filter((character) =>
-                  character.name.toLowerCase().includes(searchText)
-                )
-                .map((character, index) => (
+          <div className={classes.flex}>
+            <Autocomplete
+              id="combo-box-demo"
+              freeSolo
+              disableClearable
+              options={props.charList}
+              getOptionLabel={(char) => char.name}
+              onChange={handleSelectedChar}
+              renderOption={(char) => (
+                <React.Fragment>
+                  <Avatar src={char.img} />
+                  <span>{char.name}</span>
+                </React.Fragment>
+              )}
+              style={{ width: 300 }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Characters"
+                  variant="outlined"
+                  InputProps={{ ...params.InputProps, type: "search" }}
+                />
+              )}
+            />
+            <Button
+              onClick={() => {
+                addToSelectedList(selectedChar);
+              }}
+              autoFocus
+              color="primary"
+            >
+              Add To List
+            </Button>
+          </div>
+          {selectedList.length == 0 && (
+            <div className={classes.placeholder}>
+              <div>
+                <SvgIcon style={{ fontSize: 500 }} color="action">
+                  <Dragon />
+                </SvgIcon>
+              </div>
+              <div>
+                <p style={{ fontSize: "2em" }}>
+                  The inn is empty. Recruit some more adventurers.
+                </p>
+              </div>
+            </div>
+          )}
+          {selectedList.length != 0 && (
+            <div>
+              <List>
+                {selectedList.map((character, index) => (
                   <Slide direction="up" in={true} mountOnEnter>
                     <ListItem key={character.id}>
                       <SimpleCharacterCard
                         character={character}
                         index={index}
-                        addToSelectedList={addToSelectedList}
-                        selected={false}
+                        selected={true}
+                        removeFromSelectedList={removeFromSelectedList}
                       />
                     </ListItem>
                   </Slide>
                 ))}
-                         
-            </List>
-          </div>
-
-          <div className={classes.column}>
-            <List>
-              {selectedList.map((character, index) => (
-                <Slide direction="up" in={true} mountOnEnter>
-                  <ListItem key={character.id}>
-                    <SimpleCharacterCard
-                      character={character}
-                      index={index}
-                      selected={true}
-                      removeFromSelectedList={removeFromSelectedList}
-                    />
-                  </ListItem>
-                </Slide>
-              ))}
-            </List>
-          </div>
+              </List>
+            </div>
+          )}
         </DialogContent>
         <DialogActions>
           <Button autoFocus onClick={addCharacters} color="primary">
