@@ -1,37 +1,33 @@
 const { app, BrowserWindow } = require("electron");
 const isDev = require("electron-is-dev");
 const path = require("path");
-const Store = require('./store.js');
+const Store = require("./store.js");
 
 let mainWindow;
 
 const store = new Store({
-    // We'll call our data file 'user-preferences'
-    configName: 'user-preferences',
-    defaults: {
-      // 800x600 is the default size of our window
-      windowBounds: { width: 800, height: 600 }
-    }
-  });
+  // We'll call our data file 'user-preferences'
+  configName: "user-preferences",
+  defaults: {
+    // 800x600 is the default size of our window
+    windowBounds: { width: 800, height: 600 },
+  },
+});
 
 function createWindow() {
-  let { width, height } = store.get('windowBounds');
-  let maximized = store.get('maximized')
+  let { width, height } = store.get("windowBounds");
+  let maximized = store.get("maximized");
 
-  mainWindow = new BrowserWindow({ width, height,show: false });
+  mainWindow = new BrowserWindow({ width, height, show: false });
 
-  if(maximized){
-      mainWindow.maximize();
-  }
-
-  mainWindow.on('resize', () => {
+  mainWindow.on("resize", () => {
     let { width, height } = mainWindow.getBounds();
-    store.set('windowBounds', { width, height });
+    store.set("windowBounds", { width, height });
   });
 
-  mainWindow.on('maximize', () => {
-    let  maximized = true;
-    store.set('maximized',  maximized );
+  mainWindow.on("maximize", () => {
+    let maximized = true;
+    store.set("maximized", maximized);
   });
 
   const startURL = isDev
@@ -40,7 +36,12 @@ function createWindow() {
 
   mainWindow.loadURL(startURL);
   //mainWindow.removeMenu();
-  mainWindow.once("ready-to-show", () => mainWindow.show());
+  mainWindow.once("ready-to-show", () => {
+    if (maximized) {
+      mainWindow.maximize();
+    }
+    mainWindow.show();
+  });
   mainWindow.on("closed", () => {
     mainWindow = null;
   });
