@@ -16,6 +16,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import React from "react";
 import { ReactComponent as Dragon } from "../../assets/dragon.svg";
+import { ReactComponent as Demo } from "../../assets/demo.svg";
 import SimpleCharacterCard from "../SimpleCharacterCard";
 
 const useStyles = makeStyles((theme) => ({
@@ -143,14 +144,14 @@ export default function AddMonster(props) {
   function generateId() {
     let tempId = parseInt(id.substring(1));
     props.initList.forEach((mon) => {
-      let charId = parseInt(mon.id.substring(1)); 
+      let charId = parseInt(mon.id.substring(1));
       if (charId > tempId) {
         tempId = parseInt(mon.id.substring(1));
       }
     });
     tempId++;
     setId("m" + tempId);
-    return "m"+tempId;
+    return "m" + tempId;
   }
 
   return (
@@ -180,7 +181,11 @@ export default function AddMonster(props) {
               onChange={handleSelectedMon}
               renderOption={(mon) => (
                 <React.Fragment>
-                  <Avatar src={mon.img} />
+                  <Avatar>
+                    <SvgIcon>
+                      <Demo />
+                    </SvgIcon>
+                  </Avatar>
                   <span style={{ padding: "1em" }}>{mon.name}</span>
                 </React.Fragment>
               )}
@@ -207,7 +212,10 @@ export default function AddMonster(props) {
           {selectedList.length === 0 && (
             <div className={classes.placeholder}>
               <div>
-                <SvgIcon style={{  width: "35vw",height: "45vh" }} color="action">
+                <SvgIcon
+                  style={{ width: "35vw", height: "45vh" }}
+                  color="action"
+                >
                   <Dragon />
                 </SvgIcon>
               </div>

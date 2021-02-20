@@ -1,16 +1,12 @@
-import Avatar from "@material-ui/core/Avatar";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import Grid from "@material-ui/core/Grid";
+import Divider from "@material-ui/core/Divider";
+import ListItem from "@material-ui/core/ListItem";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import React, { useEffect } from "react";
-import { loadMonsterData, loadMonsters } from "../../services/MonsterService";
-import { map, mergeMap } from "rxjs/operators";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import Divider from "@material-ui/core/Divider";
+import { map } from "rxjs/operators";
+import { loadMonsterData } from "../../services/MonsterService";
 
 const useStyles = makeStyles((theme) => ({
   cardwidth: {
