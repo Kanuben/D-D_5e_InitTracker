@@ -141,7 +141,7 @@ export default function PersistentDrawerLeft() {
   useEffect(() => {
     let tasks = [];
     tasks.push(getAllMonster());
-    tasks.push(getAllSpells());
+    //tasks.push(getAllSpells());
     forkJoin(tasks).subscribe(
       (tasksResult) => {
         forkJoin(tasksResult.flat()).subscribe(

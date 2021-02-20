@@ -55,6 +55,11 @@ function createWindow() {
     store.set("maximized", maximized);
   });
 
+  mainWindow.on("unmaximize", () => {
+    let maximized = false;
+    store.set("maximized", maximized);
+  });
+
   const startURL = isDev
     ? "http://localhost:3000/#/home"
     : `file://${path.join(__dirname, "../build/index.html")}`;
