@@ -1,5 +1,5 @@
 import AppBar from "@material-ui/core/AppBar";
-import Box from '@material-ui/core/Box';
+import Box from "@material-ui/core/Box";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
@@ -21,13 +21,14 @@ import MenuOpenIcon from "@material-ui/icons/MenuOpen";
 import PeopleIcon from "@material-ui/icons/People";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import clsx from "clsx";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import React, { useEffect } from "react";
 import { forkJoin } from "rxjs";
-import { map } from "rxjs/operators";
+import { map, mergeMap } from "rxjs/operators";
 import { ReactComponent as Dragon } from "../assets/dragon.svg";
 import loadFile from "../services/FileService";
 import { loadMonsterData, loadMonsters } from "../services/MonsterService";
+import { loadSpellData, loadSpells } from "../services/SpellService";
 import InitiativeTracker from "./InitiativeTracker";
 import AddCharacter from "./Modals/AddCharacter";
 import AddMonster from "./Modals/AddMonster";
@@ -41,7 +42,7 @@ function LinearProgressWithLabel(props) {
       </Box>
       <Box minWidth={35}>
         <Typography variant="body2" color="textSecondary">{`${Math.round(
-          props.value,
+          props.value
         )}%`}</Typography>
       </Box>
     </Box>
@@ -132,46 +133,102 @@ export default function PersistentDrawerLeft() {
   const [openEmptyReminder, setOpenEmptyReminder] = React.useState(false);
   const [characterList, setCharacterList] = React.useState([]);
   const [monsterList, setMonsterList] = React.useState([]);
+  const [spellList, setSpellList] = React.useState([]);
   const [initiativeList, setInitiativeList] = React.useState([]);
-  const [progress, setProgress] = React.useState(10);
+  const [monsterProgress, setMonsterProgress] = React.useState(0);
+  const [spellProgress, setSpellProgress] = React.useState(0);
 
   useEffect(() => {
-    getAllMonster();
+    let tasks = [];
+    tasks.push(getAllMonster());
+    tasks.push(getAllSpells());
+    forkJoin(tasks).subscribe(
+      (tasksResult) => {
+        forkJoin(tasksResult.flat()).subscribe(
+          (data) => {
+            let monsterArr = [];
+            let spellArr = [];
+            data.forEach((item) => {
+              if (item.isPlayer === false) {
+                monsterArr.push(item);
+              } else {
+                spellArr.push(item);
+              }
+            });
+            setMonsterList(monsterArr);
+            setSpellList(spellArr);
+            setLoaded(true);
+          },
+          (err) => {
+            alert(err);
+            setLoaded(true);
+          }
+        );
+      },
+      (err) => {
+       alert("Failed to load monsters from api" + err.message);
+       setLoaded(true);
+      }
+    );
   }, []);
 
   const getAllMonster = () => {
-    loadMonsters()
-      .pipe(
-        map((monsterList) => {
-          let count = 0;
-          return monsterList.results.map((monster) => {
-            return loadMonsterData(monster.index).pipe(
-              map((monster) => {
-                handleIncrementProgress(monsterList.count,count);
-                count++;
-                monster.isPlayer = false;
-                monster.type = capitalize(monster.type);
-                return monster;
-              })
-            );
-          });
-        })
-      )
-      .subscribe((final) => {
-        forkJoin(final).subscribe((result) => {
-          handleMonsterLoad(result);
+    return loadMonsters().pipe(
+      map((monsterList) => {
+        let count = 0;
+        return monsterList.results.map((monster) => {
+          return loadMonsterData(monster.index).pipe(
+            map((monster) => {
+              handleIncrementMonsterProgress(monsterList.count, count);
+              count++;
+              monster.isPlayer = false;
+              monster.type = capitalize(monster.type);
+              return monster;
+            })
+          );
         });
-      });
+      })
+    );
   };
 
-  const capitalize = (s) => {
-    if (typeof s !== 'string') return ''
-    return s.charAt(0).toUpperCase() + s.slice(1)
-  }
+  const getAllSpells = () => {
+    return loadSpells().pipe(
+      map((spellList) => {
+        let count = 0;
+        return spellList.results.map((spell) => {
+          return loadSpellData(spell.index).pipe(
+            map((spell) => {
+              handleIncrementSpellProgress(spellList.count, count);
+              count++;
+              return spell;
+            })
+          );
+        });
+      })
+    );
+  };
 
-  const handleIncrementProgress= (size, position) => {
-    setProgress(position/size*100);
-  }
+  const handleAppendMonsterList = (appendList) => {
+    let newList = [];
+    Object.assign(newList, monsterList);
+    newList.push(...appendList);
+    setMonsterList(newList);
+  };
+
+  const handleAppendCharacterList = (appendList) => {
+    let newList = [];
+    Object.assign(newList, characterList);
+    newList.push(...appendList);
+    setCharacterList(newList);
+  };
+
+  const handleIncrementMonsterProgress = (size, position) => {
+    setMonsterProgress((position / size) * 100);
+  };
+
+  const handleIncrementSpellProgress = (size, position) => {
+    setSpellProgress((position / size) * 100);
+  };
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -233,23 +290,26 @@ export default function PersistentDrawerLeft() {
     setInitiativeList(newList);
   };
 
-  const handleMonsterLoad = (monsters) => {
-    let newList = [];
-    Object.assign(newList, monsterList);
-    newList.push(...monsters);
-    setMonsterList(newList);
-    setLoaded(true);
-  };
-
   const handleLoadFile = () => {
     loadFile((result) => {
-      // result.sort(function (a, b) {
-      //   return b.initiative - a.initiative;
-      // });
-      setCharacterList(result);
+      let monsterArr = [];
+      let charArr = [];
+      result.forEach((item) => {
+        if (item.isPlayer === false) {
+          monsterArr.push(item);
+        } else {
+          charArr.push(item);
+        }
+      });
+      handleAppendMonsterList(monsterArr);
+      handleAppendCharacterList(charArr);
     });
   };
 
+  const capitalize = (s) => {
+    if (typeof s !== "string") return "";
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  };
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -358,8 +418,15 @@ export default function PersistentDrawerLeft() {
           [classes.contentShift]: open,
         })}
       >
-         <div className={classes.drawerHeader} />
-        {appLoaded === false && ( <LinearProgressWithLabel value={progress} />)}
+        <div className={classes.drawerHeader} />
+        {appLoaded === false && (
+          <div>
+            Loading Monsters...
+            <LinearProgressWithLabel value={monsterProgress} />
+            Loading Spells...
+            <LinearProgressWithLabel value={spellProgress} />
+          </div>
+        )}
         {appLoaded === true && (
           <div>
             {initiativeList.length !== 0 && (
@@ -373,7 +440,10 @@ export default function PersistentDrawerLeft() {
               <div className={classes.placeholder}>
                 <Grow in={true}>
                   <div>
-                    <SvgIcon style={{ width: "65vw",height: "65vh" }} color="action">
+                    <SvgIcon
+                      style={{ width: "65vw", height: "65vh" }}
+                      color="action"
+                    >
                       <Dragon />
                     </SvgIcon>
                   </div>
