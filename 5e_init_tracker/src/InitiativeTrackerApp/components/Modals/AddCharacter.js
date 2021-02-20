@@ -94,12 +94,12 @@ const DialogActions = withStyles((theme) => ({
   },
 }))(MuiDialogActions);
 
-export default function AddMonster(props) {
-  const open = props.openAddMonster;
+export default function AddCharacter(props) {
+  const open = props.openAddCharacter;
   const onClose = props.onClose;
-  const [selectedMon, setSelectedMon] = React.useState({});
+  const [selectedChar, setSelectedChar] = React.useState({});
   const [selectedList, setSelectedList] = React.useState([]);
-  const [id, setId] = React.useState("m0");
+  const [id, setId] = React.useState("c0");
 
   const classes = useStyles();
 
@@ -107,23 +107,25 @@ export default function AddMonster(props) {
     onClose();
   };
 
-  const handleSelectedMon = (e, val) => {
-    setSelectedMon(val);
+  const handleSelectedChar = (e, val) => {
+    setSelectedChar(val);
   };
 
-  const addMonsters = () => {
+  const addCharacters = () => {
     let newList = [];
     Object.assign(newList, props.initList);
     newList.push(...selectedList);
     props.setInitiativeList(newList);
     setSelectedList([]);
-    setId("m0");
+    setId("c0");
     handleClose();
   };
 
-  const addToSelectedList = (selectedMon) => {
+  const addToSelectedList = (selectedChar) => {
     let tempList = Object.create(selectedList);
-    let filteredCharList = props.monList.filter((mon) => mon === selectedMon);
+    let filteredCharList = props.charList.filter(
+      (char) => char === selectedChar
+    );
     if (filteredCharList.length !== 0) {
       let tempChar = {};
       Object.assign(tempChar, ...filteredCharList);
@@ -135,23 +137,22 @@ export default function AddMonster(props) {
     }
   };
 
-  const removeFromSelectedList = (monster) => {
-    const newList = selectedList.filter((item) => item !== monster);
+  const removeFromSelectedList = (character) => {
+    const newList = selectedList.filter((item) => item !== character);
     setSelectedList(newList);
   };
 
   function generateId() {
     let tempId = parseInt(id.substring(1));
-    props.initList.forEach((mon) => {
-      let charId = parseInt(mon.id.substring(1));
+    props.initList.forEach((char) => {
+      let charId = parseInt(char.id.substring(1));
       if (charId > tempId) {
-        tempId = parseInt(mon.id.substring(1));
-        tempId++;
+        tempId = parseInt(char.id.substring(1));
       }
     });
     tempId++;
-    setId("m" + tempId);
-    return id;
+    setId("c" + tempId);
+    return "c" + tempId;
   }
 
   return (
@@ -164,7 +165,7 @@ export default function AddMonster(props) {
         classes={{ paper: classes.dialogSize }}
       >
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-          Add Monster
+          Add Character
         </DialogTitle>
 
         <DialogContent>
@@ -173,23 +174,20 @@ export default function AddMonster(props) {
               id="combo-box-demo"
               freeSolo
               disableClearable
-              options={props.monList.sort(
-                (a, b) => a.challenge_rating - b.challenge_rating
-              )}
-              getOptionLabel={(mon) => mon.name}
-              groupBy={(mon) => mon.challenge_rating}
-              onChange={handleSelectedMon}
-              renderOption={(mon) => (
+              options={props.charList}
+              getOptionLabel={(char) => char.name}
+              onChange={handleSelectedChar}
+              renderOption={(char) => (
                 <React.Fragment>
-                  <Avatar src={mon.img} />
-                  <span style={{ padding: "1em" }}>{mon.name}</span>
+                  <Avatar src={char.img} />
+                  <span style={{ padding: "1em" }}>{char.name}</span>
                 </React.Fragment>
               )}
               style={{ width: "85%" }}
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  label="Monsters"
+                  label="Characters"
                   variant="outlined"
                   InputProps={{ ...params.InputProps, type: "search" }}
                 />
@@ -197,7 +195,7 @@ export default function AddMonster(props) {
             />
             <Button
               onClick={() => {
-                addToSelectedList(selectedMon);
+                addToSelectedList(selectedChar);
               }}
               autoFocus
               color="primary"
@@ -208,7 +206,10 @@ export default function AddMonster(props) {
           {selectedList.length === 0 && (
             <div className={classes.placeholder}>
               <div>
-                <SvgIcon style={{  width: "35vw",height: "45vh" }} color="action">
+                <SvgIcon
+                  style={{ width: "35vw", height: "45vh" }}
+                  color="action"
+                >
                   <Dragon />
                 </SvgIcon>
               </div>
@@ -217,11 +218,16 @@ export default function AddMonster(props) {
           {selectedList.length !== 0 && (
             <div>
               <List>
-                {selectedList.map((monster, index) => (
-                  <Slide key={monster.id} direction="up" in={true} mountOnEnter>
-                    <ListItem key={monster.id}>
+                {selectedList.map((character, index) => (
+                  <Slide
+                    key={character.id}
+                    direction="up"
+                    in={true}
+                    mountOnEnter
+                  >
+                    <ListItem key={character.id}>
                       <SimpleCharacterCard
-                        character={monster}
+                        character={character}
                         index={index}
                         selected={true}
                         removeFromSelectedList={removeFromSelectedList}
@@ -238,7 +244,7 @@ export default function AddMonster(props) {
             variant="contained"
             disabled={selectedList.length === 0}
             autoFocus
-            onClick={addMonsters}
+            onClick={addCharacters}
             color="primary"
           >
             Add Characters

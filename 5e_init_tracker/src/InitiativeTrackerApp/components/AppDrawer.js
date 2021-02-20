@@ -26,9 +26,9 @@ import React, { useEffect } from "react";
 import { forkJoin } from "rxjs";
 import { map, mergeMap } from "rxjs/operators";
 import { ReactComponent as Dragon } from "../assets/dragon.svg";
-import loadFile from "../services/FileService";
-import { loadMonsterData, loadMonsters } from "../services/MonsterService";
-import { loadSpellData, loadSpells } from "../services/SpellService";
+import loadFile from "../../services/FileService";
+import { loadMonsterData, loadMonsters } from "../../services/MonsterService";
+import { loadSpellData, loadSpells } from "../../services/SpellService";
 import InitiativeTracker from "./InitiativeTracker";
 import AddCharacter from "./Modals/AddCharacter";
 import AddMonster from "./Modals/AddMonster";
@@ -305,6 +305,7 @@ export default function PersistentDrawerLeft() {
       handleAppendCharacterList(charArr);
     });
   };
+
 
   const capitalize = (s) => {
     if (typeof s !== "string") return "";

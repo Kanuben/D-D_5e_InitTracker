@@ -42,6 +42,13 @@ const useStyles = makeStyles((theme) => ({
 
 export default function CharacterCard(props) {
   const classes = useStyles();
+  const { ipcRenderer } = window.require('electron');
+
+  const handleOpenNewMonsterWindow = () => {
+    if(props.isPlayer === false){
+      ipcRenderer.send('new-window', props.index)
+    }
+  }
 
   return (
     <Card className={classes.cardwidth}>
@@ -49,7 +56,7 @@ export default function CharacterCard(props) {
         <div className={classes.align_center}>
           <Grid container spacing={5}>
             <Grid className={classes.col} item xs>
-              <Avatar className={classes.char_portrait} src={props.img} />
+              <Avatar className={classes.char_portrait} src={props.img} onClick={handleOpenNewMonsterWindow}/>
               <div className={classes.charname}>
                 <Typography variant="h6" gutterBottom>
                   {props.name}

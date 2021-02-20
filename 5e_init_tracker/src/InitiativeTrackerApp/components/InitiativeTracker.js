@@ -45,14 +45,14 @@ export default function InitiativeTracker(props) {
       {/* If charList is defined display the list */}
       {props.charList && (
         <List>
-          {props.charList.map((character, index) => (
+          {props.charList.map((character) => (
             <Slide
               direction="up"
               in={true}
               mountOnEnter
             >
               <ListItem key={character.id}>
-                <CharacterCard {...character} index={index}></CharacterCard>
+                <CharacterCard {...character}></CharacterCard>
                 <IconButton
                   onClick={() => {
                     props.handleRemove(character);
