@@ -74,11 +74,14 @@ export default function CharacterCard (props) {
                   {props.character.name}
                 </Typography>
                 <Typography variant="subtitle2" gutterBottom>
-                  {props.character.role}
+                  {props.character.type}
                   :
                   {' '}
                   {props.character.isPlayer ? 'LVL ' : 'CR '}
-                  {props.character.level}
+                  {props.character.isPlayer === true && <span>{props.character.level}</span>}
+                  {props.character.isPlayer === false && (
+                    <span> {props.character.challenge_rating}</span>
+                  )}
                 </Typography>
               </div>
             </Grid>

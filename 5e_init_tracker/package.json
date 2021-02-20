@@ -17,7 +17,8 @@
     "electron-is-dev": "^1.2.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "react-scripts": "4.0.1",
+    "react-scripts": "^4.0.1",
+    "rxjs": "^6.6.3",
     "wait-on": "^5.2.1",
     "web-vitals": "^0.2.4"
   },

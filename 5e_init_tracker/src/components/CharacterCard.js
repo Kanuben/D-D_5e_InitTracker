@@ -55,8 +55,11 @@ export default function CharacterCard(props) {
                   {props.name}
                 </Typography>
                 <Typography variant="subtitle2" gutterBottom>
-                  {props.role}: {props.isPlayer ? "LVL " : "CR "}
-                  {props.level}
+                  {props.type}: {props.isPlayer ? "LVL " : "CR "}
+                  {props.isPlayer === true && <span>{props.level}</span>}
+                  {props.isPlayer === false && (
+                    <span> {props.challenge_rating}</span>
+                  )}
                 </Typography>
               </div>
             </Grid>
@@ -78,7 +81,7 @@ export default function CharacterCard(props) {
                   AC
                 </Typography>
                 <Typography variant="h4" gutterBottom>
-                  {props.ac}
+                  {props.armor_class}
                 </Typography>
               </div>
             </Grid>
@@ -89,7 +92,7 @@ export default function CharacterCard(props) {
                   Damage
                 </Typography>
                 <Typography variant="h4" gutterBottom>
-                  {props.damage}
+                  0/{props.hit_points}
                 </Typography>
               </div>
             </Grid>
@@ -110,4 +113,3 @@ export default function CharacterCard(props) {
     </Card>
   );
 }
-

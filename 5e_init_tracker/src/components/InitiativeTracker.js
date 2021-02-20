@@ -3,7 +3,7 @@ import IconButton from "@material-ui/core/IconButton";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import Slide from "@material-ui/core/Slide";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import SvgIcon from "@material-ui/core/SvgIcon";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -11,7 +11,7 @@ import React from "react";
 import { ReactComponent as Logo } from "../assets/download.svg";
 import CharacterCard from "./CharacterCard";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   toolbar: {
     "justify-content": "flex-end",
     "padding-right": "5em",
@@ -20,7 +20,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function InitiativeTracker(props) {
   const classes = useStyles();
-  const theme = useTheme();
 
   return (
     <div>

@@ -1,9 +1,11 @@
 import AppBar from "@material-ui/core/AppBar";
+import Box from '@material-ui/core/Box';
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
 import Grow from "@material-ui/core/Grow";
 import IconButton from "@material-ui/core/IconButton";
+import LinearProgress from "@material-ui/core/LinearProgress";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
@@ -19,12 +21,40 @@ import MenuOpenIcon from "@material-ui/icons/MenuOpen";
 import PeopleIcon from "@material-ui/icons/People";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import clsx from "clsx";
-import React from "react";
+import PropTypes from 'prop-types';
+import React, { useEffect } from "react";
+import { forkJoin } from "rxjs";
+import { map } from "rxjs/operators";
 import { ReactComponent as Dragon } from "../assets/dragon.svg";
 import loadFile from "../services/FileService";
+import { loadMonsterData, loadMonsters } from "../services/MonsterService";
 import InitiativeTracker from "./InitiativeTracker";
 import AddCharacter from "./Modals/AddCharacter";
+import AddMonster from "./Modals/AddMonster";
 import EmptyReminder from "./Modals/EmptyReminder";
+
+function LinearProgressWithLabel(props) {
+  return (
+    <Box display="flex" alignItems="center">
+      <Box width="100%" mr={1}>
+        <LinearProgress variant="determinate" {...props} />
+      </Box>
+      <Box minWidth={35}>
+        <Typography variant="body2" color="textSecondary">{`${Math.round(
+          props.value,
+        )}%`}</Typography>
+      </Box>
+    </Box>
+  );
+}
+
+LinearProgressWithLabel.propTypes = {
+  /**
+   * The value of the progress indicator for the determinate and buffer variants.
+   * Value between 0 and 100.
+   */
+  value: PropTypes.number.isRequired,
+};
 
 const drawerWidth = 240;
 
@@ -95,11 +125,53 @@ const useStyles = makeStyles((theme) => ({
 export default function PersistentDrawerLeft() {
   const classes = useStyles();
   const theme = useTheme();
+  const [appLoaded, setLoaded] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [openAddCharacter, setOpenAddCharacter] = React.useState(false);
+  const [openAddMonster, setOpenAddMonster] = React.useState(false);
   const [openEmptyReminder, setOpenEmptyReminder] = React.useState(false);
   const [characterList, setCharacterList] = React.useState([]);
+  const [monsterList, setMonsterList] = React.useState([]);
   const [initiativeList, setInitiativeList] = React.useState([]);
+  const [progress, setProgress] = React.useState(10);
+
+  useEffect(() => {
+    getAllMonster();
+  }, []);
+
+  const getAllMonster = () => {
+    loadMonsters()
+      .pipe(
+        map((monsterList) => {
+          let count = 0;
+          return monsterList.results.map((monster) => {
+            return loadMonsterData(monster.index).pipe(
+              map((monster) => {
+                handleIncrementProgress(monsterList.count,count);
+                count++;
+                monster.isPlayer = false;
+                monster.type = capitalize(monster.type);
+                return monster;
+              })
+            );
+          });
+        })
+      )
+      .subscribe((final) => {
+        forkJoin(final).subscribe((result) => {
+          handleMonsterLoad(result);
+        });
+      });
+  };
+
+  const capitalize = (s) => {
+    if (typeof s !== 'string') return ''
+    return s.charAt(0).toUpperCase() + s.slice(1)
+  }
+
+  const handleIncrementProgress= (size, position) => {
+    setProgress(position/size*100);
+  }
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -109,13 +181,21 @@ export default function PersistentDrawerLeft() {
     setOpen(false);
   };
 
-  const handleAddCharacterClick = () =>{
-    if(characterList.length == 0){
+  const handleAddCharacterClick = () => {
+    if (characterList.length === 0) {
       handleEmptyReminderOpen();
-    } else{
+    } else {
       handleAddCharacterOpen();
     }
-  }
+  };
+
+  const handleAddMonsterClick = () => {
+    if (monsterList.length === 0) {
+      handleEmptyReminderOpen();
+    } else {
+      handleAddMonsterOpen();
+    }
+  };
 
   const handleAddCharacterOpen = () => {
     setOpenAddCharacter(true);
@@ -123,6 +203,14 @@ export default function PersistentDrawerLeft() {
 
   const handleAddCharacterClose = () => {
     setOpenAddCharacter(false);
+  };
+
+  const handleAddMonsterOpen = () => {
+    setOpenAddMonster(true);
+  };
+
+  const handleAddMonsterClose = () => {
+    setOpenAddMonster(false);
   };
 
   const handleEmptyReminderOpen = () => {
@@ -134,28 +222,30 @@ export default function PersistentDrawerLeft() {
   };
 
   const handleRemove = (character) => {
-    //Basically what filter is doing
-    // initiativeList.forEach((item) =>{
-    //   if(item !== character){
-    //newList.push(item)
-    //   }
-    // })
     const newList = initiativeList.filter((item) => item.id !== character.id);
     setInitiativeList(newList);
   };
 
   const handleInitAdvance = () => {
     let newList = [];
-    Object.assign(newList,initiativeList);
+    Object.assign(newList, initiativeList);
     newList.push(newList.shift());
     setInitiativeList(newList);
   };
 
-  const handleLoad = () => {
+  const handleMonsterLoad = (monsters) => {
+    let newList = [];
+    Object.assign(newList, monsterList);
+    newList.push(...monsters);
+    setMonsterList(newList);
+    setLoaded(true);
+  };
+
+  const handleLoadFile = () => {
     loadFile((result) => {
-      result.sort(function (a, b) {
-        return b.initiative - a.initiative;
-      });
+      // result.sort(function (a, b) {
+      //   return b.initiative - a.initiative;
+      // });
       setCharacterList(result);
     });
   };
@@ -205,7 +295,7 @@ export default function PersistentDrawerLeft() {
         <Divider />
         <List>
           {["Import Characters"].map((text, index) => (
-            <ListItem button key={text} onClick={handleLoad}>
+            <ListItem button key={text} onClick={handleLoadFile}>
               <ListItemIcon>
                 <PeopleIcon />
               </ListItemIcon>
@@ -226,12 +316,27 @@ export default function PersistentDrawerLeft() {
             <ListItemText primary={"Add Character"} />
           </ListItem>
 
+          <ListItem button key={"Add Monster"} onClick={handleAddMonsterClick}>
+            <ListItemIcon>
+              <PersonAddIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Add Monster"} />
+          </ListItem>
+
+          <AddMonster
+            openAddMonster={openAddMonster}
+            onClose={handleAddMonsterClose}
+            setInitiativeList={setInitiativeList}
+            initList={initiativeList}
+            monList={monsterList}
+          />
+
           <AddCharacter
             openAddCharacter={openAddCharacter}
             onClose={handleAddCharacterClose}
             setInitiativeList={setInitiativeList}
-            initList={initiativeList.filter((char) => char.isPlayer == true)}
-            charList={characterList.filter((char) => char.isPlayer == true)}
+            initList={initiativeList}
+            charList={characterList.filter((char) => char.isPlayer === true)}
           />
           <EmptyReminder
             openEmptyReminder={openEmptyReminder}
@@ -253,28 +358,33 @@ export default function PersistentDrawerLeft() {
           [classes.contentShift]: open,
         })}
       >
-        <div className={classes.drawerHeader} />
-        {initiativeList.length != 0 && (
-          <InitiativeTracker
-            handleRemove={handleRemove}
-            handleInitAdvance={handleInitAdvance}
-            charList={initiativeList}
-          />
-        )}
-        {initiativeList.length == 0 && (
-          <div className={classes.placeholder}>
-            <Grow in={true}>
-              <div>
-                <SvgIcon style={{ fontSize: 500 }} color="action">
-                  <Dragon />
-                </SvgIcon>
+         <div className={classes.drawerHeader} />
+        {appLoaded === false && ( <LinearProgressWithLabel value={progress} />)}
+        {appLoaded === true && (
+          <div>
+            {initiativeList.length !== 0 && (
+              <InitiativeTracker
+                handleRemove={handleRemove}
+                handleInitAdvance={handleInitAdvance}
+                charList={initiativeList}
+              />
+            )}
+            {initiativeList.length === 0 && (
+              <div className={classes.placeholder}>
+                <Grow in={true}>
+                  <div>
+                    <SvgIcon style={{ width: "65vw",height: "65vh" }} color="action">
+                      <Dragon />
+                    </SvgIcon>
+                  </div>
+                </Grow>
+                <div>
+                  <p style={{ fontSize: "2em" }}>
+                    The inn is empty. Recruit some more adventurers.
+                  </p>
+                </div>
               </div>
-            </Grow>
-            <div>
-              <p style={{ fontSize: "2em" }}>
-                The inn is empty. Recruit some more adventurers.
-              </p>
-            </div>
+            )}
           </div>
         )}
       </main>

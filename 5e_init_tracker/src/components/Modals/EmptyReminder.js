@@ -1,23 +1,12 @@
-import { ListItem } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import MuiDialogActions from "@material-ui/core/DialogActions";
 import MuiDialogContent from "@material-ui/core/DialogContent";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
-import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
-import InputBase from "@material-ui/core/InputBase";
-import List from "@material-ui/core/List";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import Slide from "@material-ui/core/Slide";
-import { fade, makeStyles, withStyles } from "@material-ui/core/styles";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
-import PersonIcon from "@material-ui/icons/Person";
-import SearchIcon from "@material-ui/icons/Search";
 import React from "react";
-import SimpleCharacterCard from "../SimpleCharacterCard";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -105,13 +94,9 @@ export default function AddCharacter(props) {
         </DialogTitle>
 
         <DialogContent>
-          <div>
-           
-          </div>
+          <div></div>
         </DialogContent>
-        <DialogActions>
-         
-        </DialogActions>
+        <DialogActions></DialogActions>
       </Dialog>
     </div>
   );

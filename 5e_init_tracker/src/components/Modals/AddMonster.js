@@ -94,12 +94,12 @@ const DialogActions = withStyles((theme) => ({
   },
 }))(MuiDialogActions);
 
-export default function AddCharacter(props) {
-  const open = props.openAddCharacter;
+export default function AddMonster(props) {
+  const open = props.openAddMonster;
   const onClose = props.onClose;
-  const [selectedChar, setSelectedChar] = React.useState({});
+  const [selectedMon, setSelectedMon] = React.useState({});
   const [selectedList, setSelectedList] = React.useState([]);
-  const [id, setId] = React.useState("c0");
+  const [id, setId] = React.useState("m0");
 
   const classes = useStyles();
 
@@ -107,25 +107,23 @@ export default function AddCharacter(props) {
     onClose();
   };
 
-  const handleSelectedChar = (e, val) => {
-    setSelectedChar(val);
+  const handleSelectedMon = (e, val) => {
+    setSelectedMon(val);
   };
 
-  const addCharacters = () => {
+  const addMonsters = () => {
     let newList = [];
     Object.assign(newList, props.initList);
     newList.push(...selectedList);
     props.setInitiativeList(newList);
     setSelectedList([]);
-    setId("c0");
+    setId("m0");
     handleClose();
   };
 
-  const addToSelectedList = (selectedChar) => {
+  const addToSelectedList = (selectedMon) => {
     let tempList = Object.create(selectedList);
-    let filteredCharList = props.charList.filter(
-      (char) => char === selectedChar
-    );
+    let filteredCharList = props.monList.filter((mon) => mon === selectedMon);
     if (filteredCharList.length !== 0) {
       let tempChar = {};
       Object.assign(tempChar, ...filteredCharList);
@@ -137,22 +135,22 @@ export default function AddCharacter(props) {
     }
   };
 
-  const removeFromSelectedList = (character) => {
-    const newList = selectedList.filter((item) => item !== character);
+  const removeFromSelectedList = (monster) => {
+    const newList = selectedList.filter((item) => item !== monster);
     setSelectedList(newList);
   };
 
   function generateId() {
     let tempId = parseInt(id.substring(1));
-    props.initList.forEach((char) => {
-      let charId = parseInt(char.id.substring(1));
+    props.initList.forEach((mon) => {
+      let charId = parseInt(mon.id.substring(1));
       if (charId > tempId) {
-        tempId = parseInt(char.id.substring(1));
+        tempId = parseInt(mon.id.substring(1));
         tempId++;
       }
     });
     tempId++;
-    setId("c" + tempId);
+    setId("m" + tempId);
     return id;
   }
 
@@ -166,7 +164,7 @@ export default function AddCharacter(props) {
         classes={{ paper: classes.dialogSize }}
       >
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-          Add Character
+          Add Monster
         </DialogTitle>
 
         <DialogContent>
@@ -175,20 +173,23 @@ export default function AddCharacter(props) {
               id="combo-box-demo"
               freeSolo
               disableClearable
-              options={props.charList}
-              getOptionLabel={(char) => char.name}
-              onChange={handleSelectedChar}
-              renderOption={(char) => (
+              options={props.monList.sort(
+                (a, b) => a.challenge_rating - b.challenge_rating
+              )}
+              getOptionLabel={(mon) => mon.name}
+              groupBy={(mon) => mon.challenge_rating}
+              onChange={handleSelectedMon}
+              renderOption={(mon) => (
                 <React.Fragment>
-                  <Avatar src={char.img} />
-                  <span style={{ padding: "1em" }}>{char.name}</span>
+                  <Avatar src={mon.img} />
+                  <span style={{ padding: "1em" }}>{mon.name}</span>
                 </React.Fragment>
               )}
               style={{ width: "85%" }}
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  label="Characters"
+                  label="Monsters"
                   variant="outlined"
                   InputProps={{ ...params.InputProps, type: "search" }}
                 />
@@ -196,7 +197,7 @@ export default function AddCharacter(props) {
             />
             <Button
               onClick={() => {
-                addToSelectedList(selectedChar);
+                addToSelectedList(selectedMon);
               }}
               autoFocus
               color="primary"
@@ -207,7 +208,7 @@ export default function AddCharacter(props) {
           {selectedList.length === 0 && (
             <div className={classes.placeholder}>
               <div>
-                <SvgIcon style={{ width: "35vw",height: "45vh" }} color="action">
+                <SvgIcon style={{  width: "35vw",height: "45vh" }} color="action">
                   <Dragon />
                 </SvgIcon>
               </div>
@@ -216,16 +217,11 @@ export default function AddCharacter(props) {
           {selectedList.length !== 0 && (
             <div>
               <List>
-                {selectedList.map((character, index) => (
-                  <Slide
-                    key={character.id}
-                    direction="up"
-                    in={true}
-                    mountOnEnter
-                  >
-                    <ListItem key={character.id}>
+                {selectedList.map((monster, index) => (
+                  <Slide key={monster.id} direction="up" in={true} mountOnEnter>
+                    <ListItem key={monster.id}>
                       <SimpleCharacterCard
-                        character={character}
+                        character={monster}
                         index={index}
                         selected={true}
                         removeFromSelectedList={removeFromSelectedList}
@@ -239,10 +235,10 @@ export default function AddCharacter(props) {
         </DialogContent>
         <DialogActions>
           <Button
-           variant="contained"
+            variant="contained"
             disabled={selectedList.length === 0}
             autoFocus
-            onClick={addCharacters}
+            onClick={addMonsters}
             color="primary"
           >
             Add Characters
