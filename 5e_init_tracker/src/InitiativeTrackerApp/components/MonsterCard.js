@@ -309,7 +309,7 @@ export default function MonsterCard (props) {
               </ListItem>
             ))}
 
-            {damageVulnerabilties.length !== 0 &&
+            {damageImmunities.length !== 0 &&
               <Typography variant="subtitle2">
                 Damage Immunities
               </Typography>}
