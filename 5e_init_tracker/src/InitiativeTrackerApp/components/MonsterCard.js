@@ -143,9 +143,11 @@ export default function MonsterCard (props) {
       actions.push (item);
     });
 
+    if(monster.legendary_actions !== undefined){
     monster.legendary_actions.forEach (item => {
       legendaryActions.push (item);
     });
+  }
 
     senses = JSON.stringify (monster.senses);
     languages = monster.languages;
