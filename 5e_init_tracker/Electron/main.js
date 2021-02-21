@@ -19,7 +19,7 @@ ipcMain.on("new-window", (event, arg) => {
       ? "http://localhost:3000/#/monster/"+arg
       : `file://${path.join(__dirname, "../build/index.html")}`
   );
-  newWindow.removeMenu();
+  //newWindow.removeMenu();
   newWindow.setAlwaysOnTop(true);
 });
 
