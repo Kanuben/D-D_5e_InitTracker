@@ -55,7 +55,7 @@ const useStyles = makeStyles (theme => ({
   },
 }));
 
-export default function MonsterCard (props) {
+export default function MonsterInfo (props) {
   let strMod = 0;
   let dexMod = 0;
   let conMod = 0;
