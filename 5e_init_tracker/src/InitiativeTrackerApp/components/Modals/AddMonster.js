@@ -105,6 +105,7 @@ export default function AddMonster(props) {
   const classes = useStyles();
 
   const handleClose = () => {
+    setSelectedMon({});
     onClose();
   };
 
