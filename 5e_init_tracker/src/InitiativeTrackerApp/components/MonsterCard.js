@@ -118,36 +118,41 @@ export default function MonsterCard (props) {
         });
       }
     });
-
-    monster.damage_vulnerabilities.forEach (item => {
-      damageVulnerabilties.push (item);
-    });
-
-    monster.damage_resistances.forEach (item => {
-      damageResistances.push (item);
-    });
-
-    monster.damage_immunities.forEach (item => {
-      damageImmunities.push (item);
-    });
-
-    monster.condition_immunities.forEach (item => {
-      condidtionImmunities.push (item.name);
-    });
-
-    monster.special_abilities.forEach (item => {
-      specialAbilities.push (item);
-    });
-
-    monster.actions.forEach (item => {
-      actions.push (item);
-    });
-
-    if(monster.legendary_actions !== undefined){
-    monster.legendary_actions.forEach (item => {
-      legendaryActions.push (item);
-    });
-  }
+    if (monster.damage_vulnerabilities !== undefined) {
+      monster.damage_vulnerabilities.forEach (item => {
+        damageVulnerabilties.push (item);
+      });
+    }
+    if (monster.damage_resistances !== undefined) {
+      monster.damage_resistances.forEach (item => {
+        damageResistances.push (item);
+      });
+    }
+    if (monster.damage_immunities !== undefined) {
+      monster.damage_immunities.forEach (item => {
+        damageImmunities.push (item);
+      });
+    }
+    if (monster.condition_immunities !== undefined) {
+      monster.condition_immunities.forEach (item => {
+        condidtionImmunities.push (item.name);
+      });
+    }
+    if (monster.special_abilities !== undefined) {
+      monster.special_abilities.forEach (item => {
+        specialAbilities.push (item);
+      });
+    }
+    if (monster.actions !== undefined) {
+      monster.actions.forEach (item => {
+        actions.push (item);
+      });
+    }
+    if (monster.legendary_actions !== undefined) {
+      monster.legendary_actions.forEach (item => {
+        legendaryActions.push (item);
+      });
+    }
 
     senses = JSON.stringify (monster.senses);
     languages = monster.languages;
@@ -358,7 +363,7 @@ export default function MonsterCard (props) {
             </div>
             <Divider />
 
-            {actions.length !== 0 &&
+            {specialAbilities.length !== 0 &&
               <Typography variant="h6">
                 Special Abilities
               </Typography>}
