@@ -9,7 +9,8 @@
   "hit_points": 69420,
   "damage":0,
   "initiative": 20,
-  "initBonus": 3
+  "initBonus": 3,
+  "dexterity": 20
 }, {
   "isPlayer": true,
   "img": "https://9b16f79ca967fd0708d1-2713572fef44aa49ec323e813b06d2d9.ssl.cf2.rackcdn.com/300x_a1-1_cTC/6r800k6d-JPG-1579105478.jpg",
@@ -21,7 +22,8 @@
   "hit_points":60,
   "damage": 0,
   "initiative": 12,
-  "initBonus": 0
+  "initBonus": 0,
+  "dexterity": 8
 }
 , {
   "isPlayer": true,
@@ -34,6 +36,7 @@
   "hit_points":60,
   "damage": 5,
   "initiative": 15,
-  "initBonus": 1
+  "initBonus": 1,
+  "dexterity": 16
 }
 ]

@@ -1,32 +1,37 @@
-import { Toolbar } from "@material-ui/core";
-import IconButton from "@material-ui/core/IconButton";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import Slide from "@material-ui/core/Slide";
-import { makeStyles } from "@material-ui/core/styles";
-import SvgIcon from "@material-ui/core/SvgIcon";
-import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
-import DeleteIcon from "@material-ui/icons/Delete";
-import React from "react";
-import { ReactComponent as Logo } from "../assets/download.svg";
-import CharacterCard from "./CharacterCard";
+import {Toolbar} from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import Slide from '@material-ui/core/Slide';
+import {makeStyles} from '@material-ui/core/styles';
+import SvgIcon from '@material-ui/core/SvgIcon';
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
+import DeleteIcon from '@material-ui/icons/Delete';
+import React from 'react';
+import {ReactComponent as Logo} from '../assets/download.svg';
+import CharacterCard from './CharacterCard';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles (() => ({
   toolbar: {
-    "justify-content": "flex-end",
-    "padding-right": "5em",
+    'justify-content': 'flex-end',
+    'padding-right': '5em',
   },
 }));
 
-export default function InitiativeTracker(props) {
-  const classes = useStyles();
+export default function InitiativeTracker (props) {
+  const classes = useStyles ();
 
   return (
     <div>
       <Toolbar className={classes.toolbar}>
         <div>
-          <IconButton aria-label="delete">
-            <SvgIcon style={{ fontSize: 40 }} color="action">
+          <IconButton
+            aria-label="delete"
+            onClick={() => {
+              props.handleRollInit ();
+            }}
+          >
+            <SvgIcon style={{fontSize: 40}} color="action">
               <Logo />
             </SvgIcon>
           </IconButton>
@@ -34,28 +39,25 @@ export default function InitiativeTracker(props) {
         <div>
           <IconButton
             onClick={() => {
-              props.handleInitAdvance();
+              props.handleInitAdvance ();
             }}
             aria-label="advance"
           >
-            <ArrowUpwardIcon style={{ fontSize: 40 }} />
+            <ArrowUpwardIcon style={{fontSize: 40}} />
           </IconButton>
         </div>
       </Toolbar>
       {/* If charList is defined display the list */}
-      {props.charList && (
+      {props.charList &&
         <List>
-          {props.charList.map((character) => (
-            <Slide
-              direction="up"
-              in={true}
-              mountOnEnter
-            >
+          {props.charList.map (character => (
+            <Slide direction="up" in={true} mountOnEnter>
               <ListItem key={character.id}>
-                <CharacterCard {...character}></CharacterCard>
+                <CharacterCard {...character} 
+                sortInitList={props.sortInitList}/>
                 <IconButton
                   onClick={() => {
-                    props.handleRemove(character);
+                    props.handleRemove (character);
                   }}
                   aria-label="delete"
                 >
@@ -64,9 +66,7 @@ export default function InitiativeTracker(props) {
               </ListItem>
             </Slide>
           ))}
-        </List>
-      )}
+        </List>}
     </div>
   );
 }
-
