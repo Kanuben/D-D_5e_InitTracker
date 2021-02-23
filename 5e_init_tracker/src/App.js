@@ -6,7 +6,7 @@ import SpellCard from "./InitiativeTrackerApp/components/SpellCard";
 export default function App() {
   return (
     <div>
-      <Route path="/home">
+      <Route exact path="/">
         <AppDrawer />
       </Route>
       <Route exact path="/monster/:id"  component={MonsterInfo}>

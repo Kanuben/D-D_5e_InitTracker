@@ -7,17 +7,22 @@ let mainWindow;
 
 const { ipcMain } = require("electron");
 ipcMain.on("new-window", (event, arg) => {
+  let deploymentURL = `file://${path.join(
+    __dirname,
+    "../build/index.html#monster"
+  )}`;
+  deploymentURL = deploymentURL + "/" + arg;
   newWindow = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
-        nodeIntegration: true,
-      },
+      nodeIntegration: true,
+    },
   });
   newWindow.loadURL(
     isDev
-      ? "http://localhost:3000/#/monster/"+arg
-      : `file://${path.join(__dirname, "../build/index.html")}`
+      ? "http://localhost:3000/#/monster/" + arg
+      : deploymentURL
   );
   //newWindow.removeMenu();
   newWindow.setAlwaysOnTop(true);
@@ -61,7 +66,7 @@ function createWindow() {
   });
 
   const startURL = isDev
-    ? "http://localhost:3000/#/home"
+    ? "http://localhost:3000/"
     : `file://${path.join(__dirname, "../build/index.html")}`;
 
   mainWindow.loadURL(startURL);
