@@ -49,6 +49,13 @@ const useStyles = makeStyles((theme) => ({
 
 export default function CharacterCard(props) {
   const classes = useStyles();
+  const { ipcRenderer } = window.require("electron");
+
+  const handleOpenNewMonsterWindow = () => {
+    if (props.character.isPlayer === false) {
+      ipcRenderer.send("new-window", "monster", props.character.index);
+    }
+  };
 
   return (
     <Card
@@ -58,7 +65,7 @@ export default function CharacterCard(props) {
         if (props.selected === false) {
           props.addToSelectedList(props.character);
         } else {
-          props.removeFromSelectedList(props.character);
+          //props.removeFromSelectedList(props.character);
         }
       }}
     >
@@ -69,6 +76,7 @@ export default function CharacterCard(props) {
               <Avatar
                 className={classes.char_portrait}
                 src={props.character.img}
+                onClick={handleOpenNewMonsterWindow}
               >
                 <SvgIcon>
                   <Demo />
