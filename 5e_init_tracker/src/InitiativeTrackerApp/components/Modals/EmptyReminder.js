@@ -71,7 +71,7 @@ const DialogActions = withStyles((theme) => ({
   },
 }))(MuiDialogActions);
 
-export default function AddCharacter(props) {
+export default function EmptyReminder(props) {
   const open = props.openEmptyReminder;
   const onClose = props.onClose;
 

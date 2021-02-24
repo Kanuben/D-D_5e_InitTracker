@@ -184,6 +184,7 @@ export default function PersistentDrawerLeft () {
               count++;
               monster.isPlayer = false;
               monster.initiative = 0;
+              monster.statuses = [];
               monster.type = capitalize (monster.type);
               return monster;
             })
@@ -460,7 +461,7 @@ export default function PersistentDrawerLeft () {
                 charList={initiativeList}
                 handleRollInit={handleRollInit}
                 sortInitList={sortInitList}
-
+                setInitiativeList={setInitiativeList}
               />}
             {initiativeList.length === 0 &&
               <div className={classes.placeholder}>

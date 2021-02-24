@@ -1,7 +1,8 @@
 import AppDrawer from "./InitiativeTrackerApp/components/AppDrawer";
 import { Link, Route, Switch } from "react-router-dom";
 import MonsterInfo from "./InitiativeTrackerApp/components/MonsterInfo";
-import SpellCard from "./InitiativeTrackerApp/components/SpellCard";
+import SpellInfo from "./InitiativeTrackerApp/components/SpellInfo";
+import ConditionInfo from "./InitiativeTrackerApp/components/ConditionInfo";
 
 export default function App() {
   return (
@@ -11,7 +12,9 @@ export default function App() {
       </Route>
       <Route exact path="/monster/:id"  component={MonsterInfo}>
       </Route>
-      <Route exact path="/spell/:id"  component={SpellCard}>
+      <Route exact path="/spell/:id"  component={SpellInfo}>
+      </Route>
+      <Route exact path="/condition/:id"  component={ConditionInfo}>
       </Route>
     </div>
   );

@@ -6,26 +6,49 @@ const Store = require("./store.js");
 let mainWindow;
 
 const { ipcMain } = require("electron");
-ipcMain.on("new-window", (event, arg) => {
-  let deploymentURL = `file://${path.join(
-    __dirname,
-    "../build/index.html#monster"
-  )}`;
-  deploymentURL = deploymentURL + "/" + arg;
-  newWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
-    webPreferences: {
-      nodeIntegration: true,
-    },
-  });
-  newWindow.loadURL(
-    isDev
-      ? "http://localhost:3000/#/monster/" + arg
-      : deploymentURL
-  );
-  //newWindow.removeMenu();
-  newWindow.setAlwaysOnTop(true);
+ipcMain.on("new-window", (event, window, arg) => {
+  if(window === "monster"){
+    console.log(window);
+    let deploymentURL = `file://${path.join(
+      __dirname,
+      "../build/index.html#monster"
+    )}`;
+    deploymentURL = deploymentURL + "/" + arg;
+    newWindow = new BrowserWindow({
+      width: 800,
+      height: 600,
+      webPreferences: {
+        nodeIntegration: true,
+      },
+    });
+    newWindow.loadURL(
+      isDev
+        ? "http://localhost:3000/#/monster/" + arg
+        : deploymentURL
+    );
+    //newWindow.removeMenu();
+    newWindow.setAlwaysOnTop(true);
+  } else if(window === "condition"){
+    let deploymentURL = `file://${path.join(
+      __dirname,
+      "../build/index.html#condition"
+    )}`;
+    deploymentURL = deploymentURL + "/" + arg;
+    newWindow = new BrowserWindow({
+      width: 800,
+      height: 600,
+      webPreferences: {
+        nodeIntegration: true,
+      },
+    });
+    newWindow.loadURL(
+      isDev
+        ? "http://localhost:3000/#/condition/" + arg
+        : deploymentURL
+    );
+    //newWindow.removeMenu();
+    newWindow.setAlwaysOnTop(true);
+  }
 });
 
 const store = new Store({
