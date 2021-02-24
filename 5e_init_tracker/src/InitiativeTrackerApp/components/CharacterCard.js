@@ -85,7 +85,7 @@ export default function CharacterCard(props) {
 
   const handleVisibilityFullDamage = () => {
     setShowFullDamage(!showFullDamage);
-  }
+  };
 
   const handleDeleteCondition = (deleteStatus) => {
     let newList = [];
@@ -134,6 +134,14 @@ export default function CharacterCard(props) {
       props.setInitiativeList(newList);
     }
   };
+
+  const handleBlur = (e) => {
+    let newList = [];
+    Object.assign(newList, props.charList);
+    props.sortInitList(newList);
+    props.setInitiativeList(newList);
+  };
+
   return (
     <Card className={classes.cardwidth}>
       <CardContent>
@@ -224,25 +232,28 @@ export default function CharacterCard(props) {
                     flexWrap: "wrap",
                   }}
                 >
-                <IconButton onClick={handleVisibilityFullDamage} aria-label="delete">
-                  <VisibilityIcon />
-                </IconButton>
-                {showFullDamage === false &&(
-                   <TextField
-                   className={classes.textField}
-                   size="small"
-                   onChange={handleDamageChange}
-                   value={damage}
-                   id="outlined-basic"
-                   variant="outlined"
-                 />
-                )}
-                 {showFullDamage === true &&(
-                   <Typography variant="h4" >
-                   {damage}/{props.character.hit_points}
-                 </Typography>
-                 )}
-                 </div>
+                  <IconButton
+                    onClick={handleVisibilityFullDamage}
+                    aria-label="delete"
+                  >
+                    <VisibilityIcon />
+                  </IconButton>
+                  {showFullDamage === false && (
+                    <TextField
+                      className={classes.textField}
+                      size="small"
+                      onChange={handleDamageChange}
+                      value={damage}
+                      id="outlined-basic"
+                      variant="outlined"
+                    />
+                  )}
+                  {showFullDamage === true && (
+                    <Typography variant="h4">
+                      {damage}/{props.character.hit_points}
+                    </Typography>
+                  )}
+                </div>
               </div>
             </Grid>
 
@@ -256,6 +267,7 @@ export default function CharacterCard(props) {
                   size="small"
                   onChange={handleInitiativeChange}
                   onKeyDown={handleEnterKey}
+                  onBlur={handleBlur}
                   value={initiative}
                   id="outlined-basic"
                   variant="outlined"
