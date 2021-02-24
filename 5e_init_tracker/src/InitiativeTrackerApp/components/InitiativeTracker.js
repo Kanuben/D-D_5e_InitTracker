@@ -7,7 +7,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import SvgIcon from "@material-ui/core/SvgIcon";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import DeleteIcon from "@material-ui/icons/Delete";
-import React from "react";
+import React, { useEffect } from "react";
 import { ReactComponent as Logo } from "../assets/download.svg";
 import CharacterCard from "./CharacterCard";
 
@@ -20,6 +20,11 @@ const useStyles = makeStyles(() => ({
 
 export default function InitiativeTracker(props) {
   const classes = useStyles();
+
+  useEffect(() => {
+    console.log(props.charList);
+
+  }, props);
 
   return (
     <div>
