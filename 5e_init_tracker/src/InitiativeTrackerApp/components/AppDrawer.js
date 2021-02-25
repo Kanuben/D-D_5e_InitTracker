@@ -1,49 +1,51 @@
-import AppBar from "@material-ui/core/AppBar";
-import Box from "@material-ui/core/Box";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Divider from "@material-ui/core/Divider";
-import Drawer from "@material-ui/core/Drawer";
-import Grow from "@material-ui/core/Grow";
-import IconButton from "@material-ui/core/IconButton";
-import LinearProgress from "@material-ui/core/LinearProgress";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import SvgIcon from "@material-ui/core/SvgIcon";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import MenuBookIcon from "@material-ui/icons/MenuBook";
-import MenuOpenIcon from "@material-ui/icons/MenuOpen";
-import PeopleIcon from "@material-ui/icons/People";
-import PersonAddIcon from "@material-ui/icons/PersonAdd";
-import clsx from "clsx";
-import PropTypes from "prop-types";
-import React, { useEffect } from "react";
-import { forkJoin } from "rxjs";
-import { map } from "rxjs/operators";
-import loadFile from "../../services/FileService";
-import { loadMonsterData, loadMonsters } from "../../services/MonsterService";
-import { loadSpellData, loadSpells } from "../../services/SpellService";
-import { ReactComponent as Dragon } from "../assets/dragon.svg";
-import InitiativeTracker from "./InitiativeTracker";
-import AddCharacter from "./Modals/AddCharacter";
-import AddMonster from "./Modals/AddMonster";
-import EmptyReminder from "./Modals/EmptyReminder";
+import AppBar from '@material-ui/core/AppBar';
+import Box from '@material-ui/core/Box';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Divider from '@material-ui/core/Divider';
+import Drawer from '@material-ui/core/Drawer';
+import Grow from '@material-ui/core/Grow';
+import IconButton from '@material-ui/core/IconButton';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import {makeStyles, useTheme} from '@material-ui/core/styles';
+import SvgIcon from '@material-ui/core/SvgIcon';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import MenuBookIcon from '@material-ui/icons/MenuBook';
+import MenuOpenIcon from '@material-ui/icons/MenuOpen';
+import PeopleIcon from '@material-ui/icons/People';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import clsx from 'clsx';
+import PropTypes from 'prop-types';
+import React, {useEffect} from 'react';
+import {forkJoin} from 'rxjs';
+import {map} from 'rxjs/operators';
+import loadFile from '../../services/FileService';
+import {loadMonsterData, loadMonsters} from '../../services/MonsterService';
+import {loadSpellData, loadSpells} from '../../services/SpellService';
+import {ReactComponent as Dragon} from '../assets/dragon.svg';
+import InitiativeTracker from './InitiativeTracker';
+import AddCharacter from './Modals/AddCharacter';
+import AddMonster from './Modals/AddMonster';
+import EmptyReminder from './Modals/EmptyReminder';
+import CreateChar from './Modals/CreateChar';
 
-function LinearProgressWithLabel(props) {
+function LinearProgressWithLabel (props) {
   return (
     <Box display="flex" alignItems="center">
       <Box width="100%" mr={1}>
         <LinearProgress variant="determinate" {...props} />
       </Box>
       <Box minWidth={35}>
-        <Typography variant="body2" color="textSecondary">{`${Math.round(
-          props.value
-        )}%`}</Typography>
+        <Typography
+          variant="body2"
+          color="textSecondary"
+        >{`${Math.round (props.value)}%`}</Typography>
       </Box>
     </Box>
   );
@@ -59,12 +61,12 @@ LinearProgressWithLabel.propTypes = {
 
 const drawerWidth = 240;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles (theme => ({
   root: {
-    display: "flex",
+    display: 'flex',
   },
   appBar: {
-    transition: theme.transitions.create(["margin", "width"], {
+    transition: theme.transitions.create (['margin', 'width'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
@@ -72,16 +74,16 @@ const useStyles = makeStyles((theme) => ({
   appBarShift: {
     width: `calc(100% - ${drawerWidth}px)`,
     marginLeft: drawerWidth,
-    transition: theme.transitions.create(["margin", "width"], {
+    transition: theme.transitions.create (['margin', 'width'], {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
     }),
   },
   menuButton: {
-    marginRight: theme.spacing(2),
+    marginRight: theme.spacing (2),
   },
   hide: {
-    display: "none",
+    display: 'none',
   },
   drawer: {
     width: drawerWidth,
@@ -91,93 +93,96 @@ const useStyles = makeStyles((theme) => ({
     width: drawerWidth,
   },
   drawerHeader: {
-    display: "flex",
-    alignItems: "center",
-    padding: theme.spacing(0, 1),
+    display: 'flex',
+    alignItems: 'center',
+    padding: theme.spacing (0, 1),
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
-    justifyContent: "flex-end",
+    justifyContent: 'flex-end',
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing(3),
-    transition: theme.transitions.create("margin", {
+    padding: theme.spacing (3),
+    transition: theme.transitions.create ('margin', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
     marginLeft: -drawerWidth,
   },
   contentShift: {
-    transition: theme.transitions.create("margin", {
+    transition: theme.transitions.create ('margin', {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
     }),
     marginLeft: 0,
   },
   placeholder: {
-    display: "flex",
-    "justify-content": "center",
-    "align-items": "center",
-    height: "80vh",
-    "flex-direction": "column",
+    display: 'flex',
+    'justify-content': 'center',
+    'align-items': 'center',
+    height: '80vh',
+    'flex-direction': 'column',
   },
 }));
 
-export default function PersistentDrawerLeft() {
-  const classes = useStyles();
-  const theme = useTheme();
-  const [appLoaded, setLoaded] = React.useState(false);
-  const [open, setOpen] = React.useState(false);
-  const [openAddCharacter, setOpenAddCharacter] = React.useState(false);
-  const [openAddMonster, setOpenAddMonster] = React.useState(false);
-  const [openEmptyReminder, setOpenEmptyReminder] = React.useState(false);
-  const [characterList, setCharacterList] = React.useState([]);
-  const [monsterList, setMonsterList] = React.useState([]);
-  const [spellList, setSpellList] = React.useState([]);
-  const [initiativeList, setInitiativeList] = React.useState([]);
-  const [monsterProgress, setMonsterProgress] = React.useState(0);
-  const [spellProgress, setSpellProgress] = React.useState(0);
+export default function PersistentDrawerLeft () {
+  const classes = useStyles ();
+  const theme = useTheme ();
+  const [appLoaded, setLoaded] = React.useState (false);
+  const [open, setOpen] = React.useState (false);
+  const [openAddCharacter, setOpenAddCharacter] = React.useState (false);
 
-  useEffect(() => {
+  const [openCreateCharacter, setOpenCreateCharacter] = React.useState (false);
+
+  const [openAddMonster, setOpenAddMonster] = React.useState (false);
+  const [openEmptyReminder, setOpenEmptyReminder] = React.useState (false);
+  const [characterList, setCharacterList] = React.useState ([]);
+  const [monsterList, setMonsterList] = React.useState ([]);
+  const [spellList, setSpellList] = React.useState ([]);
+  const [initiativeList, setInitiativeList] = React.useState ([]);
+  const [monsterProgress, setMonsterProgress] = React.useState (0);
+  const [spellProgress, setSpellProgress] = React.useState (0);
+
+  useEffect (() => {
     let tasks = [];
-    tasks.push(getAllMonster());
+    tasks.push (getAllMonster ());
     //tasks.push(getAllSpells());
-    forkJoin(tasks).subscribe(
-      (tasksResult) => {
-        forkJoin(tasksResult.flat()).subscribe(
-          (data) => {
+    forkJoin (tasks).subscribe (
+      tasksResult => {
+        forkJoin (tasksResult.flat ()).subscribe (
+          data => {
             let monsterArr = [];
             let spellArr = [];
-            data.forEach((item) => {
-              monsterArr.push(item);
+            data.forEach (item => {
+              monsterArr.push (item);
             });
-            handleAppendMonsterList(monsterArr);
+            handleAppendMonsterList (monsterArr);
             //setSpellList (spellArr);
-            setLoaded(true);
+            setLoaded (true);
           },
-          (err) => {
-            alert(err);
-            setLoaded(true);
+          err => {
+            alert (err);
+            setLoaded (true);
           }
         );
       },
-      (err) => {
-        alert("Failed to load monsters from api" + err.message);
-        setLoaded(true);
+      err => {
+        alert ('Failed to load monsters from api' + err.message);
+        setLoaded (true);
       }
     );
   }, []);
 
   const getAllMonster = () => {
-    return loadMonsters().pipe(
-      map((monsterList) => {
+    return loadMonsters ().pipe (
+      map (monsterList => {
         let count = 0;
-        return monsterList.results.map((monster) => {
-          return loadMonsterData(monster.index).pipe(
-            map((monster) => {
-              handleIncrementMonsterProgress(monsterList.count, count);
+        return monsterList.results.map (monster => {
+          return loadMonsterData (monster.index).pipe (
+            map (monster => {
+              handleIncrementMonsterProgress (monsterList.count, count);
               count++;
-              monster.type = capitalize(monster.type);
+              monster.type = capitalize (monster.type);
               return monster;
             })
           );
@@ -203,148 +208,156 @@ export default function PersistentDrawerLeft() {
   //   );
   // };
 
-  const handleAppendMonsterList = (appendList) => {
+  const handleAppendMonsterList = appendList => {
     let newList = [];
-    Object.assign(newList, monsterList);
-    appendList.forEach((monster) => {
+    Object.assign (newList, monsterList);
+    appendList.forEach (monster => {
       monster.initiative = 0;
       monster.isPlayer = false;
       monster.initiative = 0;
       monster.statuses = [];
       monster.damage = 0;
-      newList.push(monster);
+      newList.push (monster);
     });
 
-    setMonsterList(newList);
+    setMonsterList (newList);
   };
 
-  const handleAppendCharacterList = (appendList) => {
+  const handleAppendCharacterList = appendList => {
     let newList = [];
-    Object.assign(newList, characterList);
-    appendList.forEach((character) => {
+    Object.assign (newList, characterList);
+    appendList.forEach (character => {
       character.initiative = 0;
-      newList.push(character);
+      newList.push (character);
     });
-    setCharacterList(newList);
+    setCharacterList (newList);
   };
 
   const handleIncrementMonsterProgress = (size, position) => {
-    setMonsterProgress((position / size) * 100);
+    setMonsterProgress (position / size * 100);
   };
 
   const handleIncrementSpellProgress = (size, position) => {
-    setSpellProgress((position / size) * 100);
+    setSpellProgress (position / size * 100);
   };
 
   const handleDrawerOpen = () => {
-    setOpen(true);
+    setOpen (true);
   };
 
   const handleDrawerClose = () => {
-    setOpen(false);
+    setOpen (false);
   };
 
   const handleAddCharacterClick = () => {
     if (characterList.length === 0) {
-      handleEmptyReminderOpen();
+      handleEmptyReminderOpen ();
     } else {
-      handleAddCharacterOpen();
+      handleAddCharacterOpen ();
     }
   };
 
   const handleAddMonsterClick = () => {
     if (monsterList.length === 0) {
-      handleEmptyReminderOpen();
+      handleEmptyReminderOpen ();
     } else {
-      handleAddMonsterOpen();
+      handleAddMonsterOpen ();
     }
   };
 
   const handleAddCharacterOpen = () => {
-    setOpenAddCharacter(true);
+    setOpenAddCharacter (true);
   };
 
   const handleAddCharacterClose = () => {
-    setOpenAddCharacter(false);
+    setOpenAddCharacter (false);
+  };
+
+  const handleCreateCharacterOpen = () => {
+    setOpenCreateCharacter (true);
+  };
+
+  const handleCreateCharacterClose = () => {
+    setOpenCreateCharacter (false);
   };
 
   const handleAddMonsterOpen = () => {
-    setOpenAddMonster(true);
+    setOpenAddMonster (true);
   };
 
   const handleAddMonsterClose = () => {
-    setOpenAddMonster(false);
+    setOpenAddMonster (false);
   };
 
   const handleEmptyReminderOpen = () => {
-    setOpenEmptyReminder(true);
+    setOpenEmptyReminder (true);
   };
 
   const handleEmptyReminderClose = () => {
-    setOpenEmptyReminder(false);
+    setOpenEmptyReminder (false);
   };
 
-  const handleRemove = (character) => {
-    const newList = initiativeList.filter((item) => item.id !== character.id);
-    setInitiativeList(newList);
+  const handleRemove = character => {
+    const newList = initiativeList.filter (item => item.id !== character.id);
+    setInitiativeList (newList);
   };
 
   const handleInitAdvance = () => {
     let newList = [];
-    Object.assign(newList, initiativeList);
-    newList.push(newList.shift());
-    setInitiativeList(newList);
+    Object.assign (newList, initiativeList);
+    newList.push (newList.shift ());
+    setInitiativeList (newList);
   };
 
   const handleRollInit = () => {
     let newList = [];
-    initiativeList.map((character) => {
-      let dexMod = Math.floor((character.dexterity - 10) / 2);
-      let d20 = Math.floor(Math.random() * 20) + 1;
+    initiativeList.map (character => {
+      let dexMod = Math.floor ((character.dexterity - 10) / 2);
+      let d20 = Math.floor (Math.random () * 20) + 1;
       character.initiative = d20 + dexMod;
 
       let tempChar = {};
-      Object.assign(tempChar, character);
+      Object.assign (tempChar, character);
 
-      newList.push(tempChar);
+      newList.push (tempChar);
     });
-    sortInitList(newList);
+    sortInitList (newList);
 
-    setInitiativeList(newList);
+    setInitiativeList (newList);
   };
 
-  const sortInitList = (list) => {
-    list.sort(function (a, b) {
+  const sortInitList = list => {
+    list.sort (function (a, b) {
       return b.initiative - a.initiative;
     });
   };
 
   const handleLoadFile = () => {
-    loadFile((result) => {
+    loadFile (result => {
       let monsterArr = [];
       let charArr = [];
-      result.forEach((item) => {
+      result.forEach (item => {
         if (item.isPlayer === false) {
-          monsterArr.push(item);
+          monsterArr.push (item);
         } else {
-          charArr.push(item);
+          charArr.push (item);
         }
       });
-      handleAppendMonsterList(monsterArr);
-      handleAppendCharacterList(charArr);
+      handleAppendMonsterList (monsterArr);
+      handleAppendCharacterList (charArr);
     });
   };
 
-  const capitalize = (s) => {
-    if (typeof s !== "string") return "";
-    return s.charAt(0).toUpperCase() + s.slice(1);
+  const capitalize = s => {
+    if (typeof s !== 'string') return '';
+    return s.charAt (0).toUpperCase () + s.slice (1);
   };
   return (
     <div className={classes.root}>
       <CssBaseline />
       <AppBar
         position="fixed"
-        className={clsx(classes.appBar, {
+        className={clsx (classes.appBar, {
           [classes.appBarShift]: open,
         })}
       >
@@ -354,9 +367,9 @@ export default function PersistentDrawerLeft() {
             aria-label="open drawer"
             onClick={handleDrawerOpen}
             edge="start"
-            className={clsx(classes.menuButton, open && classes.hide)}
+            className={clsx (classes.menuButton, open && classes.hide)}
           >
-            <MenuOpenIcon style={{ fontSize: 40 }} />
+            <MenuOpenIcon style={{fontSize: 40}} />
           </IconButton>
           <Typography variant="h6" noWrap>
             Initiative Tracker
@@ -374,16 +387,14 @@ export default function PersistentDrawerLeft() {
       >
         <div className={classes.drawerHeader}>
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "ltr" ? (
-              <ChevronLeftIcon />
-            ) : (
-              <ChevronRightIcon />
-            )}
+            {theme.direction === 'ltr'
+              ? <ChevronLeftIcon />
+              : <ChevronRightIcon />}
           </IconButton>
         </div>
         <Divider />
         <List>
-          {["Import Characters"].map((text, index) => (
+          {['Import Characters'].map ((text, index) => (
             <ListItem button key={text} onClick={handleLoadFile}>
               <ListItemIcon>
                 <PeopleIcon />
@@ -391,25 +402,37 @@ export default function PersistentDrawerLeft() {
               <ListItemText primary={text} />
             </ListItem>
           ))}
-          <input type="file" id="my_file" style={{ display: "none" }} />
+          <input type="file" id="my_file" style={{display: 'none'}} />
         </List>
         <List>
+
           <ListItem
             button
-            key={"Add Character"}
+            key={'Create Character'}
+            onClick={handleCreateCharacterOpen}
+          >
+            <ListItemIcon>
+              <PersonAddIcon />
+            </ListItemIcon>
+            <ListItemText primary={'Create Character'} />
+          </ListItem>
+
+          <ListItem
+            button
+            key={'Add Character'}
             onClick={handleAddCharacterClick}
           >
             <ListItemIcon>
               <PersonAddIcon />
             </ListItemIcon>
-            <ListItemText primary={"Add Character"} />
+            <ListItemText primary={'Add Character'} />
           </ListItem>
 
-          <ListItem button key={"Add Monster"} onClick={handleAddMonsterClick}>
+          <ListItem button key={'Add Monster'} onClick={handleAddMonsterClick}>
             <ListItemIcon>
               <PersonAddIcon />
             </ListItemIcon>
-            <ListItemText primary={"Add Monster"} />
+            <ListItemText primary={'Add Monster'} />
           </ListItem>
 
           <AddMonster
@@ -425,16 +448,21 @@ export default function PersistentDrawerLeft() {
             onClose={handleAddCharacterClose}
             setInitiativeList={setInitiativeList}
             initList={initiativeList}
-            charList={characterList.filter((char) => char.isPlayer === true)}
+            charList={characterList.filter (char => char.isPlayer === true)}
           />
           <EmptyReminder
             openEmptyReminder={openEmptyReminder}
             onClose={handleEmptyReminderClose}
           />
+          <CreateChar
+            onClose={handleCreateCharacterClose}
+            openCreateCharacter={openCreateCharacter}
+            
+          />
         </List>
         <Divider />
         <List>
-          {["Bestiary"].map((text) => (
+          {['Bestiary'].map (text => (
             <ListItem button key={text}>
               <ListItemIcon>{<MenuBookIcon />}</ListItemIcon>
               <ListItemText primary={text} />
@@ -443,22 +471,21 @@ export default function PersistentDrawerLeft() {
         </List>
       </Drawer>
       <main
-        className={clsx(classes.content, {
+        className={clsx (classes.content, {
           [classes.contentShift]: open,
         })}
       >
         <div className={classes.drawerHeader} />
-        {appLoaded === false && (
+        {appLoaded === false &&
           <div>
             Loading Monsters...
             <LinearProgressWithLabel value={monsterProgress} />
             Loading Spells...
             <LinearProgressWithLabel value={spellProgress} />
-          </div>
-        )}
-        {appLoaded === true && (
+          </div>}
+        {appLoaded === true &&
           <div>
-            {initiativeList.length !== 0 && (
+            {initiativeList.length !== 0 &&
               <InitiativeTracker
                 handleRemove={handleRemove}
                 handleInitAdvance={handleInitAdvance}
@@ -466,14 +493,13 @@ export default function PersistentDrawerLeft() {
                 handleRollInit={handleRollInit}
                 sortInitList={sortInitList}
                 setInitiativeList={setInitiativeList}
-              />
-            )}
-            {initiativeList.length === 0 && (
+              />}
+            {initiativeList.length === 0 &&
               <div className={classes.placeholder}>
                 <Grow in={true}>
                   <div>
                     <SvgIcon
-                      style={{ width: "65vw", height: "65vh" }}
+                      style={{width: '65vw', height: '65vh'}}
                       color="action"
                     >
                       <Dragon />
@@ -481,14 +507,12 @@ export default function PersistentDrawerLeft() {
                   </div>
                 </Grow>
                 <div>
-                  <p style={{ fontSize: "2em" }}>
+                  <p style={{fontSize: '2em'}}>
                     The inn is empty. Recruit some more adventurers.
                   </p>
                 </div>
-              </div>
-            )}
-          </div>
-        )}
+              </div>}
+          </div>}
       </main>
     </div>
   );
