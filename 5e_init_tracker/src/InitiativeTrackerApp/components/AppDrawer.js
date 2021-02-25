@@ -34,6 +34,9 @@ import AddCharacter from './Modals/AddCharacter';
 import AddMonster from './Modals/AddMonster';
 import EmptyReminder from './Modals/EmptyReminder';
 import CreateChar from './Modals/CreateChar';
+import AccessibilityIcon from '@material-ui/icons/Accessibility';
+import CreateIcon from '@material-ui/icons/Create';
+import PublishIcon from '@material-ui/icons/Publish';
 
 function LinearProgressWithLabel (props) {
   return (
@@ -397,7 +400,7 @@ export default function PersistentDrawerLeft () {
           {['Import Characters'].map ((text, index) => (
             <ListItem button key={text} onClick={handleLoadFile}>
               <ListItemIcon>
-                <PeopleIcon />
+                <PublishIcon/>
               </ListItemIcon>
               <ListItemText primary={text} />
             </ListItem>
@@ -412,7 +415,7 @@ export default function PersistentDrawerLeft () {
             onClick={handleCreateCharacterOpen}
           >
             <ListItemIcon>
-              <PersonAddIcon />
+              <CreateIcon />
             </ListItemIcon>
             <ListItemText primary={'Create Character'} />
           </ListItem>
