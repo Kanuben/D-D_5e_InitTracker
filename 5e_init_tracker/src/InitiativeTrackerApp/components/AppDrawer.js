@@ -355,6 +355,10 @@ export default function PersistentDrawerLeft () {
     if (typeof s !== 'string') return '';
     return s.charAt (0).toUpperCase () + s.slice (1);
   };
+
+//Check the character list state
+//console.log("Character List" + JSON.stringify(characterList));
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -460,6 +464,7 @@ export default function PersistentDrawerLeft () {
           <CreateChar
             onClose={handleCreateCharacterClose}
             openCreateCharacter={openCreateCharacter}
+            handleAppendCharacterList={handleAppendCharacterList}
             
           />
         </List>

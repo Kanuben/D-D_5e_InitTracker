@@ -1,0 +1,14 @@
+{
+    "isPlayer": true,
+    "img": "none",
+    "name": "none",
+    "type": "none",
+    "level": 0,
+    "statuses": [],
+    "armor_class": 0,
+    "hit_points": 0,
+    "damage": 0,
+    "initiative": 0,
+    "initBonus": 0,
+    "dexterity": 0
+  }
