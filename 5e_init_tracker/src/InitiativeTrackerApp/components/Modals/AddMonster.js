@@ -206,6 +206,7 @@ export default function AddMonster(props) {
               }}
               autoFocus
               color="primary"
+              variant="contained"
             >
               Add To List
             </Button>

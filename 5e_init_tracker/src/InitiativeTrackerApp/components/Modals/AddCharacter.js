@@ -199,6 +199,7 @@ export default function AddCharacter(props) {
               }}
               autoFocus
               color="primary"
+              variant="contained"
             >
               Add To List
             </Button>

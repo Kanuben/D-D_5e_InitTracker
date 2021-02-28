@@ -260,7 +260,7 @@ export default function CreateChar (props) {
         classes={{paper: classes.dialogSize}}
       >
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-          Create Character
+          Create Monster
         </DialogTitle>
         <DialogContent>
           <div>

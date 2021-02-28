@@ -75,7 +75,7 @@ export default function CharacterCard(props) {
 
   const handleOpenNewMonsterWindow = () => {
     if (props.character.isPlayer === false) {
-      ipcRenderer.send("new-window", "monster", props.character.index);
+      ipcRenderer.send("new-window", "monster", props.character.name);
     }
   };
 

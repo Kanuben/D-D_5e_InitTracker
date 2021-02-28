@@ -15,6 +15,12 @@ import { Link } from "react-router-dom";
 import { map } from "rxjs/operators";
 import { loadMonsterData } from "../../services/MonsterService";
 import Checkbox from "@material-ui/core/Checkbox";
+import {
+  translateMonsters,
+  monsterFileExists,
+  readMonsterFile,
+  writeMonsterFile
+} from "../utilities/MonsterTranslator";
 
 const useStyles = makeStyles((theme) => ({
   cardwidth: {
@@ -94,13 +100,15 @@ export default function MonsterInfo(props) {
   const [monster, setMonster] = React.useState();
 
   useEffect(() => {
-    loadMonsterData(props.match.params.id)
-      .pipe(
-        map((monster) => {
-          setMonster(monster);
-        })
-      )
-      .subscribe();
+    let monsterList = readMonsterFile();
+    setMonster(...monsterList.filter(e => e.name === props.match.params.id));
+    // loadMonsterData(props.match.params.id)
+    //   .pipe(
+    //     map((monster) => {
+    //       setMonster(monster);
+    //     })
+    //   )
+    //   .subscribe();
   }, props);
 
   if (monster) {
@@ -120,19 +128,19 @@ export default function MonsterInfo(props) {
       { name: "CHA", value: chaMod }
     );
     monster.proficiencies.forEach((element) => {
-      if (element.proficiency.name.includes("Saving Throw:")) {
-        element.proficiency.name = element.proficiency.name.replace(
+      if (element.name.includes("Saving Throw:")) {
+        element.name = element.name.replace(
           "Saving Throw: ",
           ""
         );
         let index = savingThrows.findIndex(
-          (item) => item.name === element.proficiency.name
+          (item) => item.name === element.name
         );
         savingThrows[index].value = element.value;
       }
-      if (element.proficiency.name.includes("Skill:")) {
+      if (element.name.includes("Skill:")) {
         skills.push({
-          name: (element.proficiency.name = element.proficiency.name.replace(
+          name: (element.name = element.name.replace(
             "Skill:",
             ""
           )),
@@ -160,27 +168,21 @@ export default function MonsterInfo(props) {
         condidtionImmunities.push(item.name);
       });
     }
+    if (monster.spell_casting !== undefined) {
+      spells = monster.spell_casting.spells;
+      spellSlots = monster.spell_casting.slots
+    }
     if (monster.special_abilities !== undefined) {
       monster.special_abilities.forEach((item) => {
         specialAbilities.push(item);
-        if (item.name == "Spellcasting") {
-          spells.push(...item.spellcasting.spells);
-          let tempSlots = [...item.desc.matchAll("([1-9]* slot[s]*)")];
-
-          tempSlots.forEach((slots) => {
-            let numSlots = parseInt(slots[0].match("[1-9]"));
-            let tempArr = [];
-            for (let i = 0; i < numSlots; i++) {
-              tempArr.push("X");
-            }
-            spellSlots.push(tempArr);
-          });
-        }
       });
     }
+
     if (spells) {
       spells.forEach((spell) => {
-        spell.url = spell.url.substring(spell.url.lastIndexOf("/") + 1);
+        if(spell.url){
+          spell.url = spell.url.substring(spell.url.lastIndexOf("/") + 1);
+        }
         switch (spell.level) {
           case 0:
             cantrips.push(spell);
@@ -222,7 +224,7 @@ export default function MonsterInfo(props) {
       });
     }
     if (monster.legendary_actions !== undefined) {
-      monster.legendary_actions.forEach((item) => {
+      monster.legendary_actions.actions.forEach((item) => {
         legendaryActions.push(item);
       });
     }
@@ -487,7 +489,7 @@ export default function MonsterInfo(props) {
                 <ListItem>
                   <div style={{ display: "inline-flex" }}>
                     <Typography variant="body1">Level 1:</Typography>
-                    {level1Spells.map((item, index) => (
+                    {level1Spells.map((item) => (
                       <div>
                         <span>&nbsp;</span>
                         <Link to={"/spell/" + item.url}>{item.name}</Link>
@@ -501,6 +503,7 @@ export default function MonsterInfo(props) {
                   ))}
                 </ListItem>
               )}
+
               {level2Spells.length !== 0 && (
                 <ListItem>
                   <div style={{ display: "inline-flex" }}>

@@ -1,8 +1,8 @@
 {
     "isPlayer": true,
-    "img": "none",
-    "name": "none",
-    "type": "none",
+    "img": "",
+    "name": "",
+    "type": "",
     "level": 0,
     "statuses": [],
     "armor_class": 0,
