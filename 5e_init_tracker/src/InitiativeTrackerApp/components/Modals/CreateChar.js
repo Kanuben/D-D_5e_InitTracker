@@ -183,14 +183,14 @@ export default function CreateChar (props) {
   };
 
   const handleCreateChar = () => {
-    let newCharacter = [CharacterTemplate];
+    let newCharacter = {...CharacterTemplate};
     newCharacter.name = name;
     newCharacter.hit_points = hp;
     newCharacter.armor_class = ac;
     newCharacter.initBonus = initBonus;
     newCharacter.type = selectedClasses;
 
-    props.handleAppendCharacterList (newCharacter);
+    props.handleAppendCharacterList ([newCharacter]);
     handleClose ();
   };
 
