@@ -11,6 +11,7 @@ import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import IconButton from "@material-ui/core/IconButton";
 import ConditionPicker from "./Modals/ConditionPicker";
 import VisibilityIcon from "@material-ui/icons/Visibility";
+import CasinoIcon from '@material-ui/icons/Casino';
 
 const useStyles = makeStyles((theme) => ({
   cardwidth: {
@@ -173,22 +174,29 @@ export default function CharacterCard(props) {
 
             <Grid className={classes.col} item xs>
               <div>
-                <Typography variant="subtitle2" gutterBottom>
-                  Status
-                </Typography>
                 <div
                   style={{
                     display: "inline-flex",
                     alignItems: "center",
-                    flexWrap: "wrap",
                   }}
                 >
+                  <Typography variant="subtitle2" gutterBottom>
+                    Status
+                  </Typography>
                   <IconButton
                     onClick={handleConditionPickerOpen}
                     aria-label="delete"
                   >
                     <AddCircleOutlineIcon />
                   </IconButton>
+                </div>
+                <br></br>
+                <div
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                  }}
+                >
                   <ConditionPicker
                     character={props.character}
                     onOpen={openConditionPicker}
@@ -211,10 +219,10 @@ export default function CharacterCard(props) {
 
             <Grid className={classes.col} item xs>
               <div>
-                <Typography variant="subtitle2" gutterBottom>
+                <Typography variant="subtitle2" >
                   AC
                 </Typography>
-                <Typography variant="h4" gutterBottom>
+                <Typography variant="h4" >
                   {props.character.armor_class}
                 </Typography>
               </div>
@@ -222,46 +230,68 @@ export default function CharacterCard(props) {
 
             <Grid className={classes.col} item xs>
               <div>
+              <div
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                }}
+              >
                 <Typography variant="subtitle2" gutterBottom>
                   Damage
                 </Typography>
-                <div
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    flexWrap: "wrap",
-                  }}
+                <IconButton
+                  onClick={handleVisibilityFullDamage}
+                  aria-label="delete"
                 >
-                  <IconButton
-                    onClick={handleVisibilityFullDamage}
-                    aria-label="delete"
-                  >
-                    <VisibilityIcon />
-                  </IconButton>
-                  {showFullDamage === false && (
-                    <TextField
-                      className={classes.textField}
-                      size="small"
-                      onChange={handleDamageChange}
-                      value={damage}
-                      id="outlined-basic"
-                      variant="outlined"
-                    />
-                  )}
-                  {showFullDamage === true && (
-                    <Typography variant="h4">
-                      {damage}/{props.character.hit_points}
-                    </Typography>
-                  )}
-                </div>
+                  <VisibilityIcon />
+                </IconButton>
+              </div>
+              <br></br>
+              <div
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                }}
+              >
+                {showFullDamage === false && (
+                  <TextField
+                    className={classes.textField}
+                    size="small"
+                    onChange={handleDamageChange}
+                    value={damage}
+                    id="outlined-basic"
+                    variant="outlined"
+                  />
+                )}
+                {showFullDamage === true && (
+                  <Typography variant="h4">
+                    {damage}/{props.character.hit_points}
+                  </Typography>
+                )}
+              </div>
               </div>
             </Grid>
 
             <Grid className={classes.col} item xs>
               <div>
+              <div
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                }}
+              >
                 <Typography variant="subtitle2" gutterBottom>
                   Initiative
                 </Typography>
+                <IconButton
+                  aria-label="delete"
+                >
+                  <CasinoIcon />
+                </IconButton>
+                </div>
+                <br></br>
+                <div>
                 <TextField
                   className={classes.textField}
                   size="small"
@@ -272,6 +302,7 @@ export default function CharacterCard(props) {
                   id="outlined-basic"
                   variant="outlined"
                 />
+                </div>
               </div>
             </Grid>
           </Grid>

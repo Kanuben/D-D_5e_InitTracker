@@ -6,7 +6,7 @@ import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
@@ -19,10 +19,13 @@ import {
   translateMonsters,
   monsterFileExists,
   readMonsterFile,
-  writeMonsterFile
+  writeMonsterFile,
 } from "../utilities/MonsterTranslator";
 
 const useStyles = makeStyles((theme) => ({
+  link:{
+    color: theme.palette.secondary.main
+  },
   cardwidth: {
     width: "inherit",
   },
@@ -96,12 +99,14 @@ export default function MonsterInfo(props) {
   let actions = [];
   let legendaryActions = [];
 
-  const classes = useStyles();
+  const theme = useTheme();
+  console.log(theme);
+  const classes = useStyles(theme);
   const [monster, setMonster] = React.useState();
 
   useEffect(() => {
     let monsterList = readMonsterFile();
-    setMonster(...monsterList.filter(e => e.name === props.match.params.id));
+    setMonster(...monsterList.filter((e) => e.name === props.match.params.id));
     // loadMonsterData(props.match.params.id)
     //   .pipe(
     //     map((monster) => {
@@ -112,12 +117,12 @@ export default function MonsterInfo(props) {
   }, props);
 
   if (monster) {
-    strMod = Math.floor((monster.strength - 10) / 2);
-    dexMod = Math.floor((monster.dexterity - 10) / 2);
-    conMod = Math.floor((monster.constitution - 10) / 2);
-    intMod = Math.floor((monster.intelligence - 10) / 2);
-    wisMod = Math.floor((monster.wisdom - 10) / 2);
-    chaMod = Math.floor((monster.charisma - 10) / 2);
+    strMod = Math.floor((monster.stats.strength - 10) / 2);
+    dexMod = Math.floor((monster.stats.dexterity - 10) / 2);
+    conMod = Math.floor((monster.stats.constitution - 10) / 2);
+    intMod = Math.floor((monster.stats.intelligence - 10) / 2);
+    wisMod = Math.floor((monster.stats.wisdom - 10) / 2);
+    chaMod = Math.floor((monster.stats.charisma - 10) / 2);
 
     savingThrows.push(
       { name: "STR", value: strMod },
@@ -129,10 +134,7 @@ export default function MonsterInfo(props) {
     );
     monster.proficiencies.forEach((element) => {
       if (element.name.includes("Saving Throw:")) {
-        element.name = element.name.replace(
-          "Saving Throw: ",
-          ""
-        );
+        element.name = element.name.replace("Saving Throw: ", "");
         let index = savingThrows.findIndex(
           (item) => item.name === element.name
         );
@@ -140,10 +142,7 @@ export default function MonsterInfo(props) {
       }
       if (element.name.includes("Skill:")) {
         skills.push({
-          name: (element.name = element.name.replace(
-            "Skill:",
-            ""
-          )),
+          name: (element.name = element.name.replace("Skill:", "")),
           value: element.value,
         });
       }
@@ -170,7 +169,7 @@ export default function MonsterInfo(props) {
     }
     if (monster.spell_casting !== undefined) {
       spells = monster.spell_casting.spells;
-      spellSlots = monster.spell_casting.slots
+      spellSlots = monster.spell_casting.slots;
     }
     if (monster.special_abilities !== undefined) {
       monster.special_abilities.forEach((item) => {
@@ -180,7 +179,7 @@ export default function MonsterInfo(props) {
 
     if (spells) {
       spells.forEach((spell) => {
-        if(spell.url){
+        if (spell.url) {
           spell.url = spell.url.substring(spell.url.lastIndexOf("/") + 1);
         }
         switch (spell.level) {
@@ -229,7 +228,7 @@ export default function MonsterInfo(props) {
       });
     }
 
-    senses = JSON.stringify(monster.senses);
+    senses = monster.senses;
     languages = monster.languages;
     cr = monster.challenge_rating;
   }
@@ -253,18 +252,6 @@ export default function MonsterInfo(props) {
       subtype = subtype.concat("(" + monster.subtype + ")");
 
     return subtype;
-  };
-
-  const handleSenses = () => {
-    //gross code should see if we can fix
-    let temp = senses
-      .toString()
-      .replaceAll("{", "")
-      .replaceAll("}", "")
-      .replaceAll('"', "")
-      .replaceAll("_", " ")
-      .replaceAll(",", ", ");
-    return temp;
   };
 
   return (
@@ -341,22 +328,22 @@ export default function MonsterInfo(props) {
                 spacing={1}
               >
                 <Grid item xs={2}>
-                  {monster.strength} ({strMod})
+                  {monster.stats.strength} ({strMod})
                 </Grid>
                 <Grid item xs={2}>
-                  {monster.dexterity} ({dexMod})
+                  {monster.stats.dexterity} ({dexMod})
                 </Grid>
                 <Grid item xs={2}>
-                  {monster.constitution} ({conMod})
+                  {monster.stats.constitution} ({conMod})
                 </Grid>
                 <Grid item xs={2}>
-                  {monster.intelligence} ({intMod})
+                  {monster.stats.intelligence} ({intMod})
                 </Grid>
                 <Grid item xs={2}>
-                  {monster.wisdom} ({wisMod})
+                  {monster.stats.wisdom} ({wisMod})
                 </Grid>
                 <Grid item xs={2}>
-                  {monster.charisma} ({chaMod})
+                  {monster.stats.charisma} ({chaMod})
                 </Grid>
               </Grid>
 
@@ -427,23 +414,24 @@ export default function MonsterInfo(props) {
                 <Typography variant="caption">{immunities}</Typography>
               </ListItem>
             ))}
-            <div style={{ display: "flex" }}>
-              <Typography variant="subtitle2">
-                Senses
-                <Typography style={{ marginLeft: "10px" }} variant="caption">
-                  {handleSenses()}
-                </Typography>
-              </Typography>
-            </div>
-
-            {languages.length !== 0 && (
+            {senses.length !== 0 && (
               <div style={{ display: "flex" }}>
-                <Typography variant="subtitle2">
-                  Languages
+                <Typography variant="subtitle2">Senses</Typography>
+                {senses.map((sense) => (
                   <Typography style={{ marginLeft: "10px" }} variant="caption">
-                    {languages}
+                    {sense.name}&nbsp;{sense.value},
                   </Typography>
-                </Typography>
+                ))}
+              </div>
+            )}
+                {languages.length !== 0 && (
+              <div style={{ display: "flex" }}>
+                <Typography variant="subtitle2">Languages</Typography>
+                {languages.map((language) => (
+                  <Typography style={{ marginLeft: "10px" }} variant="caption">
+                    {language},
+                  </Typography>
+                ))}
               </div>
             )}
 
@@ -475,9 +463,9 @@ export default function MonsterInfo(props) {
                   <div style={{ display: "inline-flex" }}>
                     <Typography variant="body1">Cantrips:</Typography>
                     {cantrips.map((item, index) => (
-                      <div>
+                      <div >
                         <span>&nbsp;</span>
-                        <Link to={"/spell/" + item.url}>{item.name}</Link>
+                        <Link className={classes.link} to={"/spell/" + item.url}>{item.name}</Link>
                         <span>,</span>
                       </div>
                     ))}
@@ -490,9 +478,9 @@ export default function MonsterInfo(props) {
                   <div style={{ display: "inline-flex" }}>
                     <Typography variant="body1">Level 1:</Typography>
                     {level1Spells.map((item) => (
-                      <div>
+                      <div color="inherit">
                         <span>&nbsp;</span>
-                        <Link to={"/spell/" + item.url}>{item.name}</Link>
+                        <Link className={classes.link} to={"/spell/" + item.url}>{item.name}</Link>
                         <span>,</span>
                       </div>
                     ))}
@@ -511,7 +499,7 @@ export default function MonsterInfo(props) {
                     {level2Spells.map((item, index) => (
                       <div>
                         <span>&nbsp;</span>
-                        <Link to={"/spell/" + item.url}>{item.name}</Link>
+                        <Link className={classes.link} to={"/spell/" + item.url}>{item.name}</Link>
                         <span>,</span>
                       </div>
                     ))}
@@ -528,7 +516,7 @@ export default function MonsterInfo(props) {
                     {level3Spells.map((item, index) => (
                       <div>
                         <span>&nbsp;</span>
-                        <Link to={"/spell/" + item.url}>{item.name}</Link>
+                        <Link className={classes.link} to={"/spell/" + item.url}>{item.name}</Link>
                         <span>,</span>
                       </div>
                     ))}
@@ -545,7 +533,7 @@ export default function MonsterInfo(props) {
                     {level4Spells.map((item, index) => (
                       <div>
                         <span>&nbsp;</span>
-                        <Link to={"/spell/" + item.url}>{item.name}</Link>
+                        <Link className={classes.link} to={"/spell/" + item.url}>{item.name}</Link>
                         <span>,</span>
                       </div>
                     ))}
@@ -562,7 +550,7 @@ export default function MonsterInfo(props) {
                     {level5Spells.map((item, index) => (
                       <div>
                         <span>&nbsp;</span>
-                        <Link to={"/spell/" + item.url}>{item.name}</Link>
+                        <Link className={classes.link} to={"/spell/" + item.url}>{item.name}</Link>
                         <span>,</span>
                       </div>
                     ))}
@@ -579,7 +567,7 @@ export default function MonsterInfo(props) {
                     {level6Spells.map((item, index) => (
                       <div>
                         <span>&nbsp;</span>
-                        <Link to={"/spell/" + item.url}>{item.name}</Link>
+                        <Link className={classes.link} to={"/spell/" + item.url}>{item.name}</Link>
                         <span>,</span>
                       </div>
                     ))}
@@ -596,7 +584,7 @@ export default function MonsterInfo(props) {
                     {level7Spells.map((item, index) => (
                       <div>
                         <span>&nbsp;</span>
-                        <Link to={"/spell/" + item.url}>{item.name}</Link>
+                        <Link className={classes.link} to={"/spell/" + item.url}>{item.name}</Link>
                         <span>,</span>
                       </div>
                     ))}
@@ -613,7 +601,7 @@ export default function MonsterInfo(props) {
                     {level8Spells.map((item, index) => (
                       <div>
                         <span>&nbsp;</span>
-                        <Link to={"/spell/" + item.url}>{item.name}</Link>
+                        <Link className={classes.link} to={"/spell/" + item.url}>{item.name}</Link>
                         <span>,</span>
                       </div>
                     ))}
@@ -630,7 +618,7 @@ export default function MonsterInfo(props) {
                     {level9Spells.map((item, index) => (
                       <div>
                         <span>&nbsp;</span>
-                        <Link to={"/spell/" + item.url}>{item.name}</Link>
+                        <Link className={classes.link} to={"/spell/" + item.url}>{item.name}</Link>
                         <span>,</span>
                       </div>
                     ))}

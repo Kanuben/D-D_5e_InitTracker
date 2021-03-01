@@ -18,6 +18,7 @@ export const translateMonsters = (monsters) => {
     translatedMonster.allignment = monster.allignment;
     translatedMonster.armor_class = monster.armor_class;
     translatedMonster.hit_points = monster.hit_points;
+    translatedMonster.hit_dice = monster.hit_dice;
     translatedMonster.speed.fly = monster.speed.fly;
     translatedMonster.speed.swim = monster.speed.swim;
     translatedMonster.speed.walk = monster.speed.walk;
@@ -48,7 +49,7 @@ export const translateMonsters = (monsters) => {
     translatedMonster.senses = [];
     Object.entries(monster.senses).forEach((element) => {
       translatedMonster.senses.push({
-        name: element[0],
+        name: element[0].replace('_',' '),
         value: element[1],
       });
     });

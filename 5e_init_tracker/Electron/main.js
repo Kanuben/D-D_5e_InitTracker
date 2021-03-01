@@ -4,11 +4,12 @@ const path = require("path");
 const Store = require("./store.js");
 
 let mainWindow;
+let newWindow;
+
 
 const { ipcMain } = require("electron");
 ipcMain.on("new-window", (event, window, arg) => {
   if(window === "monster"){
-    console.log(window);
     let deploymentURL = `file://${path.join(
       __dirname,
       "../build/index.html#monster"
@@ -21,12 +22,13 @@ ipcMain.on("new-window", (event, window, arg) => {
         nodeIntegration: true,
       },
     });
+    newWindow.setBackgroundColor("#303030");
     newWindow.loadURL(
       isDev
         ? "http://localhost:3000/#/monster/" + arg
         : deploymentURL
     );
-    //newWindow.removeMenu();
+    newWindow.removeMenu();
     newWindow.setAlwaysOnTop(true);
   } else if(window === "condition"){
     let deploymentURL = `file://${path.join(
@@ -35,18 +37,19 @@ ipcMain.on("new-window", (event, window, arg) => {
     )}`;
     deploymentURL = deploymentURL + "/" + arg;
     newWindow = new BrowserWindow({
-      width: 800,
-      height: 600,
+      width: 600,
+      height: 400,
       webPreferences: {
         nodeIntegration: true,
       },
     });
+    newWindow.setBackgroundColor("#303030");
     newWindow.loadURL(
       isDev
         ? "http://localhost:3000/#/condition/" + arg
         : deploymentURL
     );
-    //newWindow.removeMenu();
+    newWindow.removeMenu();
     newWindow.setAlwaysOnTop(true);
   }
 });
