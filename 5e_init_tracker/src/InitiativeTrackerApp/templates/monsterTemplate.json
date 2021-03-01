@@ -60,7 +60,7 @@
     }
   ],
   "legendary_actions": {
-    "actions_per_turn": 0,
+    "actions_per_turn": [],
     "actions": [
       {
         "name": "",

@@ -98,22 +98,15 @@ export default function MonsterInfo(props) {
 
   let actions = [];
   let legendaryActions = [];
+  let legendaryActionsSlots =[];
 
   const theme = useTheme();
-  console.log(theme);
   const classes = useStyles(theme);
   const [monster, setMonster] = React.useState();
 
   useEffect(() => {
     let monsterList = readMonsterFile();
     setMonster(...monsterList.filter((e) => e.name === props.match.params.id));
-    // loadMonsterData(props.match.params.id)
-    //   .pipe(
-    //     map((monster) => {
-    //       setMonster(monster);
-    //     })
-    //   )
-    //   .subscribe();
   }, props);
 
   if (monster) {
@@ -222,9 +215,15 @@ export default function MonsterInfo(props) {
         actions.push(item);
       });
     }
-    if (monster.legendary_actions !== undefined) {
+    if (monster.legendary_actions.actions !== undefined) {
       monster.legendary_actions.actions.forEach((item) => {
         legendaryActions.push(item);
+      });
+    }
+
+    if (monster.legendary_actions.actions_per_turn !== undefined) {
+      monster.legendary_actions.actions_per_turn.forEach((item) => {
+        legendaryActionsSlots.push(item);
       });
     }
 
@@ -649,6 +648,9 @@ export default function MonsterInfo(props) {
             {legendaryActions.length !== 0 && (
               <Typography variant="h6">Legendary Actions</Typography>
             )}
+             {legendaryActionsSlots.map((item, index) => (
+                    <Checkbox />
+                  ))}
             {legendaryActions.map((item, index) => (
               <ListItem dense={true}>
                 <Typography variant="subtitle2">

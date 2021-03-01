@@ -3,7 +3,6 @@ import MonsterTemplate from "../templates/monsterTemplate.json";
 const fs = window.require("fs");
 const path = window.require("path");
 
-
 export const translateMonsters = (monsters) => {
   let translatedMonsters = [];
   monsters.forEach((monster) => {
@@ -49,7 +48,7 @@ export const translateMonsters = (monsters) => {
     translatedMonster.senses = [];
     Object.entries(monster.senses).forEach((element) => {
       translatedMonster.senses.push({
-        name: element[0].replace('_',' '),
+        name: element[0].replace("_", " "),
         value: element[1],
       });
     });
@@ -63,7 +62,7 @@ export const translateMonsters = (monsters) => {
         if (element.name === "Spellcasting") {
           translatedMonster.spell_casting = {};
           translatedMonster.spell_casting.spells = [];
-          translatedMonster.spell_casting.slots= [];
+          translatedMonster.spell_casting.slots = [];
           element.spellcasting.spells.forEach((spell) => {
             translatedMonster.spell_casting.spells.push({
               name: spell.name,
@@ -71,9 +70,7 @@ export const translateMonsters = (monsters) => {
               url: spell.url,
             });
           });
-         Object.values(
-            element.spellcasting.slots
-          ).forEach((slot) => {
+          Object.values(element.spellcasting.slots).forEach((slot) => {
             let tempArray = [];
             for (let i = 0; i < slot; i++) {
               tempArray.push("X");
@@ -105,20 +102,20 @@ export const translateMonsters = (monsters) => {
         });
       });
     }
-    translatedMonster.legendary_actions.actions = [];
     if (monster.legendary_actions) {
-      if (monster.legendary_actions.actions) {
-      } else {
-        monster.legendary_actions.forEach((element) => {
-          translatedMonster.legendary_actions.actions.push({
-            name: element.name,
-            desc: element.desc,
-          });
+      translatedMonster.legendary_actions = {};
+      translatedMonster.legendary_actions.actions_per_turn = ['X','X','X'];
+      translatedMonster.legendary_actions.actions = [];
+      monster.legendary_actions.forEach((element) => {
+        translatedMonster.legendary_actions.actions.push({
+          name: element.name,
+          desc: element.desc,
         });
-      }
+      });
     }
-    translatedMonster.lair_actions = [];
+
     if (monster.lair_actions) {
+      translatedMonster.lair_actions = [];
       monster.lair_actions.forEach((element) => {
         translatedMonster.lair_actions.push({
           name: element.name,
@@ -133,13 +130,16 @@ export const translateMonsters = (monsters) => {
 
 export function monsterFileExists() {
   try {
-    let filePath = ""
-    if(window.isDev){
-      filePath = "./src/InitiativeTrackerApp/assets/monsters.json"
-    } else{
-      filePath = path.join(global.__dirname, "../src/InitiativeTrackerApp/assets/monsters.json")
+    let filePath = "";
+    if (window.isDev) {
+      filePath = "./src/InitiativeTrackerApp/assets/monsters.json";
+    } else {
+      filePath = path.join(
+        global.__dirname,
+        "../src/InitiativeTrackerApp/assets/monsters.json"
+      );
     }
-    return fs.existsSync( filePath);
+    return fs.existsSync(filePath);
   } catch (error) {
     console.error(error);
   }
@@ -147,16 +147,16 @@ export function monsterFileExists() {
 
 export function readMonsterFile() {
   try {
-    let filePath = ""
-    if(window.isDev){
-      filePath = "./src/InitiativeTrackerApp/assets/monsters.json"
-    } else{
-      filePath = path.join(global.__dirname, "../src/InitiativeTrackerApp/assets/monsters.json")
+    let filePath = "";
+    if (window.isDev) {
+      filePath = "./src/InitiativeTrackerApp/assets/monsters.json";
+    } else {
+      filePath = path.join(
+        global.__dirname,
+        "../src/InitiativeTrackerApp/assets/monsters.json"
+      );
     }
-    const data = fs.readFileSync(
-      filePath,
-      "utf8"
-    );
+    const data = fs.readFileSync(filePath, "utf8");
     return JSON.parse(data);
   } catch (err) {
     console.error(err);
@@ -165,19 +165,17 @@ export function readMonsterFile() {
 
 export function writeMonsterFile(translatedMonster) {
   try {
-    let filePath = ""
-    if(window.isDev){
-      filePath = "./src/InitiativeTrackerApp/assets/monsters.json"
-    } else{
-      filePath = path.join(global.__dirname, "../src/InitiativeTrackerApp/assets/monsters.json")
+    let filePath = "";
+    if (window.isDev) {
+      filePath = "./src/InitiativeTrackerApp/assets/monsters.json";
+    } else {
+      filePath = path.join(
+        global.__dirname,
+        "../src/InitiativeTrackerApp/assets/monsters.json"
+      );
     }
-    fs.writeFileSync(
-      filePath,
-      JSON.stringify(translatedMonster)
-    );
+    fs.writeFileSync(filePath, JSON.stringify(translatedMonster));
   } catch (e) {
     console.log(e.message);
   }
 }
-
-
