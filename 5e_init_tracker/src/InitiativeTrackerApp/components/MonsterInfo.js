@@ -1,30 +1,27 @@
 import AppBar from "@material-ui/core/AppBar";
+import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
+import Checkbox from "@material-ui/core/Checkbox";
 import Divider from "@material-ui/core/Divider";
 import Grid from "@material-ui/core/Grid";
-import IconButton from "@material-ui/core/IconButton";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
+import Popover from "@material-ui/core/Popover";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { map } from "rxjs/operators";
-import { loadMonsterData } from "../../services/MonsterService";
-import Checkbox from "@material-ui/core/Checkbox";
-import {
-  translateMonsters,
-  monsterFileExists,
-  readMonsterFile,
-  writeMonsterFile,
-} from "../utilities/MonsterTranslator";
+import { readMonsterFile } from "../utilities/MonsterTranslator";
+import SpellCard from "./SpellInfo";
 
 const useStyles = makeStyles((theme) => ({
-  link:{
-    color: theme.palette.secondary.main
+  popover: {
+    pointerEvents: "none",
+  },
+  link: {
+    color: theme.palette.secondary.main,
   },
   cardwidth: {
     width: "inherit",
@@ -98,11 +95,12 @@ export default function MonsterInfo(props) {
 
   let actions = [];
   let legendaryActions = [];
-  let legendaryActionsSlots =[];
+  let legendaryActionsSlots = [];
 
   const theme = useTheme();
   const classes = useStyles(theme);
   const [monster, setMonster] = React.useState();
+  const { ipcRenderer } = window.require("electron");
 
   useEffect(() => {
     let monsterList = readMonsterFile();
@@ -252,6 +250,25 @@ export default function MonsterInfo(props) {
 
     return subtype;
   };
+
+  const handleOpenNewSpellWindow = (spellUrl) => {
+    ipcRenderer.send("new-window", "spell", spellUrl);
+  };
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [openedPopoverId, setOpenedPopoverId] = React.useState(null);
+
+  const handlePopoverOpen = (event, popoverId) => {
+    setOpenedPopoverId(popoverId);
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setOpenedPopoverId(null);
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
 
   return (
     <Card className={classes.cardwidth}>
@@ -423,7 +440,7 @@ export default function MonsterInfo(props) {
                 ))}
               </div>
             )}
-                {languages.length !== 0 && (
+            {languages.length !== 0 && (
               <div style={{ display: "flex" }}>
                 <Typography variant="subtitle2">Languages</Typography>
                 {languages.map((language) => (
@@ -462,10 +479,39 @@ export default function MonsterInfo(props) {
                   <div style={{ display: "inline-flex" }}>
                     <Typography variant="body1">Cantrips:</Typography>
                     {cantrips.map((item, index) => (
-                      <div >
+                      <div>
                         <span>&nbsp;</span>
-                        <Link className={classes.link} to={"/spell/" + item.url}>{item.name}</Link>
-                        <span>,</span>
+                        <Link
+                          className={classes.link}
+                          aria-owns={open ? "mouse-over-popover" : undefined}
+                          aria-haspopup="true"
+                          onClick={() => handleOpenNewSpellWindow(item.url)}
+                          onMouseEnter={(e) => handlePopoverOpen(e, item.name)}
+                          onMouseLeave={handlePopoverClose}
+                        >
+                          {item.name},
+                        </Link>
+                        <Popover
+                          id={item.name}
+                          className={classes.popover}
+                          classes={{
+                            paper: classes.paper,
+                          }}
+                          open={openedPopoverId === item.name}
+                          anchorEl={anchorEl}
+                          anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "left",
+                          }}
+                          transformOrigin={{
+                            vertical: "top",
+                            horizontal: "left",
+                          }}
+                          onClose={handlePopoverClose}
+                          disableRestoreFocus
+                        >
+                          <SpellCard id={item.url}></SpellCard>
+                        </Popover>
                       </div>
                     ))}
                   </div>
@@ -477,10 +523,39 @@ export default function MonsterInfo(props) {
                   <div style={{ display: "inline-flex" }}>
                     <Typography variant="body1">Level 1:</Typography>
                     {level1Spells.map((item) => (
-                      <div color="inherit">
+                      <div>
                         <span>&nbsp;</span>
-                        <Link className={classes.link} to={"/spell/" + item.url}>{item.name}</Link>
-                        <span>,</span>
+                        <Link
+                          className={classes.link}
+                          aria-owns={open ? "mouse-over-popover" : undefined}
+                          aria-haspopup="true"
+                          onClick={() => handleOpenNewSpellWindow(item.url)}
+                          onMouseEnter={(e) => handlePopoverOpen(e, item.name)}
+                          onMouseLeave={handlePopoverClose}
+                        >
+                          {item.name},
+                        </Link>
+                        <Popover
+                          id={item.name}
+                          className={classes.popover}
+                          classes={{
+                            paper: classes.paper,
+                          }}
+                          open={openedPopoverId === item.name}
+                          anchorEl={anchorEl}
+                          anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "left",
+                          }}
+                          transformOrigin={{
+                            vertical: "top",
+                            horizontal: "left",
+                          }}
+                          onClose={handlePopoverClose}
+                          disableRestoreFocus
+                        >
+                          <SpellCard id={item.url}></SpellCard>
+                        </Popover>
                       </div>
                     ))}
                   </div>
@@ -498,8 +573,37 @@ export default function MonsterInfo(props) {
                     {level2Spells.map((item, index) => (
                       <div>
                         <span>&nbsp;</span>
-                        <Link className={classes.link} to={"/spell/" + item.url}>{item.name}</Link>
-                        <span>,</span>
+                        <Link
+                          className={classes.link}
+                          aria-owns={open ? "mouse-over-popover" : undefined}
+                          aria-haspopup="true"
+                          onClick={() => handleOpenNewSpellWindow(item.url)}
+                          onMouseEnter={(e) => handlePopoverOpen(e, item.name)}
+                          onMouseLeave={handlePopoverClose}
+                        >
+                          {item.name},
+                        </Link>
+                        <Popover
+                          id={item.name}
+                          className={classes.popover}
+                          classes={{
+                            paper: classes.paper,
+                          }}
+                          open={openedPopoverId === item.name}
+                          anchorEl={anchorEl}
+                          anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "left",
+                          }}
+                          transformOrigin={{
+                            vertical: "top",
+                            horizontal: "left",
+                          }}
+                          onClose={handlePopoverClose}
+                          disableRestoreFocus
+                        >
+                          <SpellCard id={item.url}></SpellCard>
+                        </Popover>
                       </div>
                     ))}
                   </div>
@@ -515,8 +619,37 @@ export default function MonsterInfo(props) {
                     {level3Spells.map((item, index) => (
                       <div>
                         <span>&nbsp;</span>
-                        <Link className={classes.link} to={"/spell/" + item.url}>{item.name}</Link>
-                        <span>,</span>
+                        <Link
+                          className={classes.link}
+                          aria-owns={open ? "mouse-over-popover" : undefined}
+                          aria-haspopup="true"
+                          onClick={() => handleOpenNewSpellWindow(item.url)}
+                          onMouseEnter={(e) => handlePopoverOpen(e, item.name)}
+                          onMouseLeave={handlePopoverClose}
+                        >
+                          {item.name},
+                        </Link>
+                        <Popover
+                          id={item.name}
+                          className={classes.popover}
+                          classes={{
+                            paper: classes.paper,
+                          }}
+                          open={openedPopoverId === item.name}
+                          anchorEl={anchorEl}
+                          anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "left",
+                          }}
+                          transformOrigin={{
+                            vertical: "top",
+                            horizontal: "left",
+                          }}
+                          onClose={handlePopoverClose}
+                          disableRestoreFocus
+                        >
+                          <SpellCard id={item.url}></SpellCard>
+                        </Popover>
                       </div>
                     ))}
                   </div>
@@ -532,8 +665,37 @@ export default function MonsterInfo(props) {
                     {level4Spells.map((item, index) => (
                       <div>
                         <span>&nbsp;</span>
-                        <Link className={classes.link} to={"/spell/" + item.url}>{item.name}</Link>
-                        <span>,</span>
+                        <Link
+                          className={classes.link}
+                          aria-owns={open ? "mouse-over-popover" : undefined}
+                          aria-haspopup="true"
+                          onClick={() => handleOpenNewSpellWindow(item.url)}
+                          onMouseEnter={(e) => handlePopoverOpen(e, item.name)}
+                          onMouseLeave={handlePopoverClose}
+                        >
+                          {item.name},
+                        </Link>
+                        <Popover
+                          id={item.name}
+                          className={classes.popover}
+                          classes={{
+                            paper: classes.paper,
+                          }}
+                          open={openedPopoverId === item.name}
+                          anchorEl={anchorEl}
+                          anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "left",
+                          }}
+                          transformOrigin={{
+                            vertical: "top",
+                            horizontal: "left",
+                          }}
+                          onClose={handlePopoverClose}
+                          disableRestoreFocus
+                        >
+                          <SpellCard id={item.url}></SpellCard>
+                        </Popover>
                       </div>
                     ))}
                   </div>
@@ -549,8 +711,37 @@ export default function MonsterInfo(props) {
                     {level5Spells.map((item, index) => (
                       <div>
                         <span>&nbsp;</span>
-                        <Link className={classes.link} to={"/spell/" + item.url}>{item.name}</Link>
-                        <span>,</span>
+                        <Link
+                          className={classes.link}
+                          aria-owns={open ? "mouse-over-popover" : undefined}
+                          aria-haspopup="true"
+                          onClick={() => handleOpenNewSpellWindow(item.url)}
+                          onMouseEnter={(e) => handlePopoverOpen(e, item.name)}
+                          onMouseLeave={handlePopoverClose}
+                        >
+                          {item.name},
+                        </Link>
+                        <Popover
+                          id={item.name}
+                          className={classes.popover}
+                          classes={{
+                            paper: classes.paper,
+                          }}
+                          open={openedPopoverId === item.name}
+                          anchorEl={anchorEl}
+                          anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "left",
+                          }}
+                          transformOrigin={{
+                            vertical: "top",
+                            horizontal: "left",
+                          }}
+                          onClose={handlePopoverClose}
+                          disableRestoreFocus
+                        >
+                          <SpellCard id={item.url}></SpellCard>
+                        </Popover>
                       </div>
                     ))}
                   </div>
@@ -566,8 +757,37 @@ export default function MonsterInfo(props) {
                     {level6Spells.map((item, index) => (
                       <div>
                         <span>&nbsp;</span>
-                        <Link className={classes.link} to={"/spell/" + item.url}>{item.name}</Link>
-                        <span>,</span>
+                        <Link
+                          className={classes.link}
+                          aria-owns={open ? "mouse-over-popover" : undefined}
+                          aria-haspopup="true"
+                          onClick={() => handleOpenNewSpellWindow(item.url)}
+                          onMouseEnter={(e) => handlePopoverOpen(e, item.name)}
+                          onMouseLeave={handlePopoverClose}
+                        >
+                          {item.name},
+                        </Link>
+                        <Popover
+                          id={item.name}
+                          className={classes.popover}
+                          classes={{
+                            paper: classes.paper,
+                          }}
+                          open={openedPopoverId === item.name}
+                          anchorEl={anchorEl}
+                          anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "left",
+                          }}
+                          transformOrigin={{
+                            vertical: "top",
+                            horizontal: "left",
+                          }}
+                          onClose={handlePopoverClose}
+                          disableRestoreFocus
+                        >
+                          <SpellCard id={item.url}></SpellCard>
+                        </Popover>
                       </div>
                     ))}
                   </div>
@@ -583,8 +803,37 @@ export default function MonsterInfo(props) {
                     {level7Spells.map((item, index) => (
                       <div>
                         <span>&nbsp;</span>
-                        <Link className={classes.link} to={"/spell/" + item.url}>{item.name}</Link>
-                        <span>,</span>
+                        <Link
+                          className={classes.link}
+                          aria-owns={open ? "mouse-over-popover" : undefined}
+                          aria-haspopup="true"
+                          onClick={() => handleOpenNewSpellWindow(item.url)}
+                          onMouseEnter={(e) => handlePopoverOpen(e, item.name)}
+                          onMouseLeave={handlePopoverClose}
+                        >
+                          {item.name},
+                        </Link>
+                        <Popover
+                          id={item.name}
+                          className={classes.popover}
+                          classes={{
+                            paper: classes.paper,
+                          }}
+                          open={openedPopoverId === item.name}
+                          anchorEl={anchorEl}
+                          anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "left",
+                          }}
+                          transformOrigin={{
+                            vertical: "top",
+                            horizontal: "left",
+                          }}
+                          onClose={handlePopoverClose}
+                          disableRestoreFocus
+                        >
+                          <SpellCard id={item.url}></SpellCard>
+                        </Popover>
                       </div>
                     ))}
                   </div>
@@ -600,8 +849,37 @@ export default function MonsterInfo(props) {
                     {level8Spells.map((item, index) => (
                       <div>
                         <span>&nbsp;</span>
-                        <Link className={classes.link} to={"/spell/" + item.url}>{item.name}</Link>
-                        <span>,</span>
+                        <Link
+                          className={classes.link}
+                          aria-owns={open ? "mouse-over-popover" : undefined}
+                          aria-haspopup="true"
+                          onClick={() => handleOpenNewSpellWindow(item.url)}
+                          onMouseEnter={(e) => handlePopoverOpen(e, item.name)}
+                          onMouseLeave={handlePopoverClose}
+                        >
+                          {item.name},
+                        </Link>
+                        <Popover
+                          id={item.name}
+                          className={classes.popover}
+                          classes={{
+                            paper: classes.paper,
+                          }}
+                          open={openedPopoverId === item.name}
+                          anchorEl={anchorEl}
+                          anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "left",
+                          }}
+                          transformOrigin={{
+                            vertical: "top",
+                            horizontal: "left",
+                          }}
+                          onClose={handlePopoverClose}
+                          disableRestoreFocus
+                        >
+                          <SpellCard id={item.url}></SpellCard>
+                        </Popover>
                       </div>
                     ))}
                   </div>
@@ -617,8 +895,37 @@ export default function MonsterInfo(props) {
                     {level9Spells.map((item, index) => (
                       <div>
                         <span>&nbsp;</span>
-                        <Link className={classes.link} to={"/spell/" + item.url}>{item.name}</Link>
-                        <span>,</span>
+                        <Link
+                          className={classes.link}
+                          aria-owns={open ? "mouse-over-popover" : undefined}
+                          aria-haspopup="true"
+                          onClick={() => handleOpenNewSpellWindow(item.url)}
+                          onMouseEnter={(e) => handlePopoverOpen(e, item.name)}
+                          onMouseLeave={handlePopoverClose}
+                        >
+                          {item.name},
+                        </Link>
+                        <Popover
+                          id={item.name}
+                          className={classes.popover}
+                          classes={{
+                            paper: classes.paper,
+                          }}
+                          open={openedPopoverId === item.name}
+                          anchorEl={anchorEl}
+                          anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "left",
+                          }}
+                          transformOrigin={{
+                            vertical: "top",
+                            horizontal: "left",
+                          }}
+                          onClose={handlePopoverClose}
+                          disableRestoreFocus
+                        >
+                          <SpellCard id={item.url}></SpellCard>
+                        </Popover>
                       </div>
                     ))}
                   </div>
@@ -648,9 +955,9 @@ export default function MonsterInfo(props) {
             {legendaryActions.length !== 0 && (
               <Typography variant="h6">Legendary Actions</Typography>
             )}
-             {legendaryActionsSlots.map((item, index) => (
-                    <Checkbox />
-                  ))}
+            {legendaryActionsSlots.map((item, index) => (
+              <Checkbox />
+            ))}
             {legendaryActions.map((item, index) => (
               <ListItem dense={true}>
                 <Typography variant="subtitle2">

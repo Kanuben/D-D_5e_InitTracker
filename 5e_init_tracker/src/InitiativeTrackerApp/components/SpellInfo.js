@@ -56,13 +56,23 @@ export default function SpellCard(props) {
   const [spell, setSpell] = React.useState();
 
   useEffect(() => {
-    loadSpellData(props.match.params.id)
+    if(props.match){
+      loadSpellData(props.match.params.id)
+        .pipe(
+          map((spell) => {
+            setSpell(spell);
+          })
+        )
+        .subscribe();
+    } else if(props.id){
+      loadSpellData(props.id)
       .pipe(
         map((spell) => {
           setSpell(spell);
         })
       )
       .subscribe();
+    }
   }, props);
 
   const handleBackClick = () => {
@@ -73,22 +83,19 @@ export default function SpellCard(props) {
     <Card className={classes.root}>
       {spell && (
         <div>
-          <AppBar position="fixed">
-            <Toolbar>
-              <IconButton
-                onClick={handleBackClick}
-                edge="start"
-                color="inherit"
-                aria-label="back"
-              >
-                <ArrowBackIcon />
-              </IconButton>
-              <Typography variant="h4" gutterBottom>
-                {spell.name}
-              </Typography>
-            </Toolbar>
-          </AppBar>
-          <Toolbar />
+          <Toolbar>
+            {/* <IconButton
+            onClick={handleBackClick}
+            edge="start"
+            color="inherit"
+            aria-label="back"
+          >
+            <ArrowBackIcon />
+          </IconButton> */}
+            <Typography variant="h4" gutterBottom>
+              {spell.name}
+            </Typography>
+          </Toolbar>
           <CardContent>
             <div>
               <Grid
