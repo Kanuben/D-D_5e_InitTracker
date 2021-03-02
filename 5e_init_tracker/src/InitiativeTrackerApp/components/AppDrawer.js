@@ -246,7 +246,9 @@ export default function PersistentDrawerLeft() {
     Object.assign(newList, characterList);
     appendList.forEach((character) => {
       character.initiative = 0;
-      newList.push(character);
+      if(newList.filter(e => isEqual(e,character)).length === 0){
+        newList.push(character);
+      }
     });
     setCharacterList(newList);
   };
