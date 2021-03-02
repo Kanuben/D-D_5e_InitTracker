@@ -129,7 +129,7 @@ export default function CharacterCard(props) {
     }
   };
 
-  const handleInitiativeRoll = (e) => {
+  const handleInitiativeRoll = () => {
     let mod = 0;
     let d20 = 0;
     if (props.character.initBonus !== undefined) {
@@ -143,6 +143,9 @@ export default function CharacterCard(props) {
     Object.assign(newList, props.charList);
     newList.map((character) => {
       if (character.id === props.character.id) {
+        if(character.initiative === parseInt(d20 + mod)){
+          handleInitiativeRoll();
+        }
         character.initiative = parseInt(d20 + mod);
       }
     });
