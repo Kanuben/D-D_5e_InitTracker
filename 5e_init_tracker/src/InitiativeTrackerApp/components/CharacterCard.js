@@ -326,7 +326,7 @@ export default function CharacterCard(props) {
                   )}
                   {showFullDamage === true && (
                     <Typography variant="h4">
-                      {damage}/{props.character.hit_points}
+                      {props.character.hit_points-damage}/{props.character.hit_points}
                     </Typography>
                   )}
                 </div>
