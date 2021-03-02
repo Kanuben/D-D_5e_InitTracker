@@ -132,7 +132,7 @@ export default function CharacterCard(props) {
   const handleInitiativeRoll = (e) => {
     let mod = 0;
     let d20 = 0;
-    if (props.character.initBonus !== 'undefined') {
+    if (props.character.initBonus !== undefined) {
       mod = props.character.initBonus;
     } else {
       mod = Math.floor((props.character.stats.dexterity - 10) / 2);
