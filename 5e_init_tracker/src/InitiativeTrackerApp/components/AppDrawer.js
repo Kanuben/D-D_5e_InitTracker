@@ -338,7 +338,7 @@ export default function PersistentDrawerLeft() {
   const handleRollInit = () => {
     let newList = [];
     initiativeList.map((character) => {
-      let dexMod = Math.floor((character.dexterity - 10) / 2);
+      let dexMod = Math.floor((character.stats.dexterity - 10) / 2);
       let d20 = Math.floor(Math.random() * 20) + 1;
       character.initiative = d20 + dexMod;
 

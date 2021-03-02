@@ -14,7 +14,7 @@ export const translateMonsters = (monsters) => {
     translatedMonster.size = monster.size;
     translatedMonster.type = monster.type;
     translatedMonster.subtype = monster.subtype;
-    translatedMonster.allignment = monster.allignment;
+    translatedMonster.alignment = monster.alignment;
     translatedMonster.armor_class = monster.armor_class;
     translatedMonster.hit_points = monster.hit_points;
     translatedMonster.hit_dice = monster.hit_dice;

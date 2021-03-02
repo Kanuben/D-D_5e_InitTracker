@@ -281,7 +281,7 @@ export default function MonsterInfo(props) {
               </Typography>
               <Typography variant="subtitle2" gutterBottom>
                 &nbsp;({monster.size} {monster.type}
-                {isSubtype()}, {monster.allignment})
+                {isSubtype()}, {monster.alignment})
               </Typography>
             </Toolbar>
           </AppBar>

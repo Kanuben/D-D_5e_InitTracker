@@ -4,7 +4,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Divider from "@material-ui/core/Divider";
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
@@ -46,13 +46,14 @@ const useStyles = makeStyles((theme) => ({
     padding: "1em",
   },
 
-  background_blue: {
-    "background-color": "blue",
+  background: {
+    "background-color": theme.palette.primary.main,
   },
 }));
 
 export default function SpellCard(props) {
-  const classes = useStyles();
+  const theme = useTheme();
+  const classes = useStyles(theme);
   const [spell, setSpell] = React.useState();
 
   useEffect(() => {
@@ -83,7 +84,7 @@ export default function SpellCard(props) {
     <Card className={classes.root}>
       {spell && (
         <div>
-          <Toolbar>
+          <Toolbar className={classes.background}>
             {/* <IconButton
             onClick={handleBackClick}
             edge="start"
