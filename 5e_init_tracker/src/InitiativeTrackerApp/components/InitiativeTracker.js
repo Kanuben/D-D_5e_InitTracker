@@ -10,6 +10,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import React, { useEffect } from "react";
 import { ReactComponent as Logo } from "../assets/download.svg";
 import CharacterCard from "./CharacterCard";
+import SortIcon from '@material-ui/icons/Sort';
 
 const useStyles = makeStyles(() => ({
   toolbar: {
@@ -29,6 +30,19 @@ export default function InitiativeTracker(props) {
   return (
     <div>
       <Toolbar className={classes.toolbar}>
+      <div>
+          <IconButton
+            aria-label="delete"
+            onClick={() => {
+              let newList = [];
+              Object.assign(newList, props.charList);
+              props.sortInitList(newList);
+              props.setInitiativeList(newList);
+            }}
+          >
+          <SortIcon/>
+          </IconButton>
+        </div>
         <div>
           <IconButton
             aria-label="delete"

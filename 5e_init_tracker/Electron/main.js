@@ -6,10 +6,9 @@ const Store = require("./store.js");
 let mainWindow;
 let newWindow;
 
-
 const { ipcMain } = require("electron");
 ipcMain.on("new-window", (event, window, arg) => {
-  if(window === "monster"){
+  if (window === "monster") {
     let deploymentURL = `file://${path.join(
       __dirname,
       "../build/index.html#monster"
@@ -24,34 +23,11 @@ ipcMain.on("new-window", (event, window, arg) => {
     });
     newWindow.setBackgroundColor("#303030");
     newWindow.loadURL(
-      isDev
-        ? "http://localhost:3000/#/monster/" + arg
-        : deploymentURL
+      isDev ? "http://localhost:3000/#/monster/" + arg : deploymentURL
     );
     //newWindow.removeMenu();
-    newWindow.setAlwaysOnTop(true);
-  } else if(window === "condition"){
-    let deploymentURL = `file://${path.join(
-      __dirname,
-      "../build/index.html#condition"
-    )}`;
-    deploymentURL = deploymentURL + "/" + arg;
-    newWindow = new BrowserWindow({
-      width: 600,
-      height: 400,
-      webPreferences: {
-        nodeIntegration: true,
-      },
-    });
-    newWindow.setBackgroundColor("#303030");
-    newWindow.loadURL(
-      isDev
-        ? "http://localhost:3000/#/condition/" + arg
-        : deploymentURL
-    );
-    //newWindow.removeMenu();
-    newWindow.setAlwaysOnTop(true);
-  }else if(window === "spell"){
+    //newWindow.setAlwaysOnTop(true);
+  } else if (window === "spell") {
     let deploymentURL = `file://${path.join(
       __dirname,
       "../build/index.html#spell"
@@ -66,13 +42,11 @@ ipcMain.on("new-window", (event, window, arg) => {
     });
     newWindow.setBackgroundColor("#303030");
     newWindow.loadURL(
-      isDev
-        ? "http://localhost:3000/#/spell/" + arg
-        : deploymentURL
+      isDev ? "http://localhost:3000/#/spell/" + arg : deploymentURL
     );
     //newWindow.removeMenu();
-    newWindow.setAlwaysOnTop(true);
-  } 
+    //newWindow.setAlwaysOnTop(true);
+  }
 });
 
 const store = new Store({

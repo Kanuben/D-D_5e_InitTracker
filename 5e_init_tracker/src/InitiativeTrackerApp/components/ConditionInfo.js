@@ -47,18 +47,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SpellCard(props) {
+export default function ConditionCard(props) {
   const classes = useStyles();
   const [condition, setCondition] = React.useState();
 
   useEffect(() => {
-    loadConditionData(props.match.params.id)
-      .pipe(
-        map((condition) => {
-          setCondition(condition);
-        })
-      )
-      .subscribe();
+      loadConditionData(props.id)
+        .pipe(
+          map((conditon) => {
+            setCondition(conditon);
+          })
+        )
+        .subscribe();
   }, props);
 
   const handleBackClick = () => {
@@ -69,24 +69,19 @@ export default function SpellCard(props) {
     <Card className={classes.root}>
       {condition && (
         <div>
-          <AppBar position="fixed">
-            <Toolbar>
-              <Typography variant="h4" gutterBottom>
-                {condition.name}
-              </Typography>
-            </Toolbar>
-          </AppBar>
-          <Toolbar />
+          <Toolbar>
+            <Typography variant="h4" gutterBottom>
+              {condition.name}
+            </Typography>
+          </Toolbar>
           <CardContent>
             <div>
-              <p>
-                {condition.desc.map((description, index) => (
-                  <div>
+              {condition.desc.map((description, index) => (
+                <div>
                     <Typography variant="body2">{description}</Typography>
-                    <br></br>
-                  </div>
-                ))}
-              </p>
+                  <br></br>
+                </div>
+              ))}
             </div>
           </CardContent>
         </div>

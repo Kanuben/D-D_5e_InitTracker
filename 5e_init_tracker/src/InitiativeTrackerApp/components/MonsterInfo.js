@@ -16,6 +16,7 @@ import { Link } from "react-router-dom";
 import { readMonsterFile } from "../utilities/MonsterTranslator";
 import SpellCard from "./SpellInfo";
 
+
 const useStyles = makeStyles((theme) => ({
   popover: {
     pointerEvents: "none",
@@ -505,11 +506,11 @@ export default function MonsterInfo(props) {
                               open={openedPopoverId === item.name}
                               anchorEl={anchorEl}
                               anchorOrigin={{
-                                vertical: "bottom",
+                                vertical: "top",
                                 horizontal: "left",
                               }}
                               transformOrigin={{
-                                vertical: "top",
+                                vertical: "bottom",
                                 horizontal: "left",
                               }}
                               onClose={handlePopoverClose}

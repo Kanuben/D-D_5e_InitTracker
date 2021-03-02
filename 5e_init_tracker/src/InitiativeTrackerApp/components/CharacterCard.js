@@ -11,7 +11,9 @@ import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import IconButton from "@material-ui/core/IconButton";
 import ConditionPicker from "./Modals/ConditionPicker";
 import VisibilityIcon from "@material-ui/icons/Visibility";
-import CasinoIcon from '@material-ui/icons/Casino';
+import CasinoIcon from "@material-ui/icons/Casino";
+import Popover from "@material-ui/core/Popover";
+import ConditionCard from "./ConditionInfo";
 
 const useStyles = makeStyles((theme) => ({
   cardwidth: {
@@ -127,6 +129,25 @@ export default function CharacterCard(props) {
     }
   };
 
+  const handleInitiativeRoll = (e) => {
+    let mod = 0;
+    let d20 = 0;
+    if (props.character.initBonus !== 'undefined') {
+      mod = props.character.initBonus;
+    } else {
+      mod = Math.floor((props.character.stats.dexterity - 10) / 2);
+    }
+    d20 = Math.floor(Math.random() * 20) + 1;
+    setInitiative(d20 + mod);
+    let newList = [];
+    Object.assign(newList, props.charList);
+    newList.map((character) => {
+      if (character.id === props.character.id) {
+        character.initiative = parseInt(d20 + mod);
+      }
+    });
+  };
+
   const handleEnterKey = (e) => {
     if (e.keyCode == 13) {
       let newList = [];
@@ -142,6 +163,21 @@ export default function CharacterCard(props) {
     props.sortInitList(newList);
     props.setInitiativeList(newList);
   };
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [openedPopoverId, setOpenedPopoverId] = React.useState(null);
+
+  const handlePopoverOpen = (event, popoverId) => {
+    setOpenedPopoverId(popoverId);
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setOpenedPopoverId(null);
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
 
   return (
     <Card className={classes.cardwidth}>
@@ -205,13 +241,36 @@ export default function CharacterCard(props) {
                     initList={props.charList}
                   ></ConditionPicker>
                   {props.character.statuses.map((status) => (
-                    <Chip
-                      onClick={() => handleOpenNewConditionWindow(status.index)}
-                      clickable
-                      color="secondary"
-                      label={status.name}
-                      onDelete={() => handleDeleteCondition(status.index)}
-                    />
+                    <div>
+                      <Chip
+                        clickable
+                        color="secondary"
+                        label={status.name}
+                        onClick={(e) => handlePopoverOpen(e, status.index)}
+                        onDelete={() => handleDeleteCondition(status.index)}
+                      />
+                      <Popover
+                        id={status.index}
+                        className={classes.popover}
+                        classes={{
+                          paper: classes.paper,
+                        }}
+                        open={openedPopoverId === status.index}
+                        anchorEl={anchorEl}
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "left",
+                        }}
+                        transformOrigin={{
+                          vertical: "bottom",
+                          horizontal: "left",
+                        }}
+                        onClose={handlePopoverClose}
+                        disableRestoreFocus
+                      >
+                        <ConditionCard id={status.index}></ConditionCard>
+                      </Popover>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -219,10 +278,8 @@ export default function CharacterCard(props) {
 
             <Grid className={classes.col} item xs>
               <div>
-                <Typography variant="subtitle2" >
-                  AC
-                </Typography>
-                <Typography variant="h4" >
+                <Typography variant="subtitle2">AC</Typography>
+                <Typography variant="h4">
                   {props.character.armor_class}
                 </Typography>
               </div>
@@ -230,78 +287,79 @@ export default function CharacterCard(props) {
 
             <Grid className={classes.col} item xs>
               <div>
-              <div
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                }}
-              >
-                <Typography variant="subtitle2" gutterBottom>
-                  Damage
-                </Typography>
-                <IconButton
-                  onClick={handleVisibilityFullDamage}
-                  aria-label="delete"
+                <div
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                  }}
                 >
-                  <VisibilityIcon />
-                </IconButton>
-              </div>
-              <br></br>
-              <div
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  flexWrap: "wrap",
-                }}
-              >
-                {showFullDamage === false && (
-                  <TextField
-                    className={classes.textField}
-                    size="small"
-                    onChange={handleDamageChange}
-                    value={damage}
-                    id="outlined-basic"
-                    variant="outlined"
-                  />
-                )}
-                {showFullDamage === true && (
-                  <Typography variant="h4">
-                    {damage}/{props.character.hit_points}
+                  <Typography variant="subtitle2" gutterBottom>
+                    Damage
                   </Typography>
-                )}
-              </div>
+                  <IconButton
+                    onClick={handleVisibilityFullDamage}
+                    aria-label="delete"
+                  >
+                    <VisibilityIcon />
+                  </IconButton>
+                </div>
+                <br></br>
+                <div
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  {showFullDamage === false && (
+                    <TextField
+                      className={classes.textField}
+                      size="small"
+                      onChange={handleDamageChange}
+                      value={damage}
+                      id="outlined-basic"
+                      variant="outlined"
+                    />
+                  )}
+                  {showFullDamage === true && (
+                    <Typography variant="h4">
+                      {damage}/{props.character.hit_points}
+                    </Typography>
+                  )}
+                </div>
               </div>
             </Grid>
 
             <Grid className={classes.col} item xs>
               <div>
-              <div
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                }}
-              >
-                <Typography variant="subtitle2" gutterBottom>
-                  Initiative
-                </Typography>
-                <IconButton
-                  aria-label="delete"
+                <div
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                  }}
                 >
-                  <CasinoIcon />
-                </IconButton>
+                  <Typography variant="subtitle2" gutterBottom>
+                    Initiative
+                  </Typography>
+                  <IconButton
+                    onClick={handleInitiativeRoll}
+                    aria-label="delete"
+                  >
+                    <CasinoIcon />
+                  </IconButton>
                 </div>
                 <br></br>
                 <div>
-                <TextField
-                  className={classes.textField}
-                  size="small"
-                  onChange={handleInitiativeChange}
-                  onKeyDown={handleEnterKey}
-                  onBlur={handleBlur}
-                  value={initiative}
-                  id="outlined-basic"
-                  variant="outlined"
-                />
+                  <TextField
+                    className={classes.textField}
+                    size="small"
+                    onChange={handleInitiativeChange}
+                    onKeyDown={handleEnterKey}
+                    onBlur={handleBlur}
+                    value={initiative}
+                    id="outlined-basic"
+                    variant="outlined"
+                  />
                 </div>
               </div>
             </Grid>

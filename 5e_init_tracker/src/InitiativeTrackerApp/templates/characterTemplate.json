@@ -10,5 +10,7 @@
     "damage": 0,
     "initiative": 0,
     "initBonus": 0,
-    "dexterity": 0
+    "stats":{
+      "dexterity": 0
+    }
   }
