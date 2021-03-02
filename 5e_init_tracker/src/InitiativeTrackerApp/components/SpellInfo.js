@@ -56,7 +56,7 @@ export default function SpellCard(props) {
   const [spell, setSpell] = React.useState();
 
   useEffect(() => {
-    if(props.match){
+    if (props.match) {
       loadSpellData(props.match.params.id)
         .pipe(
           map((spell) => {
@@ -64,14 +64,14 @@ export default function SpellCard(props) {
           })
         )
         .subscribe();
-    } else if(props.id){
+    } else if (props.id) {
       loadSpellData(props.id)
-      .pipe(
-        map((spell) => {
-          setSpell(spell);
-        })
-      )
-      .subscribe();
+        .pipe(
+          map((spell) => {
+            setSpell(spell);
+          })
+        )
+        .subscribe();
     }
   }, props);
 

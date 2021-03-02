@@ -106,12 +106,16 @@ export const translateMonsters = (monsters) => {
       translatedMonster.legendary_actions = {};
       translatedMonster.legendary_actions.actions_per_turn = ['X','X','X'];
       translatedMonster.legendary_actions.actions = [];
-      monster.legendary_actions.forEach((element) => {
-        translatedMonster.legendary_actions.actions.push({
-          name: element.name,
-          desc: element.desc,
+      if(monster.legendary_actions.actions){
+        translatedMonster.legendary_actions.actions= monster.legendary_actions.actions;
+      }else {
+        monster.legendary_actions.forEach((element) => {
+          translatedMonster.legendary_actions.actions.push({
+            name: element.name,
+            desc: element.desc,
+          });
         });
-      });
+      }
     }
 
     if (monster.lair_actions) {

@@ -281,7 +281,7 @@ export default function MonsterInfo(props) {
               </Typography>
               <Typography variant="subtitle2" gutterBottom>
                 &nbsp;({monster.size} {monster.type}
-                {isSubtype()}, {monster.alignment})
+                {isSubtype()}, {monster.allignment})
               </Typography>
             </Toolbar>
           </AppBar>
@@ -462,502 +462,548 @@ export default function MonsterInfo(props) {
             <Divider />
 
             {specialAbilities.length !== 0 && (
-              <Typography variant="h6">Special Abilities</Typography>
+              <div>
+                <Typography variant="h6">Special Abilities</Typography>
+
+                <List>
+                  {specialAbilities.map((item, index) => (
+                    <ListItem dense={true}>
+                      <Typography variant="subtitle2">
+                        {item.name}:
+                        <Typography variant="caption"> {item.desc} </Typography>
+                      </Typography>
+                    </ListItem>
+                  ))}
+
+                  {cantrips.length !== 0 && (
+                    <ListItem>
+                      <div style={{ display: "inline-flex" }}>
+                        <Typography variant="body1">Cantrips:</Typography>
+                        {cantrips.map((item, index) => (
+                          <div>
+                            <span>&nbsp;</span>
+                            <Link
+                              className={classes.link}
+                              aria-owns={
+                                open ? "mouse-over-popover" : undefined
+                              }
+                              aria-haspopup="true"
+                              onClick={() => handleOpenNewSpellWindow(item.url)}
+                              onMouseEnter={(e) =>
+                                handlePopoverOpen(e, item.name)
+                              }
+                              onMouseLeave={handlePopoverClose}
+                            >
+                              {item.name},
+                            </Link>
+                            <Popover
+                              id={item.name}
+                              className={classes.popover}
+                              classes={{
+                                paper: classes.paper,
+                              }}
+                              open={openedPopoverId === item.name}
+                              anchorEl={anchorEl}
+                              anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "left",
+                              }}
+                              transformOrigin={{
+                                vertical: "top",
+                                horizontal: "left",
+                              }}
+                              onClose={handlePopoverClose}
+                              disableRestoreFocus
+                            >
+                              <SpellCard id={item.url}></SpellCard>
+                            </Popover>
+                          </div>
+                        ))}
+                      </div>
+                    </ListItem>
+                  )}
+
+                  {level1Spells.length !== 0 && (
+                    <ListItem>
+                      <div style={{ display: "inline-flex" }}>
+                        <Typography variant="body1">Level 1:</Typography>
+                        {level1Spells.map((item) => (
+                          <div>
+                            <span>&nbsp;</span>
+                            <Link
+                              className={classes.link}
+                              aria-owns={
+                                open ? "mouse-over-popover" : undefined
+                              }
+                              aria-haspopup="true"
+                              onClick={() => handleOpenNewSpellWindow(item.url)}
+                              onMouseEnter={(e) =>
+                                handlePopoverOpen(e, item.name)
+                              }
+                              onMouseLeave={handlePopoverClose}
+                            >
+                              {item.name},
+                            </Link>
+                            <Popover
+                              id={item.name}
+                              className={classes.popover}
+                              classes={{
+                                paper: classes.paper,
+                              }}
+                              open={openedPopoverId === item.name}
+                              anchorEl={anchorEl}
+                              anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "left",
+                              }}
+                              transformOrigin={{
+                                vertical: "top",
+                                horizontal: "left",
+                              }}
+                              onClose={handlePopoverClose}
+                              disableRestoreFocus
+                            >
+                              <SpellCard id={item.url}></SpellCard>
+                            </Popover>
+                          </div>
+                        ))}
+                      </div>
+
+                      {spellSlots[0].map((item, index) => (
+                        <Checkbox />
+                      ))}
+                    </ListItem>
+                  )}
+
+                  {level2Spells.length !== 0 && (
+                    <ListItem>
+                      <div style={{ display: "inline-flex" }}>
+                        <Typography variant="body1">Level 2:</Typography>
+                        {level2Spells.map((item, index) => (
+                          <div>
+                            <span>&nbsp;</span>
+                            <Link
+                              className={classes.link}
+                              aria-owns={
+                                open ? "mouse-over-popover" : undefined
+                              }
+                              aria-haspopup="true"
+                              onClick={() => handleOpenNewSpellWindow(item.url)}
+                              onMouseEnter={(e) =>
+                                handlePopoverOpen(e, item.name)
+                              }
+                              onMouseLeave={handlePopoverClose}
+                            >
+                              {item.name},
+                            </Link>
+                            <Popover
+                              id={item.name}
+                              className={classes.popover}
+                              classes={{
+                                paper: classes.paper,
+                              }}
+                              open={openedPopoverId === item.name}
+                              anchorEl={anchorEl}
+                              anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "left",
+                              }}
+                              transformOrigin={{
+                                vertical: "top",
+                                horizontal: "left",
+                              }}
+                              onClose={handlePopoverClose}
+                              disableRestoreFocus
+                            >
+                              <SpellCard id={item.url}></SpellCard>
+                            </Popover>
+                          </div>
+                        ))}
+                      </div>
+                      {spellSlots[1].map((item, index) => (
+                        <Checkbox />
+                      ))}
+                    </ListItem>
+                  )}
+                  {level3Spells.length !== 0 && (
+                    <ListItem>
+                      <div style={{ display: "inline-flex" }}>
+                        <Typography variant="body1">Level 3:</Typography>
+                        {level3Spells.map((item, index) => (
+                          <div>
+                            <span>&nbsp;</span>
+                            <Link
+                              className={classes.link}
+                              aria-owns={
+                                open ? "mouse-over-popover" : undefined
+                              }
+                              aria-haspopup="true"
+                              onClick={() => handleOpenNewSpellWindow(item.url)}
+                              onMouseEnter={(e) =>
+                                handlePopoverOpen(e, item.name)
+                              }
+                              onMouseLeave={handlePopoverClose}
+                            >
+                              {item.name},
+                            </Link>
+                            <Popover
+                              id={item.name}
+                              className={classes.popover}
+                              classes={{
+                                paper: classes.paper,
+                              }}
+                              open={openedPopoverId === item.name}
+                              anchorEl={anchorEl}
+                              anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "left",
+                              }}
+                              transformOrigin={{
+                                vertical: "top",
+                                horizontal: "left",
+                              }}
+                              onClose={handlePopoverClose}
+                              disableRestoreFocus
+                            >
+                              <SpellCard id={item.url}></SpellCard>
+                            </Popover>
+                          </div>
+                        ))}
+                      </div>
+                      {spellSlots[2].map((item, index) => (
+                        <Checkbox />
+                      ))}
+                    </ListItem>
+                  )}
+                  {level4Spells.length !== 0 && (
+                    <ListItem>
+                      <div style={{ display: "inline-flex" }}>
+                        <Typography variant="body1">Level 4:</Typography>
+                        {level4Spells.map((item, index) => (
+                          <div>
+                            <span>&nbsp;</span>
+                            <Link
+                              className={classes.link}
+                              aria-owns={
+                                open ? "mouse-over-popover" : undefined
+                              }
+                              aria-haspopup="true"
+                              onClick={() => handleOpenNewSpellWindow(item.url)}
+                              onMouseEnter={(e) =>
+                                handlePopoverOpen(e, item.name)
+                              }
+                              onMouseLeave={handlePopoverClose}
+                            >
+                              {item.name},
+                            </Link>
+                            <Popover
+                              id={item.name}
+                              className={classes.popover}
+                              classes={{
+                                paper: classes.paper,
+                              }}
+                              open={openedPopoverId === item.name}
+                              anchorEl={anchorEl}
+                              anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "left",
+                              }}
+                              transformOrigin={{
+                                vertical: "top",
+                                horizontal: "left",
+                              }}
+                              onClose={handlePopoverClose}
+                              disableRestoreFocus
+                            >
+                              <SpellCard id={item.url}></SpellCard>
+                            </Popover>
+                          </div>
+                        ))}
+                      </div>
+                      {spellSlots[3].map((item, index) => (
+                        <Checkbox />
+                      ))}
+                    </ListItem>
+                  )}
+                  {level5Spells.length !== 0 && (
+                    <ListItem>
+                      <div style={{ display: "inline-flex" }}>
+                        <Typography variant="body1">Level 5:</Typography>
+                        {level5Spells.map((item, index) => (
+                          <div>
+                            <span>&nbsp;</span>
+                            <Link
+                              className={classes.link}
+                              aria-owns={
+                                open ? "mouse-over-popover" : undefined
+                              }
+                              aria-haspopup="true"
+                              onClick={() => handleOpenNewSpellWindow(item.url)}
+                              onMouseEnter={(e) =>
+                                handlePopoverOpen(e, item.name)
+                              }
+                              onMouseLeave={handlePopoverClose}
+                            >
+                              {item.name},
+                            </Link>
+                            <Popover
+                              id={item.name}
+                              className={classes.popover}
+                              classes={{
+                                paper: classes.paper,
+                              }}
+                              open={openedPopoverId === item.name}
+                              anchorEl={anchorEl}
+                              anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "left",
+                              }}
+                              transformOrigin={{
+                                vertical: "top",
+                                horizontal: "left",
+                              }}
+                              onClose={handlePopoverClose}
+                              disableRestoreFocus
+                            >
+                              <SpellCard id={item.url}></SpellCard>
+                            </Popover>
+                          </div>
+                        ))}
+                      </div>
+                      {spellSlots[4].map((item, index) => (
+                        <Checkbox />
+                      ))}
+                    </ListItem>
+                  )}
+                  {level6Spells.length !== 0 && (
+                    <ListItem>
+                      <div style={{ display: "inline-flex" }}>
+                        <Typography variant="body1">Level 6:</Typography>
+                        {level6Spells.map((item, index) => (
+                          <div>
+                            <span>&nbsp;</span>
+                            <Link
+                              className={classes.link}
+                              aria-owns={
+                                open ? "mouse-over-popover" : undefined
+                              }
+                              aria-haspopup="true"
+                              onClick={() => handleOpenNewSpellWindow(item.url)}
+                              onMouseEnter={(e) =>
+                                handlePopoverOpen(e, item.name)
+                              }
+                              onMouseLeave={handlePopoverClose}
+                            >
+                              {item.name},
+                            </Link>
+                            <Popover
+                              id={item.name}
+                              className={classes.popover}
+                              classes={{
+                                paper: classes.paper,
+                              }}
+                              open={openedPopoverId === item.name}
+                              anchorEl={anchorEl}
+                              anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "left",
+                              }}
+                              transformOrigin={{
+                                vertical: "top",
+                                horizontal: "left",
+                              }}
+                              onClose={handlePopoverClose}
+                              disableRestoreFocus
+                            >
+                              <SpellCard id={item.url}></SpellCard>
+                            </Popover>
+                          </div>
+                        ))}
+                      </div>
+                      {spellSlots[5].map((item, index) => (
+                        <Checkbox />
+                      ))}
+                    </ListItem>
+                  )}
+                  {level7Spells.length !== 0 && (
+                    <ListItem>
+                      <div style={{ display: "inline-flex" }}>
+                        <Typography variant="body1">Level 7:</Typography>
+                        {level7Spells.map((item, index) => (
+                          <div>
+                            <span>&nbsp;</span>
+                            <Link
+                              className={classes.link}
+                              aria-owns={
+                                open ? "mouse-over-popover" : undefined
+                              }
+                              aria-haspopup="true"
+                              onClick={() => handleOpenNewSpellWindow(item.url)}
+                              onMouseEnter={(e) =>
+                                handlePopoverOpen(e, item.name)
+                              }
+                              onMouseLeave={handlePopoverClose}
+                            >
+                              {item.name},
+                            </Link>
+                            <Popover
+                              id={item.name}
+                              className={classes.popover}
+                              classes={{
+                                paper: classes.paper,
+                              }}
+                              open={openedPopoverId === item.name}
+                              anchorEl={anchorEl}
+                              anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "left",
+                              }}
+                              transformOrigin={{
+                                vertical: "top",
+                                horizontal: "left",
+                              }}
+                              onClose={handlePopoverClose}
+                              disableRestoreFocus
+                            >
+                              <SpellCard id={item.url}></SpellCard>
+                            </Popover>
+                          </div>
+                        ))}
+                      </div>
+                      {spellSlots[6].map((item, index) => (
+                        <Checkbox />
+                      ))}
+                    </ListItem>
+                  )}
+                  {level8Spells.length !== 0 && (
+                    <ListItem>
+                      <div style={{ display: "inline-flex" }}>
+                        <Typography variant="body1">Level 8:</Typography>
+                        {level8Spells.map((item, index) => (
+                          <div>
+                            <span>&nbsp;</span>
+                            <Link
+                              className={classes.link}
+                              aria-owns={
+                                open ? "mouse-over-popover" : undefined
+                              }
+                              aria-haspopup="true"
+                              onClick={() => handleOpenNewSpellWindow(item.url)}
+                              onMouseEnter={(e) =>
+                                handlePopoverOpen(e, item.name)
+                              }
+                              onMouseLeave={handlePopoverClose}
+                            >
+                              {item.name},
+                            </Link>
+                            <Popover
+                              id={item.name}
+                              className={classes.popover}
+                              classes={{
+                                paper: classes.paper,
+                              }}
+                              open={openedPopoverId === item.name}
+                              anchorEl={anchorEl}
+                              anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "left",
+                              }}
+                              transformOrigin={{
+                                vertical: "top",
+                                horizontal: "left",
+                              }}
+                              onClose={handlePopoverClose}
+                              disableRestoreFocus
+                            >
+                              <SpellCard id={item.url}></SpellCard>
+                            </Popover>
+                          </div>
+                        ))}
+                      </div>
+                      {spellSlots[7].map((item, index) => (
+                        <Checkbox />
+                      ))}
+                    </ListItem>
+                  )}
+                  {level9Spells.length !== 0 && (
+                    <ListItem>
+                      <div style={{ display: "inline-flex" }}>
+                        <Typography variant="body1">Level 9:</Typography>
+                        {level9Spells.map((item, index) => (
+                          <div>
+                            <span>&nbsp;</span>
+                            <Link
+                              className={classes.link}
+                              aria-owns={
+                                open ? "mouse-over-popover" : undefined
+                              }
+                              aria-haspopup="true"
+                              onClick={() => handleOpenNewSpellWindow(item.url)}
+                              onMouseEnter={(e) =>
+                                handlePopoverOpen(e, item.name)
+                              }
+                              onMouseLeave={handlePopoverClose}
+                            >
+                              {item.name},
+                            </Link>
+                            <Popover
+                              id={item.name}
+                              className={classes.popover}
+                              classes={{
+                                paper: classes.paper,
+                              }}
+                              open={openedPopoverId === item.name}
+                              anchorEl={anchorEl}
+                              anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "left",
+                              }}
+                              transformOrigin={{
+                                vertical: "top",
+                                horizontal: "left",
+                              }}
+                              onClose={handlePopoverClose}
+                              disableRestoreFocus
+                            >
+                              <SpellCard id={item.url}></SpellCard>
+                            </Popover>
+                          </div>
+                        ))}
+                      </div>
+                      {spellSlots[8].map((item, index) => (
+                        <Checkbox />
+                      ))}
+                    </ListItem>
+                  )}
+                </List>
+                <Divider />
+              </div>
             )}
-            <List>
-              {specialAbilities.map((item, index) => (
-                <ListItem dense={true}>
-                  <Typography variant="subtitle2">
-                    {item.name}:
-                    <Typography variant="caption"> {item.desc} </Typography>
-                  </Typography>
-                </ListItem>
-              ))}
-
-              {cantrips.length !== 0 && (
-                <ListItem>
-                  <div style={{ display: "inline-flex" }}>
-                    <Typography variant="body1">Cantrips:</Typography>
-                    {cantrips.map((item, index) => (
-                      <div>
-                        <span>&nbsp;</span>
-                        <Link
-                          className={classes.link}
-                          aria-owns={open ? "mouse-over-popover" : undefined}
-                          aria-haspopup="true"
-                          onClick={() => handleOpenNewSpellWindow(item.url)}
-                          onMouseEnter={(e) => handlePopoverOpen(e, item.name)}
-                          onMouseLeave={handlePopoverClose}
-                        >
-                          {item.name},
-                        </Link>
-                        <Popover
-                          id={item.name}
-                          className={classes.popover}
-                          classes={{
-                            paper: classes.paper,
-                          }}
-                          open={openedPopoverId === item.name}
-                          anchorEl={anchorEl}
-                          anchorOrigin={{
-                            vertical: "bottom",
-                            horizontal: "left",
-                          }}
-                          transformOrigin={{
-                            vertical: "top",
-                            horizontal: "left",
-                          }}
-                          onClose={handlePopoverClose}
-                          disableRestoreFocus
-                        >
-                          <SpellCard id={item.url}></SpellCard>
-                        </Popover>
-                      </div>
-                    ))}
-                  </div>
-                </ListItem>
-              )}
-
-              {level1Spells.length !== 0 && (
-                <ListItem>
-                  <div style={{ display: "inline-flex" }}>
-                    <Typography variant="body1">Level 1:</Typography>
-                    {level1Spells.map((item) => (
-                      <div>
-                        <span>&nbsp;</span>
-                        <Link
-                          className={classes.link}
-                          aria-owns={open ? "mouse-over-popover" : undefined}
-                          aria-haspopup="true"
-                          onClick={() => handleOpenNewSpellWindow(item.url)}
-                          onMouseEnter={(e) => handlePopoverOpen(e, item.name)}
-                          onMouseLeave={handlePopoverClose}
-                        >
-                          {item.name},
-                        </Link>
-                        <Popover
-                          id={item.name}
-                          className={classes.popover}
-                          classes={{
-                            paper: classes.paper,
-                          }}
-                          open={openedPopoverId === item.name}
-                          anchorEl={anchorEl}
-                          anchorOrigin={{
-                            vertical: "bottom",
-                            horizontal: "left",
-                          }}
-                          transformOrigin={{
-                            vertical: "top",
-                            horizontal: "left",
-                          }}
-                          onClose={handlePopoverClose}
-                          disableRestoreFocus
-                        >
-                          <SpellCard id={item.url}></SpellCard>
-                        </Popover>
-                      </div>
-                    ))}
-                  </div>
-
-                  {spellSlots[0].map((item, index) => (
-                    <Checkbox />
-                  ))}
-                </ListItem>
-              )}
-
-              {level2Spells.length !== 0 && (
-                <ListItem>
-                  <div style={{ display: "inline-flex" }}>
-                    <Typography variant="body1">Level 2:</Typography>
-                    {level2Spells.map((item, index) => (
-                      <div>
-                        <span>&nbsp;</span>
-                        <Link
-                          className={classes.link}
-                          aria-owns={open ? "mouse-over-popover" : undefined}
-                          aria-haspopup="true"
-                          onClick={() => handleOpenNewSpellWindow(item.url)}
-                          onMouseEnter={(e) => handlePopoverOpen(e, item.name)}
-                          onMouseLeave={handlePopoverClose}
-                        >
-                          {item.name},
-                        </Link>
-                        <Popover
-                          id={item.name}
-                          className={classes.popover}
-                          classes={{
-                            paper: classes.paper,
-                          }}
-                          open={openedPopoverId === item.name}
-                          anchorEl={anchorEl}
-                          anchorOrigin={{
-                            vertical: "bottom",
-                            horizontal: "left",
-                          }}
-                          transformOrigin={{
-                            vertical: "top",
-                            horizontal: "left",
-                          }}
-                          onClose={handlePopoverClose}
-                          disableRestoreFocus
-                        >
-                          <SpellCard id={item.url}></SpellCard>
-                        </Popover>
-                      </div>
-                    ))}
-                  </div>
-                  {spellSlots[1].map((item, index) => (
-                    <Checkbox />
-                  ))}
-                </ListItem>
-              )}
-              {level3Spells.length !== 0 && (
-                <ListItem>
-                  <div style={{ display: "inline-flex" }}>
-                    <Typography variant="body1">Level 3:</Typography>
-                    {level3Spells.map((item, index) => (
-                      <div>
-                        <span>&nbsp;</span>
-                        <Link
-                          className={classes.link}
-                          aria-owns={open ? "mouse-over-popover" : undefined}
-                          aria-haspopup="true"
-                          onClick={() => handleOpenNewSpellWindow(item.url)}
-                          onMouseEnter={(e) => handlePopoverOpen(e, item.name)}
-                          onMouseLeave={handlePopoverClose}
-                        >
-                          {item.name},
-                        </Link>
-                        <Popover
-                          id={item.name}
-                          className={classes.popover}
-                          classes={{
-                            paper: classes.paper,
-                          }}
-                          open={openedPopoverId === item.name}
-                          anchorEl={anchorEl}
-                          anchorOrigin={{
-                            vertical: "bottom",
-                            horizontal: "left",
-                          }}
-                          transformOrigin={{
-                            vertical: "top",
-                            horizontal: "left",
-                          }}
-                          onClose={handlePopoverClose}
-                          disableRestoreFocus
-                        >
-                          <SpellCard id={item.url}></SpellCard>
-                        </Popover>
-                      </div>
-                    ))}
-                  </div>
-                  {spellSlots[2].map((item, index) => (
-                    <Checkbox />
-                  ))}
-                </ListItem>
-              )}
-              {level4Spells.length !== 0 && (
-                <ListItem>
-                  <div style={{ display: "inline-flex" }}>
-                    <Typography variant="body1">Level 4:</Typography>
-                    {level4Spells.map((item, index) => (
-                      <div>
-                        <span>&nbsp;</span>
-                        <Link
-                          className={classes.link}
-                          aria-owns={open ? "mouse-over-popover" : undefined}
-                          aria-haspopup="true"
-                          onClick={() => handleOpenNewSpellWindow(item.url)}
-                          onMouseEnter={(e) => handlePopoverOpen(e, item.name)}
-                          onMouseLeave={handlePopoverClose}
-                        >
-                          {item.name},
-                        </Link>
-                        <Popover
-                          id={item.name}
-                          className={classes.popover}
-                          classes={{
-                            paper: classes.paper,
-                          }}
-                          open={openedPopoverId === item.name}
-                          anchorEl={anchorEl}
-                          anchorOrigin={{
-                            vertical: "bottom",
-                            horizontal: "left",
-                          }}
-                          transformOrigin={{
-                            vertical: "top",
-                            horizontal: "left",
-                          }}
-                          onClose={handlePopoverClose}
-                          disableRestoreFocus
-                        >
-                          <SpellCard id={item.url}></SpellCard>
-                        </Popover>
-                      </div>
-                    ))}
-                  </div>
-                  {spellSlots[3].map((item, index) => (
-                    <Checkbox />
-                  ))}
-                </ListItem>
-              )}
-              {level5Spells.length !== 0 && (
-                <ListItem>
-                  <div style={{ display: "inline-flex" }}>
-                    <Typography variant="body1">Level 5:</Typography>
-                    {level5Spells.map((item, index) => (
-                      <div>
-                        <span>&nbsp;</span>
-                        <Link
-                          className={classes.link}
-                          aria-owns={open ? "mouse-over-popover" : undefined}
-                          aria-haspopup="true"
-                          onClick={() => handleOpenNewSpellWindow(item.url)}
-                          onMouseEnter={(e) => handlePopoverOpen(e, item.name)}
-                          onMouseLeave={handlePopoverClose}
-                        >
-                          {item.name},
-                        </Link>
-                        <Popover
-                          id={item.name}
-                          className={classes.popover}
-                          classes={{
-                            paper: classes.paper,
-                          }}
-                          open={openedPopoverId === item.name}
-                          anchorEl={anchorEl}
-                          anchorOrigin={{
-                            vertical: "bottom",
-                            horizontal: "left",
-                          }}
-                          transformOrigin={{
-                            vertical: "top",
-                            horizontal: "left",
-                          }}
-                          onClose={handlePopoverClose}
-                          disableRestoreFocus
-                        >
-                          <SpellCard id={item.url}></SpellCard>
-                        </Popover>
-                      </div>
-                    ))}
-                  </div>
-                  {spellSlots[4].map((item, index) => (
-                    <Checkbox />
-                  ))}
-                </ListItem>
-              )}
-              {level6Spells.length !== 0 && (
-                <ListItem>
-                  <div style={{ display: "inline-flex" }}>
-                    <Typography variant="body1">Level 6:</Typography>
-                    {level6Spells.map((item, index) => (
-                      <div>
-                        <span>&nbsp;</span>
-                        <Link
-                          className={classes.link}
-                          aria-owns={open ? "mouse-over-popover" : undefined}
-                          aria-haspopup="true"
-                          onClick={() => handleOpenNewSpellWindow(item.url)}
-                          onMouseEnter={(e) => handlePopoverOpen(e, item.name)}
-                          onMouseLeave={handlePopoverClose}
-                        >
-                          {item.name},
-                        </Link>
-                        <Popover
-                          id={item.name}
-                          className={classes.popover}
-                          classes={{
-                            paper: classes.paper,
-                          }}
-                          open={openedPopoverId === item.name}
-                          anchorEl={anchorEl}
-                          anchorOrigin={{
-                            vertical: "bottom",
-                            horizontal: "left",
-                          }}
-                          transformOrigin={{
-                            vertical: "top",
-                            horizontal: "left",
-                          }}
-                          onClose={handlePopoverClose}
-                          disableRestoreFocus
-                        >
-                          <SpellCard id={item.url}></SpellCard>
-                        </Popover>
-                      </div>
-                    ))}
-                  </div>
-                  {spellSlots[5].map((item, index) => (
-                    <Checkbox />
-                  ))}
-                </ListItem>
-              )}
-              {level7Spells.length !== 0 && (
-                <ListItem>
-                  <div style={{ display: "inline-flex" }}>
-                    <Typography variant="body1">Level 7:</Typography>
-                    {level7Spells.map((item, index) => (
-                      <div>
-                        <span>&nbsp;</span>
-                        <Link
-                          className={classes.link}
-                          aria-owns={open ? "mouse-over-popover" : undefined}
-                          aria-haspopup="true"
-                          onClick={() => handleOpenNewSpellWindow(item.url)}
-                          onMouseEnter={(e) => handlePopoverOpen(e, item.name)}
-                          onMouseLeave={handlePopoverClose}
-                        >
-                          {item.name},
-                        </Link>
-                        <Popover
-                          id={item.name}
-                          className={classes.popover}
-                          classes={{
-                            paper: classes.paper,
-                          }}
-                          open={openedPopoverId === item.name}
-                          anchorEl={anchorEl}
-                          anchorOrigin={{
-                            vertical: "bottom",
-                            horizontal: "left",
-                          }}
-                          transformOrigin={{
-                            vertical: "top",
-                            horizontal: "left",
-                          }}
-                          onClose={handlePopoverClose}
-                          disableRestoreFocus
-                        >
-                          <SpellCard id={item.url}></SpellCard>
-                        </Popover>
-                      </div>
-                    ))}
-                  </div>
-                  {spellSlots[6].map((item, index) => (
-                    <Checkbox />
-                  ))}
-                </ListItem>
-              )}
-              {level8Spells.length !== 0 && (
-                <ListItem>
-                  <div style={{ display: "inline-flex" }}>
-                    <Typography variant="body1">Level 8:</Typography>
-                    {level8Spells.map((item, index) => (
-                      <div>
-                        <span>&nbsp;</span>
-                        <Link
-                          className={classes.link}
-                          aria-owns={open ? "mouse-over-popover" : undefined}
-                          aria-haspopup="true"
-                          onClick={() => handleOpenNewSpellWindow(item.url)}
-                          onMouseEnter={(e) => handlePopoverOpen(e, item.name)}
-                          onMouseLeave={handlePopoverClose}
-                        >
-                          {item.name},
-                        </Link>
-                        <Popover
-                          id={item.name}
-                          className={classes.popover}
-                          classes={{
-                            paper: classes.paper,
-                          }}
-                          open={openedPopoverId === item.name}
-                          anchorEl={anchorEl}
-                          anchorOrigin={{
-                            vertical: "bottom",
-                            horizontal: "left",
-                          }}
-                          transformOrigin={{
-                            vertical: "top",
-                            horizontal: "left",
-                          }}
-                          onClose={handlePopoverClose}
-                          disableRestoreFocus
-                        >
-                          <SpellCard id={item.url}></SpellCard>
-                        </Popover>
-                      </div>
-                    ))}
-                  </div>
-                  {spellSlots[7].map((item, index) => (
-                    <Checkbox />
-                  ))}
-                </ListItem>
-              )}
-              {level9Spells.length !== 0 && (
-                <ListItem>
-                  <div style={{ display: "inline-flex" }}>
-                    <Typography variant="body1">Level 9:</Typography>
-                    {level9Spells.map((item, index) => (
-                      <div>
-                        <span>&nbsp;</span>
-                        <Link
-                          className={classes.link}
-                          aria-owns={open ? "mouse-over-popover" : undefined}
-                          aria-haspopup="true"
-                          onClick={() => handleOpenNewSpellWindow(item.url)}
-                          onMouseEnter={(e) => handlePopoverOpen(e, item.name)}
-                          onMouseLeave={handlePopoverClose}
-                        >
-                          {item.name},
-                        </Link>
-                        <Popover
-                          id={item.name}
-                          className={classes.popover}
-                          classes={{
-                            paper: classes.paper,
-                          }}
-                          open={openedPopoverId === item.name}
-                          anchorEl={anchorEl}
-                          anchorOrigin={{
-                            vertical: "bottom",
-                            horizontal: "left",
-                          }}
-                          transformOrigin={{
-                            vertical: "top",
-                            horizontal: "left",
-                          }}
-                          onClose={handlePopoverClose}
-                          disableRestoreFocus
-                        >
-                          <SpellCard id={item.url}></SpellCard>
-                        </Popover>
-                      </div>
-                    ))}
-                  </div>
-                  {spellSlots[8].map((item, index) => (
-                    <Checkbox />
-                  ))}
-                </ListItem>
-              )}
-            </List>
-
-            <Divider />
 
             {actions.length !== 0 && (
-              <Typography variant="h6">Actions</Typography>
+              <div>
+                <Typography variant="h6">Actions</Typography>
+                {actions.map((item, index) => (
+                  <ListItem dense={true}>
+                    <Typography variant="subtitle2">
+                      {item.name}:
+                      <Typography variant="caption"> {item.desc} </Typography>
+                    </Typography>
+                  </ListItem>
+                ))}
+                <Divider />
+              </div>
             )}
-            {actions.map((item, index) => (
-              <ListItem dense={true}>
-                <Typography variant="subtitle2">
-                  {item.name}:
-                  <Typography variant="caption"> {item.desc} </Typography>
-                </Typography>
-              </ListItem>
-            ))}
-
-            <Divider />
 
             {legendaryActions.length !== 0 && (
-              <Typography variant="h6">Legendary Actions</Typography>
+              <div>
+                <Typography variant="h6">Legendary Actions</Typography>
+                {legendaryActionsSlots.map((item, index) => (
+                  <Checkbox />
+                ))}
+              </div>
             )}
-            {legendaryActionsSlots.map((item, index) => (
-              <Checkbox />
-            ))}
+
             {legendaryActions.map((item, index) => (
               <ListItem dense={true}>
                 <Typography variant="subtitle2">

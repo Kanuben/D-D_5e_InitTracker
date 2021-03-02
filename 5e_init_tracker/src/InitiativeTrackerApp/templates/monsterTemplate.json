@@ -21,12 +21,7 @@
     "wisdom": 0,
     "charisma": 0
   },
-  "proficiencies": [
-    {
-      "name": "",
-      "value": 0
-    }
-  ],
+  "proficiencies": [],
   "damage_resistances": [],
   "damage_immunities": [],
   "damage_vulnerabilities": [],
@@ -35,43 +30,16 @@
   "languages": [],
   "challenge_rating": 0,
   "xp": 0,
-  "special_abilities": [
-    {
-      "name": "",
-      "desc": ""
-    }
-  ],
+  "special_abilities": [],
   "spell_casting": {
-    "spells": [
-
-    ],
+    "spells": [],
     "slots": []
   },
-  "actions": [
-    {
-      "name": "",
-      "desc": ""
-    }
-  ],
-  "reactions": [
-    {
-      "name": "",
-      "desc": ""
-    }
-  ],
+  "actions": [],
+  "reactions": [],
   "legendary_actions": {
     "actions_per_turn": [],
-    "actions": [
-      {
-        "name": "",
-        "desc": ""
-      }
-    ]
+    "actions": []
   },
-  "lair_actions": [
-    {
-      "name": "",
-      "desc": ""
-    }
-  ]
+  "lair_actions": []
 }
