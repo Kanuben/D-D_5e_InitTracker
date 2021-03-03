@@ -80,26 +80,26 @@ export default function CalculateDamage (props) {
       <TextField disabled="true" value={damage} />
       <Grid container spacing={1} justify="center">
         <Grid item xs={12}>
-          <Button onClick={handleNumClick}>0</Button>
-          <Button onClick={handleNumClick}>1</Button>
-          <Button onClick={handleNumClick}>2</Button>
-        </Grid>
-
-        <Grid item xs={12}>
-          <Button onClick={handleNumClick}>3</Button>
-          <Button onClick={handleNumClick}>4</Button>
-          <Button onClick={handleNumClick}>5</Button>
-        </Grid>
-
-        <Grid item xs={12}>
-          <Button onClick={handleNumClick}>6</Button>
           <Button onClick={handleNumClick}>7</Button>
           <Button onClick={handleNumClick}>8</Button>
+          <Button onClick={handleNumClick}>9</Button>
         </Grid>
 
         <Grid item xs={12}>
+          <Button onClick={handleNumClick}>4</Button>
+          <Button onClick={handleNumClick}>5</Button>
+          <Button onClick={handleNumClick}>6</Button>
+        </Grid>
+
+        <Grid item xs={12}>
+          <Button onClick={handleNumClick}>1</Button>
+          <Button onClick={handleNumClick}>2</Button>
+          <Button onClick={handleNumClick}>3</Button>
+        </Grid>
+
+        <Grid item xs={12}>
+          <Button onClick={handleNumClick}>0</Button>
           <Button onClick={handleSign}>-</Button>
-          <Button onClick={handleNumClick}>9</Button>
           <Button onClick={handleSign}>+</Button>
         </Grid>
 

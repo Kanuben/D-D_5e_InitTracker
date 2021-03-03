@@ -517,7 +517,7 @@ export default function PersistentDrawerLeft() {
           />
           <CreateMonster
             onClose={handleCreateMonsterClose}
-            openCreateCharacter={openCreateMonster}
+            openCreateMonster={openCreateMonster}
             handleAppendMonsterList={handleAppendMonsterList}
           />
         </List>

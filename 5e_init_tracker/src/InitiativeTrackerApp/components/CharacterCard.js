@@ -351,7 +351,7 @@ export default function CharacterCard (props) {
                     alignItems: 'center',
                   }}
                 >
-                  <Typography variant="subtitle2" gutterBottom>
+                  <Typography  style={{paddingRight: '12px'}} variant="subtitle2">
                     Damage
                   </Typography>
 
@@ -375,7 +375,7 @@ export default function CharacterCard (props) {
                     />
                   </Popover>
 
-                  <IconButton
+                  <IconButton style={{padding: '0px'}}
                     onClick={handleVisibilityFullDamage}
                     aria-label="delete"
                   >
