@@ -12,5 +12,6 @@
     "initBonus": 0,
     "stats":{
       "dexterity": 0
-    }
+    },
+    "bg_color": ""
   }

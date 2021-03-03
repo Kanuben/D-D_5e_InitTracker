@@ -41,5 +41,6 @@
     "actions_per_turn": [],
     "actions": []
   },
-  "lair_actions": []
+  "lair_actions": [],
+  "bg_color": ""
 }
