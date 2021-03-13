@@ -230,7 +230,6 @@ export default function PersistentDrawerLeft() {
     appendList.forEach((monster) => {
       monster.initiative = 0;
       monster.isPlayer = false;
-      monster.initiative = 0;
       monster.statuses = [];
       monster.damage = 0;
       if(newList.filter(e => isEqual(e,monster)).length === 0){
@@ -519,6 +518,7 @@ export default function PersistentDrawerLeft() {
             onClose={handleCreateMonsterClose}
             openCreateMonster={openCreateMonster}
             handleAppendMonsterList={handleAppendMonsterList}
+            monsterList={monsterList}
           />
         </List>
         <Divider />
