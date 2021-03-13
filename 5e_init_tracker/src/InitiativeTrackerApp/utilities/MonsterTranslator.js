@@ -18,11 +18,31 @@ export const translateMonsters = (monsters) => {
     translatedMonster.armor_class = monster.armor_class;
     translatedMonster.hit_points = monster.hit_points;
     translatedMonster.hit_dice = monster.hit_dice;
-    translatedMonster.speed.fly = monster.speed.fly;
-    translatedMonster.speed.swim = monster.speed.swim;
-    translatedMonster.speed.walk = monster.speed.walk;
-    translatedMonster.speed.climb = monster.speed.climb;
-    translatedMonster.speed.burrow = monster.speed.burrow;
+    if (monster.speed.walk) {
+      translatedMonster.speed = translatedMonster.speed.concat(
+        monster.speed.walk + ", "
+      );
+    }
+    if (monster.speed.fly) {
+      translatedMonster.speed = translatedMonster.speed.concat(
+        "fly " + monster.speed.fly + ", "
+      );
+    }
+    if (monster.speed.climb) {
+      translatedMonster.speed = translatedMonster.speed.concat(
+        "climb " + monster.speed.climb + ", "
+      );
+    }
+    if (monster.speed.swim) {
+      translatedMonster.speed = translatedMonster.speed.concat(
+        "swim " + monster.speed.swim + ", "
+      );
+    }
+    if (monster.speed.burrow) {
+      translatedMonster.speed = translatedMonster.speed.concat(
+        "burrow " + monster.speed.burrow
+      );
+    }
     if (monster.strength) translatedMonster.stats.strength = monster.strength;
     if (monster.dexterity)
       translatedMonster.stats.dexterity = monster.dexterity;
@@ -45,7 +65,10 @@ export const translateMonsters = (monsters) => {
     translatedMonster.damage_immunities = monster.damage_immunities;
     translatedMonster.damage_vulnerabilities = monster.damage_vulnerabilities;
     translatedMonster.condition_immunities = monster.condition_immunities;
-    translatedMonster.senses = monster.senses;
+    translatedMonster.senses = "";
+    Object.entries(monster.senses).forEach((element) => {
+      translatedMonster.senses = translatedMonster.senses.concat(element[0].replace('_',' ')+" " + element[1]+", ")
+    });
     if (monster.languages.length > 0)
       translatedMonster.languages = monster.languages;
     translatedMonster.challenge_rating = monster.challenge_rating;
@@ -98,11 +121,12 @@ export const translateMonsters = (monsters) => {
     }
     if (monster.legendary_actions) {
       translatedMonster.legendary_actions = {};
-      translatedMonster.legendary_actions.actions_per_turn = ['X','X','X'];
+      translatedMonster.legendary_actions.actions_per_turn = ["X", "X", "X"];
       translatedMonster.legendary_actions.actions = [];
-      if(monster.legendary_actions.actions){
-        translatedMonster.legendary_actions.actions= monster.legendary_actions.actions;
-      }else {
+      if (monster.legendary_actions.actions) {
+        translatedMonster.legendary_actions.actions =
+          monster.legendary_actions.actions;
+      } else {
         monster.legendary_actions.forEach((element) => {
           translatedMonster.legendary_actions.actions.push({
             name: element.name,

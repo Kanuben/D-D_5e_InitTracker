@@ -77,8 +77,6 @@ export default function MonsterInfo(props) {
   let damageResistances = [];
   let damageVulnerabilties = [];
   let condidtionImmunities = [];
-  let senses = [];
-  let languages = [];
   let specialAbilities = [];
 
   let spellSlots = [];
@@ -226,23 +224,8 @@ export default function MonsterInfo(props) {
       });
     }
 
-    senses = monster.senses;
-    languages = monster.languages;
     cr = monster.challenge_rating;
   }
-
-  const getSpeed = () => {
-    let speed = "";
-    if (monster.speed.walk !== undefined)
-      speed = speed.concat(monster.speed.walk);
-    if (monster.speed.climb !== undefined)
-      speed = speed.concat(" climb " + monster.speed.climb);
-    if (monster.speed.swim !== undefined)
-      speed = speed.concat(" swim " + monster.speed.swim);
-    if (monster.speed.fly !== undefined)
-      speed = speed.concat(" fly " + monster.speed.fly);
-    return speed;
-  };
 
   const isSubtype = () => {
     let subtype = "";
@@ -294,7 +277,7 @@ export default function MonsterInfo(props) {
               {parseInt(monster.hit_dice) * conMod})
             </div>
             <div>
-              Speed {getSpeed()}
+              Speed {monster.speed}
               <div
                 style={{
                   display: "flex",
@@ -431,24 +414,20 @@ export default function MonsterInfo(props) {
                 <Typography variant="caption">{immunities}</Typography>
               </ListItem>
             ))}
-            {senses.length !== 0 && (
+            {monster.senses.length !== 0 && (
               <div style={{ display: "flex" }}>
                 <Typography variant="subtitle2">Senses</Typography>
-                {senses.map((sense) => (
                   <Typography style={{ marginLeft: "10px" }} variant="caption">
-                    {sense.name}&nbsp;{sense.value},
+                {monster.senses}
                   </Typography>
-                ))}
               </div>
             )}
-            {languages.length !== 0 && (
+            {monster.languages.length !== 0 && (
               <div style={{ display: "flex" }}>
                 <Typography variant="subtitle2">Languages</Typography>
-                {languages.map((language) => (
                   <Typography style={{ marginLeft: "10px" }} variant="caption">
-                    {language},
+                    {monster.languages}
                   </Typography>
-                ))}
               </div>
             )}
 

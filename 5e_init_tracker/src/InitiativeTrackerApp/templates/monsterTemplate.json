@@ -7,13 +7,7 @@
   "armor_class": 0,
   "hit_points": 0,
   "hit_dice":0,
-  "speed": {
-    "fly": 0,
-    "swim": 0,
-    "walk": 0,
-    "climb": 0,
-    "burrow": 0
-  },
+  "speed":"",
   "stats": {
     "strength": 0,
     "dexterity": 0,
