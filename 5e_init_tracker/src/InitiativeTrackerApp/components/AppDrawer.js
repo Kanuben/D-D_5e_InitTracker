@@ -16,35 +16,33 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import CreateIcon from "@material-ui/icons/Create";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import MenuOpenIcon from "@material-ui/icons/MenuOpen";
-import PeopleIcon from "@material-ui/icons/People";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
+import PublishIcon from "@material-ui/icons/Publish";
 import clsx from "clsx";
+import { isEqual } from 'lodash';
 import PropTypes from "prop-types";
 import React, { useEffect } from "react";
 import { forkJoin } from "rxjs";
 import { map } from "rxjs/operators";
 import loadFile from "../../services/FileService";
 import { loadMonsterData, loadMonsters } from "../../services/MonsterService";
-import { loadSpellData, loadSpells } from "../../services/SpellService";
 import { ReactComponent as Dragon } from "../assets/dragon.svg";
+import {
+  monsterFileExists,
+  readMonsterFile, translateMonsters,
+
+
+  writeMonsterFile
+} from "../utilities/MonsterTranslator";
 import InitiativeTracker from "./InitiativeTracker";
 import AddCharacter from "./Modals/AddCharacter";
 import AddMonster from "./Modals/AddMonster";
-import EmptyReminder from "./Modals/EmptyReminder";
 import CreateChar from "./Modals/CreateChar";
 import CreateMonster from "./Modals/CreateMonster";
-import AccessibilityIcon from "@material-ui/icons/Accessibility";
-import CreateIcon from "@material-ui/icons/Create";
-import PublishIcon from "@material-ui/icons/Publish";
-import {
-  translateMonsters,
-  monsterFileExists,
-  readMonsterFile,
-  writeMonsterFile
-} from "../utilities/MonsterTranslator";
-import {isEqual} from 'lodash';
+import EmptyReminder from "./Modals/EmptyReminder";
 
 function LinearProgressWithLabel(props) {
   return (
@@ -167,7 +165,7 @@ export default function PersistentDrawerLeft() {
               data.forEach((item) => {
                 monsterArr.push(item);
               });
-              handleAppendMonsterList(monsterArr);
+              handleAppendMonsterList(translateMonsters(monsterArr));
               setLoaded(true);
             },
             (err) => {
@@ -226,7 +224,6 @@ export default function PersistentDrawerLeft() {
   const handleAppendMonsterList = (appendList) => {
     let newList = [];
     Object.assign(newList, monsterList);
-    appendList = translateMonsters(appendList);
     appendList.forEach((monster) => {
       monster.initiative = 0;
       monster.isPlayer = false;

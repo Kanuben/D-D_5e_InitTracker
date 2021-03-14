@@ -1,5 +1,4 @@
 import AppBar from "@material-ui/core/AppBar";
-import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -15,7 +14,6 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { readMonsterFile } from "../utilities/MonsterTranslator";
 import SpellCard from "./SpellInfo";
-
 
 const useStyles = makeStyles((theme) => ({
   popover: {
@@ -70,6 +68,7 @@ export default function MonsterInfo(props) {
   let wisMod = 0;
   let chaMod = 0;
   let cr = 0;
+  let proficiencyBonus = 0;
 
   let savingThrows = [];
   let skills = [];
@@ -106,6 +105,27 @@ export default function MonsterInfo(props) {
     setMonster(...monsterList.filter((e) => e.name === props.match.params.id));
   }, props);
 
+  const getProficiencyBonus = (challengeRating) => {
+    switch(challengeRating) {
+      case 0:case 0.125:case 0.25:case 0.5:case 1:case 2: case 3:case 4:
+      return 2;
+      case 5:case 6:case 7:case 8:
+      return 3;
+      case 9:case 10:case 11:case 12:
+      return 4;
+      case 13:case 14:case 15:case 16:
+      return 5;
+      case 17:case 18:case 19:case 20:
+      return 6;
+      case 21:case 22:case 23:case 24:
+      return 7;
+      case 25:case 26:case 27: case 28:
+      return 8;
+      case 29:case 30:
+      return 9;
+    }
+  }
+
   if (monster) {
     strMod = Math.floor((monster.stats.strength - 10) / 2);
     dexMod = Math.floor((monster.stats.dexterity - 10) / 2);
@@ -122,14 +142,22 @@ export default function MonsterInfo(props) {
       { name: "WIS", value: wisMod },
       { name: "CHA", value: chaMod }
     );
+
+    monster.saving_throws.forEach((element)=>{
+      let index = savingThrows.findIndex(
+        (item) => item.name === element
+      );
+      savingThrows[index].value = savingThrows[index].value + getProficiencyBonus(monster.challenge_rating);
+    })
+
     monster.proficiencies.forEach((element) => {
-      if (element.name.includes("Saving Throw:")) {
-        element.name = element.name.replace("Saving Throw: ", "");
-        let index = savingThrows.findIndex(
-          (item) => item.name === element.name
-        );
-        savingThrows[index].value = element.value;
-      }
+      // if (element.name.includes("Saving Throw:")) {
+      //   element.name = element.name.replace("Saving Throw: ", "");
+      //   let index = savingThrows.findIndex(
+      //     (item) => item.name === element.name
+      //   );
+      //   savingThrows[index].value = element.value;
+      // }
       if (element.name.includes("Skill:")) {
         skills.push({
           name: (element.name = element.name.replace("Skill:", "")),
@@ -417,17 +445,17 @@ export default function MonsterInfo(props) {
             {monster.senses.length !== 0 && (
               <div style={{ display: "flex" }}>
                 <Typography variant="subtitle2">Senses</Typography>
-                  <Typography style={{ marginLeft: "10px" }} variant="caption">
-                {monster.senses}
-                  </Typography>
+                <Typography style={{ marginLeft: "10px" }} variant="caption">
+                  {monster.senses}
+                </Typography>
               </div>
             )}
             {monster.languages.length !== 0 && (
               <div style={{ display: "flex" }}>
                 <Typography variant="subtitle2">Languages</Typography>
-                  <Typography style={{ marginLeft: "10px" }} variant="caption">
-                    {monster.languages}
-                  </Typography>
+                <Typography style={{ marginLeft: "10px" }} variant="caption">
+                  {monster.languages}
+                </Typography>
               </div>
             )}
 
