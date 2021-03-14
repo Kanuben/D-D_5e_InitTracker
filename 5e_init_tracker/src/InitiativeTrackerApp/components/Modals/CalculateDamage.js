@@ -100,14 +100,13 @@ export default function CalculateDamage (props) {
         <Grid item xs={12}>
           <Button onClick={handleNumClick}>0</Button>
           <Button onClick={handleSign}>-</Button>
-          <Button onClick={handleSign}>+</Button>
         </Grid>
 
         <Grid item xs={8}>
-          <Button onClick={handleClear}> clear </Button>
+          <Button onClick={handleClear}>clear</Button>
         </Grid>
         <Grid item xs={4}>
-          <Button onClick={enterDamage}> enter </Button>
+          <Button onClick={enterDamage}>enter</Button>
         </Grid>
       </Grid>
 
