@@ -5,6 +5,7 @@ import SpellInfo from "./InitiativeTrackerApp/components/SpellInfo";
 import ConditionInfo from "./InitiativeTrackerApp/components/ConditionInfo";
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
+
 const theme = createMuiTheme({
   palette: {
     type: 'dark',

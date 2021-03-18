@@ -62,21 +62,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function MonsterInfo(props) {
-  let strMod = 0;
-  let dexMod = 0;
-  let conMod = 0;
-  let intMod = 0;
-  let wisMod = 0;
-  let chaMod = 0;
-  let cr = 0;
-  let proficiencyBonus = 0;
-
-  let savingThrows = [];
-  let skills = [];
-  let damageImmunities = [];
-  let damageResistances = [];
-  let damageVulnerabilties = [];
-  let condidtionImmunities = [];
   let specialAbilities = [];
 
   let spellSlots = [];
@@ -106,96 +91,7 @@ export default function MonsterInfo(props) {
     setMonster(...monsterList.filter((e) => e.name === props.match.params.id));
   }, props);
 
-  const getProficiencyBonus = (challengeRating) => {
-    switch(challengeRating) {
-      case 0:case 0.125:case 0.25:case 0.5:case 1:case 2: case 3:case 4:
-      return 2;
-      case 5:case 6:case 7:case 8:
-      return 3;
-      case 9:case 10:case 11:case 12:
-      return 4;
-      case 13:case 14:case 15:case 16:
-      return 5;
-      case 17:case 18:case 19:case 20:
-      return 6;
-      case 21:case 22:case 23:case 24:
-      return 7;
-      case 25:case 26:case 27: case 28:
-      return 8;
-      case 29:case 30:
-      return 9;
-    }
-  }
-
   if (monster) {
-    strMod = Math.floor((monster.stats.strength - 10) / 2);
-    dexMod = Math.floor((monster.stats.dexterity - 10) / 2);
-    conMod = Math.floor((monster.stats.constitution - 10) / 2);
-    intMod = Math.floor((monster.stats.intelligence - 10) / 2);
-    wisMod = Math.floor((monster.stats.wisdom - 10) / 2);
-    chaMod = Math.floor((monster.stats.charisma - 10) / 2);
-
-    savingThrows.push(
-      { name: "STR", value: strMod },
-      { name: "DEX", value: dexMod },
-      { name: "CON", value: conMod },
-      { name: "INT", value: intMod },
-      { name: "WIS", value: wisMod },
-      { name: "CHA", value: chaMod }
-    );
-
-    monster.saving_throws.forEach((element)=>{
-      let index = savingThrows.findIndex(
-        (item) => item.name === element
-      );
-      savingThrows[index].value = savingThrows[index].value + getProficiencyBonus(monster.challenge_rating);
-    })
-
-    monster.proficiencies.forEach((element) => {
-      // if (element.name.includes("Saving Throw:")) {
-      //   element.name = element.name.replace("Saving Throw: ", "");
-      //   let index = savingThrows.findIndex(
-      //     (item) => item.name === element.name
-      //   );
-      //   savingThrows[index].value = element.value;
-      // }
-      if (element.name.includes("Skill:")) {
-        skills.push({
-          name: (element.name = element.name.replace("Skill:", "")),
-          value: element.value,
-        });
-      }
-    });
-    if (monster.damage_vulnerabilities !== undefined) {
-      monster.damage_vulnerabilities.forEach((item) => {
-        damageVulnerabilties.push(item);
-      });
-    }
-    if (monster.damage_resistances !== undefined) {
-      monster.damage_resistances.forEach((item) => {
-        damageResistances.push(item);
-      });
-    }
-    if (monster.damage_immunities !== undefined) {
-      monster.damage_immunities.forEach((item) => {
-        damageImmunities.push(item);
-      });
-    }
-    if (monster.condition_immunities !== undefined) {
-      monster.condition_immunities.forEach((item) => {
-        condidtionImmunities.push(item.name);
-      });
-    }
-    if (monster.spell_casting !== undefined) {
-      spells = monster.spell_casting.spells;
-      spellSlots = monster.spell_casting.slots;
-    }
-    if (monster.special_abilities !== undefined) {
-      monster.special_abilities.forEach((item) => {
-        specialAbilities.push(item);
-      });
-    }
-
     if (spells) {
       spells.forEach((spell) => {
         if (spell.url) {
@@ -253,7 +149,7 @@ export default function MonsterInfo(props) {
       });
     }
 
-    cr = monster.challenge_rating;
+
   }
 
 

@@ -86,6 +86,53 @@ export default function MainStats (props) {
   let damageVulnerabilties = [];
   let condidtionImmunities = [];
 
+  const getProficiencyBonus = challengeRating => {
+    switch (challengeRating) {
+      case 0:
+      case 0.125:
+      case 0.25:
+      case 0.5:
+      case 1:
+      case 2:
+      case 3:
+      case 4:
+        return 2;
+      case 5:
+      case 6:
+      case 7:
+      case 8:
+        return 3;
+      case 9:
+      case 10:
+      case 11:
+      case 12:
+        return 4;
+      case 13:
+      case 14:
+      case 15:
+      case 16:
+        return 5;
+      case 17:
+      case 18:
+      case 19:
+      case 20:
+        return 6;
+      case 21:
+      case 22:
+      case 23:
+      case 24:
+        return 7;
+      case 25:
+      case 26:
+      case 27:
+      case 28:
+        return 8;
+      case 29:
+      case 30:
+        return 9;
+    }
+  };
+
   //Initialization of monster data
   if (props.monster) {
     //load proficiences
@@ -110,39 +157,18 @@ export default function MainStats (props) {
       {name: 'CHA', value: Math.floor ((props.monster.stats.charisma - 10) / 2)}
     );
 
-    props.monster.proficiencies.forEach (element => {
-      if (element.name.includes ('STR')) {
-        savingThrows[0].value = element.value;
-      }
-      if (element.name.includes ('DEX')) {
-        savingThrows[1].value = element.value;
-      }
-      if (element.name.includes ('CON')) {
-        savingThrows[2].value = element.value;
-      }
-      if (element.name.includes ('INT')) {
-        savingThrows[3].value = element.value;
-      }
-      if (element.name.includes ('WIS')) {
-        savingThrows[4].value = element.value;
-      }
-      if (element.name.includes ('CHA')) {
-        savingThrows[5].value = element.value;
-      }
+    props.monster.saving_throws.forEach (element => {
+      let index = savingThrows.findIndex (item => item.name === element);
+      savingThrows[index].value =
+        savingThrows[index].value +
+        getProficiencyBonus (props.monster.challenge_rating);
+    });
 
-      if (
-        !element.name.includes ('STR') &&
-        !element.name.includes ('DEX') &&
-        !element.name.includes ('CON') &&
-        !element.name.includes ('INT') &&
-        !element.name.includes ('WIS') &&
-        !element.name.includes ('CHA')
-      ) {
+     props.monster.proficiencies.forEach (element => {
         skills.push ({
           name: element.name,
           value: element.value,
         });
-      }
     });
 
     //load damage vulnerabilities
@@ -313,7 +339,7 @@ export default function MainStats (props) {
         <Divider />
 
         {/* display skills */}
-        <Typography variant="h6"> Attributes </Typography>
+        <Typography variant="h6"> Traits </Typography>
         <List>
           {skills.length !== 0 &&
             <ListItem dense={true}>
