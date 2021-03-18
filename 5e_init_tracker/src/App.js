@@ -9,22 +9,16 @@ const theme = createMuiTheme({
   palette: {
     type: 'dark',
     primary: {
-      main: '#b53f3f',
+      main: '#00bfa5',
     },
     secondary: {
-      main: '#8d99ae',
-      light: '#bcc6d6',
+      main: '#90caf9',
     },
   },
-  overrides: {
-    // // Style sheet name ⚛️
-    // MuiButton: {
-    //   // Name of the rule
-    //   text: {
-    //     // Some CSS
-    //     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-    //   },
-    // },
+  typography: {
+    h4: {
+      fontFamily: 'New Rocker',
+    },
   },
 });
 

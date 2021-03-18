@@ -15,6 +15,7 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { readMonsterFile } from "../utilities/MonsterTranslator";
 import SpellCard from "./SpellInfo";
+import MainStats from '../components/MonsterInfo/MainStats';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -227,13 +228,6 @@ export default function MonsterInfo(props) {
     cr = monster.challenge_rating;
   }
 
-  const isSubtype = () => {
-    let subtype = "";
-    if (monster.subtype !== null)
-      subtype = subtype.concat("(" + monster.subtype + ")");
-
-    return subtype;
-  };
 
   const handleOpenNewSpellWindow = (spellUrl) => {
     ipcRenderer.send("new-window", "spell", spellUrl);
@@ -258,188 +252,10 @@ export default function MonsterInfo(props) {
     <Card className={classes.cardwidth}>
       {monster && (
         <div>
-          <AppBar position="fixed">
-            <Toolbar>
-              <Typography variant="h4" gutterBottom>
-                {monster.name}
-              </Typography>
-              <Typography variant="subtitle2" gutterBottom>
-                &nbsp;({monster.size} {monster.type}
-                {isSubtype()}, {monster.alignment})
-              </Typography>
-            </Toolbar>
-          </AppBar>
-          <Toolbar />
+          <MainStats
+          monster={monster}
+          />
           <CardContent>
-            <div>Armor Class {monster.armor_class}</div>
-            <div>
-              Hit Points {monster.hit_points} ({monster.hit_dice}+
-              {parseInt(monster.hit_dice) * conMod})
-            </div>
-            <div>
-              Speed {monster.speed}
-              <div
-                style={{
-                  display: "flex",
-                  "flex-direction": "row-reverse",
-                  color: "red",
-                }}
-              >
-                <Typography variant="caption">*saving throws</Typography>
-              </div>
-            </div>
-            <Divider />
-
-            <div>
-              <Grid
-                container
-                direction="row"
-                justify="center"
-                alignItems="flex-start"
-                container
-                spacing={1}
-              >
-                <Grid item xs={2}>
-                  STR
-                </Grid>
-                <Grid item xs={2}>
-                  DEX
-                </Grid>
-                <Grid item xs={2}>
-                  CON
-                </Grid>
-                <Grid item xs={2}>
-                  INT
-                </Grid>
-                <Grid item xs={2}>
-                  WIS
-                </Grid>
-                <Grid item xs={2}>
-                  CHA
-                </Grid>
-              </Grid>
-
-              <Grid
-                container
-                direction="row"
-                justify="center"
-                alignItems="flex-start"
-                container
-                spacing={1}
-              >
-                <Grid item xs={2}>
-                  {monster.stats.strength} ({strMod})
-                </Grid>
-                <Grid item xs={2}>
-                  {monster.stats.dexterity} ({dexMod})
-                </Grid>
-                <Grid item xs={2}>
-                  {monster.stats.constitution} ({conMod})
-                </Grid>
-                <Grid item xs={2}>
-                  {monster.stats.intelligence} ({intMod})
-                </Grid>
-                <Grid item xs={2}>
-                  {monster.stats.wisdom} ({wisMod})
-                </Grid>
-                <Grid item xs={2}>
-                  {monster.stats.charisma} ({chaMod})
-                </Grid>
-              </Grid>
-
-              {savingThrows.length !== 0 && (
-                <Grid
-                  container
-                  direction="row"
-                  justify="center"
-                  alignItems="flex-start"
-                  container
-                  spacing={1}
-                >
-                  {savingThrows.map((savingThrow, index) => (
-                    <Grid item xs={2}>
-                      <Typography style={{ color: "red" }}>
-                        {savingThrow.value}
-                      </Typography>
-                    </Grid>
-                  ))}
-                </Grid>
-              )}
-            </div>
-            <Divider />
-
-            {skills.length !== 0 && (
-              <Typography variant="subtitle2">Skills</Typography>
-            )}
-            {skills.map((prof, index) => (
-              <ListItem dense={true}>
-                <Typography variant="caption">
-                  {prof.name} +{prof.value}
-                </Typography>
-              </ListItem>
-            ))}
-
-            {damageVulnerabilties.length !== 0 && (
-              <Typography variant="subtitle2">Damage Vulnerabilties</Typography>
-            )}
-            {damageVulnerabilties.map((vulnerabilties, index) => (
-              <ListItem dense={true}>
-                <Typography variant="caption">{vulnerabilties}</Typography>
-              </ListItem>
-            ))}
-
-            {damageResistances.length !== 0 && (
-              <Typography variant="subtitle2">Damage Resistance</Typography>
-            )}
-            {damageResistances.map((resistance, index) => (
-              <ListItem dense={true}>
-                <Typography variant="caption">{resistance}</Typography>
-              </ListItem>
-            ))}
-
-            {damageImmunities.length !== 0 && (
-              <Typography variant="subtitle2">Damage Immunities</Typography>
-            )}
-            {damageImmunities.map((immunities, index) => (
-              <ListItem dense={true}>
-                <Typography variant="caption">{immunities}</Typography>
-              </ListItem>
-            ))}
-
-            {condidtionImmunities.length !== 0 && (
-              <Typography variant="subtitle2">Condition Immunities</Typography>
-            )}
-            {condidtionImmunities.map((immunities, index) => (
-              <ListItem dense={true}>
-                <Typography variant="caption">{immunities}</Typography>
-              </ListItem>
-            ))}
-            {monster.senses.length !== 0 && (
-              <div style={{ display: "flex" }}>
-                <Typography variant="subtitle2">Senses</Typography>
-                  <Typography style={{ marginLeft: "10px" }} variant="caption">
-                {monster.senses}
-                  </Typography>
-              </div>
-            )}
-            {monster.languages.length !== 0 && (
-              <div style={{ display: "flex" }}>
-                <Typography variant="subtitle2">Languages</Typography>
-                  <Typography style={{ marginLeft: "10px" }} variant="caption">
-                    {monster.languages}
-                  </Typography>
-              </div>
-            )}
-
-            <div style={{ display: "flex" }}>
-              <Typography variant="subtitle2">
-                Challenge Raiting
-                <Typography style={{ marginLeft: "10px" }} variant="caption">
-                  {cr}
-                </Typography>
-              </Typography>
-            </div>
-            <Divider />
 
             {specialAbilities.length !== 0 && (
               <div>
