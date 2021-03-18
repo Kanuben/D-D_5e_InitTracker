@@ -1,24 +1,28 @@
-import Button from '@material-ui/core/Button';
-import Checkbox from '@material-ui/core/Checkbox';
-import Dialog from '@material-ui/core/Dialog';
-import MuiDialogActions from '@material-ui/core/DialogActions';
-import MuiDialogContent from '@material-ui/core/DialogContent';
-import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
-import {makeStyles, withStyles} from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import CloseIcon from '@material-ui/icons/Close';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import React, {useEffect} from 'react';
-import {ajax} from 'rxjs/ajax';
-import {loadConditions} from '../../../services/ConditionService';
-import MonsterTemplate from '../../templates/monsterTemplate.json';
-import SkillSelect from '../Modals/SkillSelect';
-import Popover from '@material-ui/core/Popover';
+import Button from "@material-ui/core/Button";
+import Checkbox from "@material-ui/core/Checkbox";
+import Dialog from "@material-ui/core/Dialog";
+import MuiDialogActions from "@material-ui/core/DialogActions";
+import MuiDialogContent from "@material-ui/core/DialogContent";
+import MuiDialogTitle from "@material-ui/core/DialogTitle";
+import Grid from "@material-ui/core/Grid";
+import IconButton from "@material-ui/core/IconButton";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+import CloseIcon from "@material-ui/icons/Close";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import React, { useEffect } from "react";
+import { ajax } from "rxjs/ajax";
+import { loadConditions } from "../../../services/ConditionService";
+import { loadSpells } from "../../../services/SpellService";
+import MonsterTemplate from "../../templates/monsterTemplate.json";
+import AddSpell from "../AddSpell";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import Popover from "@material-ui/core/Popover";
+import SkillSelect from "../Modals/SkillSelect";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -29,6 +33,9 @@ const useStyles = makeStyles (theme => ({
   },
   root: {
     flexGrow: 1,
+  },
+  padding16: {
+    padding: "16px",
   },
   menuButton: {
     marginRight: theme.spacing (2),
@@ -107,8 +114,10 @@ export default function CreateChar (props) {
   const open = props.openCreateMonster;
   const onClose = props.onClose;
 
-  const [damageTypes, setDamageTypes] = React.useState ([]);
-  const [conditions, setConditions] = React.useState ([]);
+  const [damageTypes, setDamageTypes] = React.useState([]);
+  const [conditions, setConditions] = React.useState([]);
+  const [spells, setSpells] = React.useState([]);
+  const [isSpellCaster, setIsSpellCaster] = React.useState(false);
   const [anchorSkills, setAnchorSkills] = React.useState (null);
 
   useEffect (() => {
@@ -120,8 +129,12 @@ export default function CreateChar (props) {
     loadConditions ().subscribe (conditions => {
       setConditions (conditions.results);
     });
+    loadSpells().subscribe((spells) => {
+      setSpells(spells.results);
+    });
   }, []);
 
+  let monster = { ...MonsterTemplate };
   const handleSkillsClick = event => {
     setAnchorSkills (event.currentTarget);
   };
@@ -138,7 +151,8 @@ export default function CreateChar (props) {
   let monsterSizes = [];
   let monsterAlignments = [];
   let monsterCRs = [];
-  let monsterHitDiceValues = ['d4', 'd6', 'd8', 'd10', 'd12', 'd20'];
+  let monsterHitDiceValues = ["d4", "d6", "d8", "d10", "d12", "d20"];
+  let monsterStatTypes = ["CHA", "CON", "DEX", "INT", "STR", "WIS"];
 
   props.monsterList.forEach (element => {
     if (!monsterTypes.includes (element.type)) monsterTypes.push (element.type);
@@ -158,15 +172,25 @@ export default function CreateChar (props) {
       monsterCRs.push (element.challenge_rating.toString ());
   });
 
-  const handleCreateMonsterClicked = e => {
-    document.getElementById ('submitButton').click ();
+  const handleCreateMonsterClicked = (e) => {
+    document.getElementById("submitButton").click();
   };
 
-  const handleSubmit = e => {
-    let monster = {};
+  const handleSpellCheckbox = (e) => {
+    setIsSpellCaster(e.target.checked);
+  }
+
+  const handleSubtypeSelected = (e,value) => {
+    monster.subtype = value.toString();
+  }
+
+  const handleSavingThrowSelected = (e,value) => {
+    monster.saving_throws = value;
+  }
+
+  const handleSubmit = (e) => {
     if (e.target) {
-      monster = {...MonsterTemplate};
-      monster.name = e.target.elements.name.value.toString ();
+      monster.name = e.target.elements.name.value.toString();
       monster.size = e.target.elements.size.value;
       monster.type = e.target.elements.type.value;
       monster.alignment = e.target.elements.alignment.value;
@@ -188,7 +212,7 @@ export default function CreateChar (props) {
       if (e.target.elements.actions_description.value.length !== 0)
         monster.actions = [e.target.elements.actions_description.value];
       monster.reactions = [e.target.elements.reactions_description.value];
-      props.handleAppendMonsterList ([monster]);
+      props.handleAppendMonsterList([monster]);
     }
     e.preventDefault ();
     handleClose ();
@@ -247,9 +271,9 @@ export default function CreateChar (props) {
                   multiple
                   disableCloseOnSelect
                   options={monsterSubtypes}
-                  getOptionLabel={option => option}
-                  //onChange={handleConditionSelected}
-                  renderOption={(option, {selected}) => (
+                  getOptionLabel={(option) => option}
+                  onChange={handleSubtypeSelected}
+                  renderOption={(option, { selected }) => (
                     <React.Fragment>
                       <Checkbox
                         icon={icon}
@@ -395,6 +419,140 @@ export default function CreateChar (props) {
               </Grid>
             </Grid>
             <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <div style={{ display: "inline-flex", alignItems: "center" }}>
+                  <Checkbox
+                    checked={isSpellCaster}
+                    onChange={handleSpellCheckbox}
+                    inputProps={{ "aria-label": "primary checkbox" }}
+                  />
+                  <Typography>SPELLCASTING?</Typography>
+                </div>
+                {isSpellCaster ===true && (
+                  <Card>
+                    <CardContent>
+                      <AddSpell spells={spells}></AddSpell>
+                      <Grid className={classes.padding16} container spacing={3}>
+                        <Grid item xs>
+                          <Typography>Spell Slots</Typography>
+                        </Grid>
+                        <Grid item xs>
+                          <TextField
+                            className={classes.textField}
+                            id="outlined-basic"
+                            label="LVL 1"
+                            variant="outlined"
+                            name="lvl1_slots"
+                          />
+                        </Grid>
+                        <Grid item xs>
+                          <TextField
+                            className={classes.textField}
+                            id="outlined-basic"
+                            label="LVL 2"
+                            variant="outlined"
+                            name="lvl2_slots"
+                          />
+                        </Grid>
+                        <Grid item xs>
+                          <TextField
+                            className={classes.textField}
+                            id="outlined-basic"
+                            label="LVL 3"
+                            variant="outlined"
+                            name="lvl3_slots"
+                          />
+                        </Grid>
+                        <Grid item xs>
+                          <TextField
+                            className={classes.textField}
+                            id="outlined-basic"
+                            label="LVL 4"
+                            variant="outlined"
+                            name="lvl4_slots"
+                          />
+                        </Grid>
+                        <Grid item xs>
+                          <TextField
+                            className={classes.textField}
+                            id="outlined-basic"
+                            label="LVL 5"
+                            variant="outlined"
+                            name="lvl5_slots"
+                          />
+                        </Grid>
+                        <Grid item xs>
+                          <TextField
+                            className={classes.textField}
+                            id="outlined-basic"
+                            label="LVL 6"
+                            variant="outlined"
+                            name="lvl6_slots"
+                          />
+                        </Grid>
+                        <Grid item xs>
+                          <TextField
+                            className={classes.textField}
+                            id="outlined-basic"
+                            label="LVL 7"
+                            variant="outlined"
+                            name="lvl7_slots"
+                          />
+                        </Grid>
+                        <Grid item xs>
+                          <TextField
+                            className={classes.textField}
+                            id="outlined-basic"
+                            label="LVL 8"
+                            variant="outlined"
+                            name="lvl8_slots"
+                          />
+                        </Grid>
+                        <Grid item xs>
+                          <TextField
+                            className={classes.textField}
+                            id="outlined-basic"
+                            label="LVL 9"
+                            variant="outlined"
+                            name="lvl9_slots"
+                          />
+                        </Grid>
+                      </Grid>
+                      <Grid className={classes.padding16} container spacing={3}>
+                        <Grid item xs>
+                          <TextField
+                            className={classes.textField}
+                            id="outlined-basic"
+                            label="Spell Casting Ability"
+                            variant="outlined"
+                            name="spell_casting_ability"
+                          />
+                        </Grid>
+                        <Grid item xs>
+                          <TextField
+                            className={classes.textField}
+                            id="outlined-basic"
+                            label="Spell Save DC"
+                            variant="outlined"
+                            name="spell_save_dc"
+                          />
+                        </Grid>
+                        <Grid item xs>
+                          <TextField
+                            className={classes.textField}
+                            id="outlined-basic"
+                            label="Spell Attack Bonus"
+                            variant="outlined"
+                            name="spell_attack_bonus"
+                          />
+                        </Grid>
+                      </Grid>
+                    </CardContent>
+                  </Card>
+                )}
+              </Grid>
+            </Grid>
+            <Grid container spacing={3}>
               <Grid item xs={3}>
                 <TextField
                   className={classes.textField}
@@ -408,9 +566,9 @@ export default function CreateChar (props) {
                 <TextField
                   className={classes.textField}
                   id="outlined-basic"
-                  label="Passive Perception*"
+                  label="Speed*"
                   variant="outlined"
-                  name="passive_perception"
+                  name="speed"
                 />
               </Grid>
               <Grid item xs={3}>
@@ -437,8 +595,48 @@ export default function CreateChar (props) {
                   )}
                 />
               </Grid>
-
             </Grid>
+            <Grid container spacing={3}>
+              <Grid item xs={6}>
+                <TextField
+                  className={classes.textField}
+                  id="outlined-basic"
+                  label="Senses"
+                  variant="outlined"
+                  name="senses"
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <Autocomplete
+                  id="combo-box-demo"
+                  multiple
+                  disableCloseOnSelect
+                  options={monsterStatTypes}
+                  getOptionLabel={(option) => option}
+                  onChange={handleSavingThrowSelected}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>
+                      <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={selected}
+                      />
+                      {option}
+                    </React.Fragment>
+                  )}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      label="Saving Throws"
+                      name="saving_throws"
+                    />
+                  )}
+                />
+              </Grid>
+            </Grid>
+
             <Grid container spacing={3}>
               <Grid item xs={4}>
                 <TextField
@@ -659,7 +857,11 @@ export default function CreateChar (props) {
               </Grid>
             </Grid>
           </div>
-          <Button id="submitButton" style={{display: 'none'}} type="submit" />
+          <Button
+            id="submitButton"
+            style={{ display: "none" }}
+            type="submit"
+          ></Button>
         </form>
       </DialogContent>
 

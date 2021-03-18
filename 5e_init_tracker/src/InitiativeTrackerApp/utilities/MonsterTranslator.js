@@ -43,6 +43,7 @@ export const translateMonsters = (monsters) => {
         "burrow " + monster.speed.burrow
       );
     }
+    translatedMonster.stats = {};
     if (monster.strength) translatedMonster.stats.strength = monster.strength;
     if (monster.dexterity)
       translatedMonster.stats.dexterity = monster.dexterity;
@@ -52,13 +53,22 @@ export const translateMonsters = (monsters) => {
       translatedMonster.stats.intelligence = monster.intelligence;
     if (monster.wisdom) translatedMonster.stats.wisdom = monster.wisdom;
     if (monster.charisma) translatedMonster.stats.charisma = monster.charisma;
+    if (monster.saving_throws)
+      translatedMonster.saving_throws = monster.saving_throws;
     translatedMonster.proficiencies = [];
+    translatedMonster.saving_throws = [];
     monster.proficiencies.forEach((element) => {
       if (element.proficiency) {
-        translatedMonster.proficiencies.push({
-          name: element.proficiency.name,
-          value: element.value,
-        });
+        if (element.proficiency.name.includes("Saving Throw:")) {
+          translatedMonster.saving_throws.push(
+            element.proficiency.name.replace("Saving Throw: ", "")
+          );
+        } else {
+          translatedMonster.proficiencies.push({
+            name: element.proficiency.name,
+            value: element.value,
+          });
+        }
       }
     });
     translatedMonster.damage_resistances = monster.damage_resistances;
@@ -67,7 +77,9 @@ export const translateMonsters = (monsters) => {
     translatedMonster.condition_immunities = monster.condition_immunities;
     translatedMonster.senses = "";
     Object.entries(monster.senses).forEach((element) => {
-      translatedMonster.senses = translatedMonster.senses.concat(element[0].replace('_',' ')+" " + element[1]+", ")
+      translatedMonster.senses = translatedMonster.senses.concat(
+        element[0].replace("_", " ") + " " + element[1] + ", "
+      );
     });
     if (monster.languages.length > 0)
       translatedMonster.languages = monster.languages;
