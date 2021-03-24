@@ -200,7 +200,7 @@ export default function MainStats (props) {
   return (
     <div>
       <AppBar position="fixed">
-        <Toolbar>
+        <Toolbar style={{background: "linear-gradient(180deg, rgba(0,191,165,1) 79%, rgba(48,48,48,1) 96%, rgba(19,19,19,1) 100%)"}}>
           <Typography variant="h4" gutterBottom>
             {props.monster.name}
           </Typography>
@@ -211,7 +211,6 @@ export default function MainStats (props) {
         </Toolbar>
       </AppBar>
       <Toolbar />
-      <CardContent>
         <div>Armor Class {props.monster.armor_class}</div>
         <div>
           Hit Points {props.monster.hit_points} ({props.monster.hit_dice}+
@@ -465,8 +464,7 @@ export default function MainStats (props) {
         </List>
         <Divider />
 
-        {props.monster.special_abilities.length !== 0 &&
-          <div>
+
             {props.monster.special_abilities.length !== 0 &&
               <div>
                 <Typography variant="h6">Special Abilities</Typography>
@@ -490,8 +488,8 @@ export default function MainStats (props) {
                 </List>
 
               </div>}
-          </div>}
-      </CardContent>
+
+
     </div>
   );
 }

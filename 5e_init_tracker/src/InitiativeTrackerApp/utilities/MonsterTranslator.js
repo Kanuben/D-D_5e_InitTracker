@@ -1,12 +1,12 @@
-import MonsterTemplate from "../templates/monsterTemplate.json";
+import MonsterTemplate from '../templates/monsterTemplate.json';
 
-const fs = window.require("fs");
-const path = window.require("path");
+const fs = window.require ('fs');
+const path = window.require ('path');
 
-export const translateMonsters = (monsters) => {
+export const translateMonsters = monsters => {
   let translatedMonsters = [];
-  monsters.forEach((monster) => {
-    let translatedMonster = { ...MonsterTemplate };
+  monsters.forEach (monster => {
+    let translatedMonster = {...MonsterTemplate};
     if (monster.img) {
       translatedMonster.img = monster.img;
     }
@@ -19,28 +19,28 @@ export const translateMonsters = (monsters) => {
     translatedMonster.hit_points = monster.hit_points;
     translatedMonster.hit_dice = monster.hit_dice;
     if (monster.speed.walk) {
-      translatedMonster.speed = translatedMonster.speed.concat(
-        monster.speed.walk + ", "
+      translatedMonster.speed = translatedMonster.speed.concat (
+        monster.speed.walk + ', '
       );
     }
     if (monster.speed.fly) {
-      translatedMonster.speed = translatedMonster.speed.concat(
-        "fly " + monster.speed.fly + ", "
+      translatedMonster.speed = translatedMonster.speed.concat (
+        'fly ' + monster.speed.fly + ', '
       );
     }
     if (monster.speed.climb) {
-      translatedMonster.speed = translatedMonster.speed.concat(
-        "climb " + monster.speed.climb + ", "
+      translatedMonster.speed = translatedMonster.speed.concat (
+        'climb ' + monster.speed.climb + ', '
       );
     }
     if (monster.speed.swim) {
-      translatedMonster.speed = translatedMonster.speed.concat(
-        "swim " + monster.speed.swim + ", "
+      translatedMonster.speed = translatedMonster.speed.concat (
+        'swim ' + monster.speed.swim + ', '
       );
     }
     if (monster.speed.burrow) {
-      translatedMonster.speed = translatedMonster.speed.concat(
-        "burrow " + monster.speed.burrow
+      translatedMonster.speed = translatedMonster.speed.concat (
+        'burrow ' + monster.speed.burrow
       );
     }
     translatedMonster.stats = {};
@@ -57,14 +57,14 @@ export const translateMonsters = (monsters) => {
       translatedMonster.saving_throws = monster.saving_throws;
     translatedMonster.proficiencies = [];
     translatedMonster.saving_throws = [];
-    monster.proficiencies.forEach((element) => {
+    monster.proficiencies.forEach (element => {
       if (element.proficiency) {
-        if (element.proficiency.name.includes("Saving Throw:")) {
-          translatedMonster.saving_throws.push(
-            element.proficiency.name.replace("Saving Throw: ", "")
+        if (element.proficiency.name.includes ('Saving Throw:')) {
+          translatedMonster.saving_throws.push (
+            element.proficiency.name.replace ('Saving Throw: ', '')
           );
         } else {
-          translatedMonster.proficiencies.push({
+          translatedMonster.proficiencies.push ({
             name: element.proficiency.name,
             value: element.value,
           });
@@ -75,10 +75,11 @@ export const translateMonsters = (monsters) => {
     translatedMonster.damage_immunities = monster.damage_immunities;
     translatedMonster.damage_vulnerabilities = monster.damage_vulnerabilities;
     translatedMonster.condition_immunities = monster.condition_immunities;
-    translatedMonster.senses = "";
-    Object.entries(monster.senses).forEach((element) => {
-      translatedMonster.senses = translatedMonster.senses.concat(
-        element[0].replace("_", " ") + " " + element[1] + ", "
+    translatedMonster.senses = '';
+
+    Object.entries (monster.senses).forEach (element => {
+      translatedMonster.senses = translatedMonster.senses.concat (
+        element[0].replace ('_', ' ') + ' ' + element[1] + ', '
       );
     });
     if (monster.languages.length > 0)
@@ -87,27 +88,27 @@ export const translateMonsters = (monsters) => {
     translatedMonster.xp = monster.xp;
     translatedMonster.special_abilities = [];
     if (monster.special_abilities) {
-      monster.special_abilities.forEach((element) => {
-        if (element.name === "Spellcasting") {
+      monster.special_abilities.forEach (element => {
+        if (element.name === 'Spellcasting') {
           translatedMonster.spell_casting = {};
           translatedMonster.spell_casting.spells = [];
           translatedMonster.spell_casting.slots = [];
-          element.spellcasting.spells.forEach((spell) => {
-            translatedMonster.spell_casting.spells.push({
+          element.spellcasting.spells.forEach (spell => {
+            translatedMonster.spell_casting.spells.push ({
               name: spell.name,
               level: spell.level,
               url: spell.url,
             });
           });
-          Object.values(element.spellcasting.slots).forEach((slot) => {
+          Object.values (element.spellcasting.slots).forEach (slot => {
             let tempArray = [];
             for (let i = 0; i < slot; i++) {
-              tempArray.push("X");
+              tempArray.push ('X');
             }
-            translatedMonster.spell_casting.slots.push(tempArray);
+            translatedMonster.spell_casting.slots.push (tempArray);
           });
         }
-        translatedMonster.special_abilities.push({
+        translatedMonster.special_abilities.push ({
           name: element.name,
           desc: element.desc,
         });
@@ -115,8 +116,8 @@ export const translateMonsters = (monsters) => {
     }
     translatedMonster.actions = [];
     if (monster.actions) {
-      monster.actions.forEach((element) => {
-        translatedMonster.actions.push({
+      monster.actions.forEach (element => {
+        translatedMonster.actions.push ({
           name: element.name,
           desc: element.desc,
         });
@@ -124,8 +125,8 @@ export const translateMonsters = (monsters) => {
     }
     translatedMonster.reactions = [];
     if (monster.reactions) {
-      monster.reactions.forEach((element) => {
-        translatedMonster.reactions.push({
+      monster.reactions.forEach (element => {
+        translatedMonster.reactions.push ({
           name: element.name,
           desc: element.desc,
         });
@@ -133,14 +134,14 @@ export const translateMonsters = (monsters) => {
     }
     if (monster.legendary_actions) {
       translatedMonster.legendary_actions = {};
-      translatedMonster.legendary_actions.actions_per_turn = ["X", "X", "X"];
+      translatedMonster.legendary_actions.actions_per_turn = ['X', 'X', 'X'];
       translatedMonster.legendary_actions.actions = [];
       if (monster.legendary_actions.actions) {
         translatedMonster.legendary_actions.actions =
           monster.legendary_actions.actions;
       } else {
-        monster.legendary_actions.forEach((element) => {
-          translatedMonster.legendary_actions.actions.push({
+        monster.legendary_actions.forEach (element => {
+          translatedMonster.legendary_actions.actions.push ({
             name: element.name,
             desc: element.desc,
           });
@@ -150,66 +151,66 @@ export const translateMonsters = (monsters) => {
 
     if (monster.lair_actions) {
       translatedMonster.lair_actions = [];
-      monster.lair_actions.forEach((element) => {
-        translatedMonster.lair_actions.push({
+      monster.lair_actions.forEach (element => {
+        translatedMonster.lair_actions.push ({
           name: element.name,
           desc: element.desc,
         });
       });
     }
-    translatedMonsters.push(translatedMonster);
+    translatedMonsters.push (translatedMonster);
   });
   return translatedMonsters;
 };
 
-export function monsterFileExists() {
+export function monsterFileExists () {
   try {
-    let filePath = "";
+    let filePath = '';
     if (window.isDev) {
-      filePath = "./src/InitiativeTrackerApp/assets/monsters.json";
+      filePath = './src/InitiativeTrackerApp/assets/monsters.json';
     } else {
-      filePath = path.join(
+      filePath = path.join (
         global.__dirname,
-        "../src/InitiativeTrackerApp/assets/monsters.json"
+        '../src/InitiativeTrackerApp/assets/monsters.json'
       );
     }
-    return fs.existsSync(filePath);
+    return fs.existsSync (filePath);
   } catch (error) {
-    console.error(error);
+    console.error (error);
   }
 }
 
-export function readMonsterFile() {
+export function readMonsterFile () {
   try {
-    let filePath = "";
+    let filePath = '';
     if (window.isDev) {
-      filePath = "./src/InitiativeTrackerApp/assets/monsters.json";
+      filePath = './src/InitiativeTrackerApp/assets/monsters.json';
     } else {
-      filePath = path.join(
+      filePath = path.join (
         global.__dirname,
-        "../src/InitiativeTrackerApp/assets/monsters.json"
+        '../src/InitiativeTrackerApp/assets/monsters.json'
       );
     }
-    const data = fs.readFileSync(filePath, "utf8");
-    return JSON.parse(data);
+    const data = fs.readFileSync (filePath, 'utf8');
+    return JSON.parse (data);
   } catch (err) {
-    console.error(err);
+    console.error (err);
   }
 }
 
-export function writeMonsterFile(translatedMonster) {
+export function writeMonsterFile (translatedMonster) {
   try {
-    let filePath = "";
+    let filePath = '';
     if (window.isDev) {
-      filePath = "./src/InitiativeTrackerApp/assets/monsters.json";
+      filePath = './src/InitiativeTrackerApp/assets/monsters.json';
     } else {
-      filePath = path.join(
+      filePath = path.join (
         global.__dirname,
-        "../src/InitiativeTrackerApp/assets/monsters.json"
+        '../src/InitiativeTrackerApp/assets/monsters.json'
       );
     }
-    fs.writeFileSync(filePath, JSON.stringify(translatedMonster));
+    fs.writeFileSync (filePath, JSON.stringify (translatedMonster));
   } catch (e) {
-    console.log(e.message);
+    console.log (e.message);
   }
 }
