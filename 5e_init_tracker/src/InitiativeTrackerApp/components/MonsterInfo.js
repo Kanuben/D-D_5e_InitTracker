@@ -1,19 +1,9 @@
-import AppBar from '@material-ui/core/AppBar';
+
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import Checkbox from '@material-ui/core/Checkbox';
-import Divider from '@material-ui/core/Divider';
-import Grid from '@material-ui/core/Grid';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import Popover from '@material-ui/core/Popover';
 import {makeStyles, useTheme} from '@material-ui/core/styles';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import React, {useEffect} from 'react';
-import {Link} from 'react-router-dom';
 import {readMonsterFile} from '../utilities/MonsterTranslator';
-import SpellCard from './SpellInfo';
 import MainStats from '../components/MonsterInfo/MainStats';
 import SpellCasting from '../components/MonsterInfo/SpellCasting';
 import ActionsReactions from './MonsterInfo/ActionsReactions';
