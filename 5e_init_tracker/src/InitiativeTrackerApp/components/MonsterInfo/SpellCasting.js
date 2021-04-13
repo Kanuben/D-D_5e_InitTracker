@@ -73,6 +73,9 @@ export default function SpellCasting (props) {
 
   if (props.monster) {
     props.monster.spell_casting.spells.forEach (spell => {
+      if (spell.url) {
+        spell.url = spell.url.substring(spell.url.lastIndexOf("/") + 1);
+      }
       if (spell.level === 0) cantrips.push (spell);
       if (spell.level === 1) level1Spells.push (spell);
       if (spell.level === 2) level2Spells.push (spell);
@@ -87,6 +90,7 @@ export default function SpellCasting (props) {
   }
 
   const handleOpenNewSpellWindow = spellUrl => {
+    console.log(spellUrl);
     ipcRenderer.send ('new-window', 'spell', spellUrl);
   };
 

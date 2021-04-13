@@ -34,7 +34,7 @@
   "actions": [],
   "reactions": [],
   "legendary_actions": {
-    "actions_per_turn": [],
+    "actions_per_turn": ["X","X","X"],
     "actions": []
   },
   "lair_actions": [],

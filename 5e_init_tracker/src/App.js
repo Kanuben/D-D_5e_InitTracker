@@ -10,16 +10,17 @@ const theme = createMuiTheme({
   palette: {
     type: 'dark',
     primary: {
-      main: '#00bfa5',
+      main: '#b53f3f',
     },
     secondary: {
-      main: '#90caf9',
+      main: '#8d99ae',
+      light: '#bcc6d6',
     },
   },
   typography: {
-    h4: {
-      fontFamily: 'New Rocker',
-    },
+    // h4: {
+    //   fontFamily: 'New Rocker',
+    // },
   },
 });
 

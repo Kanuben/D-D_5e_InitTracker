@@ -27,9 +27,9 @@ import SkillSelect from "../Modals/SkillSelect";
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-const useStyles = makeStyles (theme => ({
+const useStyles = makeStyles((theme) => ({
   textField: {
-    width: '100%',
+    width: "100%",
   },
   root: {
     flexGrow: 1,
@@ -38,79 +38,79 @@ const useStyles = makeStyles (theme => ({
     padding: "16px",
   },
   menuButton: {
-    marginRight: theme.spacing (2),
+    marginRight: theme.spacing(2),
   },
   title: {
     flexGrow: 1,
-    display: 'none',
-    [theme.breakpoints.up ('sm')]: {
-      display: 'block',
+    display: "none",
+    [theme.breakpoints.up("sm")]: {
+      display: "block",
     },
   },
   flex: {
-    display: 'flex',
-    justifyContent: 'space-between',
+    display: "flex",
+    justifyContent: "space-between",
   },
   placeholder: {
-    display: 'flex',
-    'justify-content': 'center',
-    'align-items': 'center',
-    'flex-direction': 'column',
+    display: "flex",
+    "justify-content": "center",
+    "align-items": "center",
+    "flex-direction": "column",
   },
   dialogSize: {
-    minHeight: '65%',
-    minWidth: '40%',
-    maxWidth: '40%',
-    maxHeight: '65%',
+    minHeight: "65%",
+    minWidth: "40%",
+    maxWidth: "40%",
+    maxHeight: "65%",
   },
 }));
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     margin: 0,
-    padding: theme.spacing (2),
+    padding: theme.spacing(2),
   },
   closeButton: {
-    position: 'absolute',
-    right: theme.spacing (1),
-    top: theme.spacing (1),
+    position: "absolute",
+    right: theme.spacing(1),
+    top: theme.spacing(1),
     color: theme.palette.grey[500],
   },
 });
 
-const DialogTitle = withStyles (styles) (props => {
-  const {children, classes, onClose, ...other} = props;
+const DialogTitle = withStyles(styles)((props) => {
+  const { children, classes, onClose, ...other } = props;
   return (
     <MuiDialogTitle disableTypography className={classes.root} {...other}>
       <Typography variant="h6">{children}</Typography>
-      {onClose
-        ? <IconButton
-            aria-label="close"
-            className={classes.closeButton}
-            onClick={onClose}
-          >
-            <CloseIcon />
-          </IconButton>
-        : null}
+      {onClose ? (
+        <IconButton
+          aria-label="close"
+          className={classes.closeButton}
+          onClick={onClose}
+        >
+          <CloseIcon />
+        </IconButton>
+      ) : null}
     </MuiDialogTitle>
   );
 });
 
-const DialogContent = withStyles (theme => ({
+const DialogContent = withStyles((theme) => ({
   root: {
-    padding: theme.spacing (2),
+    padding: theme.spacing(2),
   },
-})) (MuiDialogContent);
+}))(MuiDialogContent);
 
-const DialogActions = withStyles (theme => ({
+const DialogActions = withStyles((theme) => ({
   root: {
     margin: 0,
-    padding: theme.spacing (1),
+    padding: theme.spacing(1),
   },
-})) (MuiDialogActions);
+}))(MuiDialogActions);
 
-export default function CreateChar (props) {
-  const classes = useStyles ();
+export default function CreateChar(props) {
+  const classes = useStyles();
   const open = props.openCreateMonster;
   const onClose = props.onClose;
 
@@ -118,16 +118,18 @@ export default function CreateChar (props) {
   const [conditions, setConditions] = React.useState([]);
   const [spells, setSpells] = React.useState([]);
   const [isSpellCaster, setIsSpellCaster] = React.useState(false);
-  const [anchorSkills, setAnchorSkills] = React.useState (null);
+  const [isLegendary, setIsLegendary] = React.useState(false);
+  const [hasLair, setHasLair] = React.useState(false);
+  const [anchorSkills, setAnchorSkills] = React.useState(null);
 
-  useEffect (() => {
+  useEffect(() => {
     ajax
-      .getJSON ('https://www.dnd5eapi.co/api/damage-types')
-      .subscribe (types => {
-        setDamageTypes (types.results);
+      .getJSON("https://www.dnd5eapi.co/api/damage-types")
+      .subscribe((types) => {
+        setDamageTypes(types.results);
       });
-    loadConditions ().subscribe (conditions => {
-      setConditions (conditions.results);
+    loadConditions().subscribe((conditions) => {
+      setConditions(conditions.results);
     });
     loadSpells().subscribe((spells) => {
       setSpells(spells.results);
@@ -135,16 +137,16 @@ export default function CreateChar (props) {
   }, []);
 
   let monster = { ...MonsterTemplate };
-  const handleSkillsClick = event => {
-    setAnchorSkills (event.currentTarget);
+  const handleSkillsClick = (event) => {
+    setAnchorSkills(event.currentTarget);
   };
 
   const handleSkillsClose = () => {
-    setAnchorSkills (null);
+    setAnchorSkills(null);
   };
 
-  const openSkills = Boolean (anchorSkills);
-  const idSkills = openSkills ? 'simple-popover' : undefined;
+  const openSkills = Boolean(anchorSkills);
+  const idSkills = openSkills ? "simple-popover" : undefined;
 
   let monsterTypes = [];
   let monsterSubtypes = [];
@@ -154,22 +156,22 @@ export default function CreateChar (props) {
   let monsterHitDiceValues = ["d4", "d6", "d8", "d10", "d12", "d20"];
   let monsterStatTypes = ["CHA", "CON", "DEX", "INT", "STR", "WIS"];
 
-  props.monsterList.forEach (element => {
-    if (!monsterTypes.includes (element.type)) monsterTypes.push (element.type);
-    if (!monsterSubtypes.includes (element.subtype) && element.subtype !== null)
-      monsterSubtypes.push (element.subtype);
-    if (!monsterSizes.includes (element.size) && element.size !== null)
-      monsterSizes.push (element.size);
+  props.monsterList.forEach((element) => {
+    if (!monsterTypes.includes(element.type)) monsterTypes.push(element.type);
+    if (!monsterSubtypes.includes(element.subtype) && element.subtype !== null)
+      monsterSubtypes.push(element.subtype);
+    if (!monsterSizes.includes(element.size) && element.size !== null)
+      monsterSizes.push(element.size);
     if (
-      !monsterAlignments.includes (element.alignment) &&
+      !monsterAlignments.includes(element.alignment) &&
       element.alignment !== null
     )
-      monsterAlignments.push (element.alignment);
+      monsterAlignments.push(element.alignment);
     if (
-      !monsterCRs.includes (element.challenge_rating.toString ()) &&
+      !monsterCRs.includes(element.challenge_rating.toString()) &&
       element.challenge_rating !== null
     )
-      monsterCRs.push (element.challenge_rating.toString ());
+      monsterCRs.push(element.challenge_rating.toString());
   });
 
   const handleCreateMonsterClicked = (e) => {
@@ -178,22 +180,56 @@ export default function CreateChar (props) {
 
   const handleSpellCheckbox = (e) => {
     setIsSpellCaster(e.target.checked);
-  }
+  };
 
-  const handleSubtypeSelected = (e,value) => {
+  const handleLegendaryCheckbox = (e) => {
+    setIsLegendary(e.target.checked);
+  };
+
+  const handleLairCheckbox = (e) => {
+    setHasLair(e.target.checked);
+  };
+
+  const handleSubtypeSelected = (e, value) => {
     monster.subtype = value.toString();
-  }
+  };
 
-  const handleSavingThrowSelected = (e,value) => {
+  const handleSavingThrowSelected = (e, value) => {
     monster.saving_throws = value;
-  }
+  };
 
   const handleSubmit = (e) => {
     if (e.target) {
       monster.name = e.target.elements.name.value.toString();
-      monster.size = e.target.elements.size.value;
       monster.type = e.target.elements.type.value;
+      monster.size = e.target.elements.size.value;
       monster.alignment = e.target.elements.alignment.value;
+      monster.challenge_rating = e.target.elements.challenge_rating.value;
+      if (e.target.elements.reactions_description.value.length !== 0) {
+        monster.reactions = parseTextDescription(
+          e.target.elements.reactions_description.value
+        );
+      }
+      if (e.target.elements.actions_description.value.length !== 0) {
+        monster.actions = parseTextDescription(
+          e.target.elements.actions_description.value
+        );
+      }
+      if (e.target.elements.special_traits_description.value.length !== 0) {
+        monster.special_abilities = parseTextDescription(
+          e.target.elements.special_traits_description.value
+        );
+      }
+      if (e.target.elements.legendary_actions_description.value.length !== 0) {
+        monster.legendary_actions.actions = parseTextDescription(
+          e.target.elements.legendary_actions_description.value
+        );
+      }
+      // if (e.target.elements.lair_actions_description.value.length !== 0) {
+      //   monster.lair_actions = parseTextDescription(
+      //     e.target.elements.lair_actions_description.value
+      //   );
+      // }
       monster.armor_class = e.target.elements.armor_class.value;
       monster.hit_points = e.target.elements.hit_points.value;
       monster.hit_dice =
@@ -205,22 +241,16 @@ export default function CreateChar (props) {
       monster.stats.intelligence = e.target.elements.intelligence.value;
       monster.stats.wisdom = e.target.elements.wisdom.value;
       monster.stats.charisma = e.target.elements.charisma.value;
-      if (e.target.elements.special_traits_description.value.length !== 0)
-        monster.special_abilities = [
-          e.target.elements.special_traits_description.value,
-        ];
-      if (e.target.elements.actions_description.value.length !== 0)
-        monster.actions = [e.target.elements.actions_description.value];
-      monster.reactions = [e.target.elements.reactions_description.value];
       props.handleAppendMonsterList([monster]);
     }
-    e.preventDefault ();
-    handleClose ();
+    e.preventDefault();
+    handleClose();
   };
 
   //Reset states on close
   const handleClose = () => {
-    onClose ();
+    monster = { ...MonsterTemplate };
+    onClose();
   };
 
   return (
@@ -229,11 +259,10 @@ export default function CreateChar (props) {
       aria-labelledby="customized-dialog-title"
       open={open}
       fullWidth={true}
-      classes={{paper: classes.dialogSize}}
+      classes={{ paper: classes.dialogSize }}
     >
       <DialogTitle id="customized-dialog-title" onClose={handleClose}>
         Create Monster
-
       </DialogTitle>
       <DialogContent>
         <form className={classes.root} onSubmit={handleSubmit}>
@@ -253,8 +282,8 @@ export default function CreateChar (props) {
                   freeSolo
                   id="combo-box-demo"
                   options={monsterTypes}
-                  getOptionLabel={option => option}
-                  renderInput={params => (
+                  getOptionLabel={(option) => option}
+                  renderInput={(params) => (
                     <TextField
                       {...params}
                       label="Monster Type*"
@@ -278,13 +307,13 @@ export default function CreateChar (props) {
                       <Checkbox
                         icon={icon}
                         checkedIcon={checkedIcon}
-                        style={{marginRight: 8}}
+                        style={{ marginRight: 8 }}
                         checked={selected}
                       />
                       {option}
                     </React.Fragment>
                   )}
-                  renderInput={params => (
+                  renderInput={(params) => (
                     <TextField
                       {...params}
                       variant="outlined"
@@ -301,8 +330,8 @@ export default function CreateChar (props) {
                   freeSolo
                   id="combo-box-demo"
                   options={monsterSizes}
-                  getOptionLabel={option => option}
-                  renderInput={params => (
+                  getOptionLabel={(option) => option}
+                  renderInput={(params) => (
                     <TextField
                       {...params}
                       label="Size*"
@@ -318,8 +347,8 @@ export default function CreateChar (props) {
                   freeSolo
                   id="combo-box-demo"
                   options={monsterAlignments}
-                  getOptionLabel={option => option}
-                  renderInput={params => (
+                  getOptionLabel={(option) => option}
+                  renderInput={(params) => (
                     <TextField
                       {...params}
                       label="Alignment"
@@ -334,8 +363,8 @@ export default function CreateChar (props) {
                   freeSolo
                   id="combo-box-demo"
                   options={monsterCRs}
-                  getOptionLabel={option => option}
-                  renderInput={params => (
+                  getOptionLabel={(option) => option}
+                  renderInput={(params) => (
                     <TextField
                       {...params}
                       label="Challenge Rating*"
@@ -386,36 +415,48 @@ export default function CreateChar (props) {
             </Grid>
             <Grid container spacing={3}>
               <Grid item xs={6}>
-                <div style={{display: 'inline-flex', alignItems: 'center'}}>
-                  <Checkbox inputProps={{'aria-label': 'primary checkbox'}} />
+                <div style={{ display: "inline-flex", alignItems: "center" }}>
+                  <Checkbox
+                    checked={isLegendary}
+                    onChange={handleLegendaryCheckbox}
+                    inputProps={{ "aria-label": "primary checkbox" }}
+                  />
                   <Typography>LEGENDARY?</Typography>
                 </div>
-                <TextField
-                  className={classes.textField}
-                  id="outlined-multiline-static"
-                  label="LEGENDARY ACTIONS DESCRIPTION"
-                  multiline
-                  rows={6}
-                  variant="outlined"
-                  disabled={true}
-                  name="legendary_actions_description"
-                />
+                {isLegendary === true && (
+                  <TextField
+                    className={classes.textField}
+                    id="outlined-multiline-static"
+                    label="LEGENDARY ACTIONS DESCRIPTION"
+                    multiline
+                    rows={6}
+                    variant="outlined"
+                    disabled={!isLegendary}
+                    name="legendary_actions_description"
+                  />
+                )}
               </Grid>
               <Grid item xs={6}>
-                <div style={{display: 'inline-flex', alignItems: 'center'}}>
-                  <Checkbox inputProps={{'aria-label': 'primary checkbox'}} />
+                <div style={{ display: "inline-flex", alignItems: "center" }}>
+                  <Checkbox
+                    checked={hasLair}
+                    onChange={handleLairCheckbox}
+                    inputProps={{ "aria-label": "primary checkbox" }}
+                  />
                   <Typography>LAIR?</Typography>
                 </div>
-                <TextField
-                  className={classes.textField}
-                  id="outlined-multiline-static"
-                  label="LAIR AND LAIR ACTIONS DESCRIPTION"
-                  multiline
-                  rows={6}
-                  variant="outlined"
-                  disabled={true}
-                  name="lair_actions_description"
-                />
+                {hasLair === true && (
+                  <TextField
+                    className={classes.textField}
+                    id="outlined-multiline-static"
+                    label="LAIR AND LAIR ACTIONS DESCRIPTION"
+                    multiline
+                    rows={6}
+                    variant="outlined"
+                    disabled={!hasLair}
+                    name="lair_actions_description"
+                  />
+                )}
               </Grid>
             </Grid>
             <Grid container spacing={3}>
@@ -428,7 +469,7 @@ export default function CreateChar (props) {
                   />
                   <Typography>SPELLCASTING?</Typography>
                 </div>
-                {isSpellCaster ===true && (
+                {isSpellCaster === true && (
                   <Card>
                     <CardContent>
                       <AddSpell spells={spells}></AddSpell>
@@ -584,8 +625,8 @@ export default function CreateChar (props) {
                 <Autocomplete
                   id="combo-box-demo"
                   options={monsterHitDiceValues}
-                  getOptionLabel={option => option}
-                  renderInput={params => (
+                  getOptionLabel={(option) => option}
+                  renderInput={(params) => (
                     <TextField
                       {...params}
                       label="Hit Points Die Value*"
@@ -711,20 +752,20 @@ export default function CreateChar (props) {
                   multiple
                   disableCloseOnSelect
                   options={damageTypes}
-                  getOptionLabel={option => option.name}
+                  getOptionLabel={(option) => option.name}
                   //onChange={handleConditionSelected}
-                  renderOption={(option, {selected}) => (
+                  renderOption={(option, { selected }) => (
                     <React.Fragment>
                       <Checkbox
                         icon={icon}
                         checkedIcon={checkedIcon}
-                        style={{marginRight: 8}}
+                        style={{ marginRight: 8 }}
                         checked={selected}
                       />
                       {option.name}
                     </React.Fragment>
                   )}
-                  renderInput={params => (
+                  renderInput={(params) => (
                     <TextField
                       {...params}
                       variant="outlined"
@@ -740,20 +781,20 @@ export default function CreateChar (props) {
                   multiple
                   disableCloseOnSelect
                   options={damageTypes}
-                  getOptionLabel={option => option.name}
+                  getOptionLabel={(option) => option.name}
                   //onChange={handleConditionSelected}
-                  renderOption={(option, {selected}) => (
+                  renderOption={(option, { selected }) => (
                     <React.Fragment>
                       <Checkbox
                         icon={icon}
                         checkedIcon={checkedIcon}
-                        style={{marginRight: 8}}
+                        style={{ marginRight: 8 }}
                         checked={selected}
                       />
                       {option.name}
                     </React.Fragment>
                   )}
-                  renderInput={params => (
+                  renderInput={(params) => (
                     <TextField
                       {...params}
                       variant="outlined"
@@ -769,20 +810,20 @@ export default function CreateChar (props) {
                   multiple
                   disableCloseOnSelect
                   options={damageTypes}
-                  getOptionLabel={option => option.name}
+                  getOptionLabel={(option) => option.name}
                   //onChange={handleConditionSelected}
-                  renderOption={(option, {selected}) => (
+                  renderOption={(option, { selected }) => (
                     <React.Fragment>
                       <Checkbox
                         icon={icon}
                         checkedIcon={checkedIcon}
-                        style={{marginRight: 8}}
+                        style={{ marginRight: 8 }}
                         checked={selected}
                       />
                       {option.name}
                     </React.Fragment>
                   )}
-                  renderInput={params => (
+                  renderInput={(params) => (
                     <TextField
                       {...params}
                       variant="outlined"
@@ -798,20 +839,20 @@ export default function CreateChar (props) {
                   multiple
                   disableCloseOnSelect
                   options={conditions}
-                  getOptionLabel={option => option.name}
+                  getOptionLabel={(option) => option.name}
                   //onChange={handleConditionSelected}
-                  renderOption={(option, {selected}) => (
+                  renderOption={(option, { selected }) => (
                     <React.Fragment>
                       <Checkbox
                         icon={icon}
                         checkedIcon={checkedIcon}
-                        style={{marginRight: 8}}
+                        style={{ marginRight: 8 }}
                         checked={selected}
                       />
                       {option.name}
                     </React.Fragment>
                   )}
-                  renderInput={params => (
+                  renderInput={(params) => (
                     <TextField
                       {...params}
                       variant="outlined"
@@ -830,7 +871,7 @@ export default function CreateChar (props) {
                   name="languages"
                 />
               </Grid>
-              <Grid item xs={4} style={{height: '150%!', display: 'grid'}}>
+              <Grid item xs={4} style={{ height: "150%!", display: "grid" }}>
                 <Button
                   aria-describedby={idSkills}
                   variant="outlined"
@@ -844,12 +885,12 @@ export default function CreateChar (props) {
                   anchorEl={anchorSkills}
                   onClose={handleSkillsClose}
                   anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'center',
+                    vertical: "bottom",
+                    horizontal: "center",
                   }}
                   transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'center',
+                    vertical: "top",
+                    horizontal: "center",
                   }}
                 >
                   <SkillSelect />
@@ -877,4 +918,19 @@ export default function CreateChar (props) {
       </DialogActions>
     </Dialog>
   );
+
+  function parseTextDescription(text) {
+    let sections = text.split(/[\r\n]+/);
+    let parsedSections = [];
+    sections.forEach((section) => {
+      let sectionObject = {
+        name: "",
+        desc: "",
+      };
+      sectionObject.name = section.substring(0, section.indexOf("."));
+      sectionObject.desc = section.substring(section.indexOf(".") + 1);
+      parsedSections.push(sectionObject);
+    });
+    return parsedSections;
+  }
 }
