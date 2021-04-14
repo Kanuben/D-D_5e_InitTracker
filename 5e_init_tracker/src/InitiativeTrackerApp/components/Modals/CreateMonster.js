@@ -220,7 +220,7 @@ export default function CreateChar(props) {
           e.target.elements.special_traits_description.value
         );
       }
-      if (e.target.elements.legendary_actions_description.value.length !== 0) {
+      if (e.target.elements.legendary_actions_description && e.target.elements.legendary_actions_description.value.length !== 0) {
         monster.legendary_actions.actions = parseTextDescription(
           e.target.elements.legendary_actions_description.value
         );
