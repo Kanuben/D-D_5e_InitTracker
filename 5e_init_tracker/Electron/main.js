@@ -14,9 +14,11 @@ ipcMain.on("new-window", (event, window, arg) => {
       "../build/index.html#monster"
     )}`;
     deploymentURL = deploymentURL + "/" + arg;
+    console.debug(store.get("windowBounds").width);
+    console.debug(mainWindow.height);
     newWindow = new BrowserWindow({
-      width: 800,
-      height: 600,
+      width: store.get("windowBounds").width / 2,
+      height: store.get("windowBounds").height / 2,
       webPreferences: {
         nodeIntegration: true,
       },
@@ -34,8 +36,8 @@ ipcMain.on("new-window", (event, window, arg) => {
     )}`;
     deploymentURL = deploymentURL + "/" + arg;
     newWindow = new BrowserWindow({
-      width: 800,
-      height: 600,
+      width: store.get("windowBounds").width / 2,
+      height: store.get("windowBounds").height / 2,
       webPreferences: {
         nodeIntegration: true,
       },
@@ -57,6 +59,8 @@ const store = new Store({
     windowBounds: { width: 800, height: 600 },
   },
 });
+
+store.set("isDev", isDev);
 
 function createWindow() {
   let { width, height } = store.get("windowBounds");
