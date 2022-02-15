@@ -4,7 +4,7 @@ import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
-import {makeStyles, withStyles} from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
@@ -14,40 +14,38 @@ import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import Button from '@material-ui/core/Button';
 import charClassList from '../../assets/characterClasses.json';
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import CharacterTemplate from '../../templates/characterTemplate.json';
 import Grid from '@material-ui/core/Grid';
 
-export default function CalculateDamage (props) {
-  const [damage, setDamage] = React.useState ('');
+export default function CalculateDamage(props) {
+  const [damage, setDamage] = React.useState('');
 
   const handleNumClick = e => {
     let num = e.target.textContent;
     let temp = '';
-    setDamage (temp.concat (damage, num));
+    setDamage(temp.concat(damage, num));
   };
 
   const handleSign = e => {
     let sign = e.target.textContent;
     let signValue = undefined;
     if (damage !== undefined) {
-      signValue = damage.charAt (0);
+      signValue = damage.charAt(0);
     }
     let tempDamage = '';
 
     if (signValue !== undefined) {
-      console.log ('SIGN: ' + sign + '\nSIGNVALUE: ' + signValue);
-
       if (sign !== '+' && sign !== '-') {
-        setDamage (tempDamage.concat (sign, damage));
+        setDamage(tempDamage.concat(sign, damage));
       } else if (signValue === '-' && sign === '+') {
-        setDamage (damage.replace ('-', '+'));
+        setDamage(damage.replace('-', '+'));
       } else if (signValue === '+' && sign === '+') {
       } else if (signValue === '+' && sign === '-') {
-        setDamage (damage.replace ('+', '-'));
+        setDamage(damage.replace('+', '-'));
       } else if (signValue === '-' && sign === '-') {
       } else {
-        setDamage (''.concat (sign, damage));
+        setDamage(''.concat(sign, damage));
       }
     }
   };
@@ -55,27 +53,27 @@ export default function CalculateDamage (props) {
   const handleNeg = () => {
     let value = '-';
 
-    if (damage.charAt (0) !== '-') {
-      value = value.concat (damage);
-      setDamage (value);
+    if (damage.charAt(0) !== '-') {
+      value = value.concat(damage);
+      setDamage(value);
     }
   };
 
   const handleClear = () => {
-    setDamage ('');
+    setDamage('');
   };
 
   const enterDamage = () => {
     props.handleDamageChange(damage)
-    closePop ();
+    closePop();
   };
 
   const closePop = () => {
-    props.handleDamageClose ();
+    props.handleDamageClose();
   };
 
   return (
-    <div style={{maxWidth: '200px', minHeight: '250px', padding: '2%'}}>
+    <div style={{ maxWidth: '200px', minHeight: '250px', padding: '2%' }}>
 
       <TextField disabled="true" value={damage} />
       <Grid container spacing={1} justify="center">

@@ -8,7 +8,8 @@ import SvgIcon from "@material-ui/core/SvgIcon";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import React from "react";
-import SimpleCharacterCard from "./SimpleCharacterCard";
+import SpellCard from "./SpellCard";
+import { loadSpellData } from "../../services/SpellService";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -70,15 +71,23 @@ export default function AddSpell(props) {
 
   const addToSelectedList = (selectedSpell) => {
     let tempList = Object.create(selectedList);
-    let filteredSpellList = props.spells.filter(
+    let filteredSpellList = [];
+    filteredSpellList = props.spells.filter(
       (spell) => spell === selectedSpell
     );
     if (filteredSpellList.length !== 0) {
       let tempSpell = {};
       Object.assign(tempSpell, ...filteredSpellList);
-      //tempSpell.id = generateId();
-      tempList.push(tempSpell);
-      setSelectedList(tempList);
+      loadSpellData(tempSpell.index).subscribe(spellData => {
+        tempSpell = {
+          name: spellData.name,
+          level: spellData.level,
+          url: spellData.url,
+        };
+        tempList.push(tempSpell);
+        setSelectedList(tempList);
+        props.setSelectedSpells(tempList.flat());
+      });
     } else {
       return;
     }
@@ -144,14 +153,14 @@ export default function AddSpell(props) {
         <Card>
           <CardContent className={classes.spellList}>
             <List>
-              {selectedList.map((character, index) => (
-                <Slide key={character.id} direction="up" in={true} mountOnEnter>
-                  <ListItem key={character.id}>
-                    <SimpleCharacterCard
-                      character={character}
+              {selectedList.map((spell, index) => (
+                <Slide direction="up" in={true} mountOnEnter>
+                  <ListItem>
+                    <SpellCard
+                      spell={spell}
                       index={index}
                       selected={true}
-                      //removeFromSelectedList={removeFromSelectedList}
+                    //removeFromSelectedList={removeFromSelectedList}
                     />
                   </ListItem>
                 </Slide>

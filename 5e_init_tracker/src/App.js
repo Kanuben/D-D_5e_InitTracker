@@ -16,6 +16,9 @@ const theme = createMuiTheme({
       main: '#8d99ae',
       light: '#bcc6d6',
     },
+    spell: {
+      main: '#65A4AB'
+    }
   },
   typography: {
     // h4: {
@@ -27,17 +30,17 @@ const theme = createMuiTheme({
 export default function App() {
   return (
     <ThemeProvider theme={theme}>
-    <div>
-      <Route exact path="/">
-        <AppDrawer />
-      </Route>
-      <Route exact path="/monster/:id"  component={MonsterInfo}>
-      </Route>
-      <Route exact path="/spell/:id"  component={SpellInfo}>
-      </Route>
-      <Route exact path="/condition/:id"  component={ConditionInfo}>
-      </Route>
-    </div>
+      <div>
+        <Route exact path="/">
+          <AppDrawer />
+        </Route>
+        <Route exact path="/monster/:id" component={MonsterInfo}>
+        </Route>
+        <Route exact path="/spell/:id" component={SpellInfo}>
+        </Route>
+        <Route exact path="/condition/:id" component={ConditionInfo}>
+        </Route>
+      </div>
     </ThemeProvider>
   );
 }

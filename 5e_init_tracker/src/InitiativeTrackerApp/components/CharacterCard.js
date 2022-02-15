@@ -460,11 +460,11 @@ export default function CharacterCard(props) {
                     alignItems: "center",
                   }}
                 >
-                  <Typography  style={{ paddingRight: "12px" }} variant="subtitle2" gutterBottom>
+                  <Typography style={{ paddingRight: "12px" }} variant="subtitle2" gutterBottom>
                     Initiative
                   </Typography>
                   <IconButton
-                  style={{ padding: "0px" }}
+                    style={{ padding: "0px" }}
                     onClick={handleInitiativeRoll}
                     aria-label="delete"
                   >

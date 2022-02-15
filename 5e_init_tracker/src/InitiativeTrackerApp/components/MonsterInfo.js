@@ -1,14 +1,15 @@
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import {makeStyles, useTheme} from '@material-ui/core/styles';
-import React, {useEffect} from 'react';
-import {readMonsterFile} from '../utilities/MonsterTranslator';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import React, { useEffect } from 'react';
+import { readMonsterFile } from '../utilities/MonsterTranslator';
 import MainStats from '../components/MonsterInfo/MainStats';
 import SpellCasting from '../components/MonsterInfo/SpellCasting';
 import ActionsReactions from './MonsterInfo/ActionsReactions';
 import LegendaryLair from './MonsterInfo/LegendaryLair';
 
-const useStyles = makeStyles (theme => ({
+
+const useStyles = makeStyles(theme => ({
   popover: {
     pointerEvents: 'none',
   },
@@ -30,7 +31,7 @@ const useStyles = makeStyles (theme => ({
     'font-size': '1em',
   },
   col: {
-    padding: theme.spacing (2),
+    padding: theme.spacing(2),
     color: theme.palette.text.secondary,
     'align-items': 'center',
     display: 'inline-flex',
@@ -38,8 +39,8 @@ const useStyles = makeStyles (theme => ({
     'white-space': 'nowrap',
   },
   char_portrait: {
-    width: theme.spacing (8),
-    height: theme.spacing (8),
+    width: theme.spacing(8),
+    height: theme.spacing(8),
     'border-style': 'solid',
     'border-color': 'darkgrey',
     'border-width': '.25em',
@@ -53,14 +54,14 @@ const useStyles = makeStyles (theme => ({
   },
 }));
 
-export default function MonsterInfo (props) {
-  const theme = useTheme ();
-  const classes = useStyles (theme);
-  const [monster, setMonster] = React.useState ();
+export default function MonsterInfo(props) {
+  const theme = useTheme();
+  const classes = useStyles(theme);
+  const [monster, setMonster] = React.useState();
 
-  useEffect (() => {
-    let monsterList = readMonsterFile ();
-    setMonster (...monsterList.filter (e => e.name === props.match.params.id));
+  useEffect(() => {
+    let monsterList = readMonsterFile();
+    setMonster(...monsterList.filter(e => e.name === props.match.params.id));
   }, props);
 
   return (

@@ -1,12 +1,13 @@
-import MonsterTemplate from "../templates/monsterTemplate.json";
+import { Monster } from "../templates/monster";
 
 const fs = window.require("fs");
 const path = window.require("path");
+const app = window.require('electron')
 
 export const translateMonsters = (monsters) => {
   let translatedMonsters = [];
   monsters.forEach((monster) => {
-    let translatedMonster = { ...MonsterTemplate };
+    let translatedMonster = new Monster();
     if (monster.img) {
       translatedMonster.img = monster.img;
     }
@@ -54,7 +55,7 @@ export const translateMonsters = (monsters) => {
     if (monster.wisdom) translatedMonster.stats.wisdom = monster.wisdom;
     if (monster.charisma) translatedMonster.stats.charisma = monster.charisma;
     if (monster.saving_throws)
-    translatedMonster.saving_throws = monster.saving_throws;
+      translatedMonster.saving_throws = monster.saving_throws;
     translatedMonster.proficiencies = [];
     translatedMonster.saving_throws = [];
     monster.proficiencies.forEach((element) => {
@@ -74,7 +75,7 @@ export const translateMonsters = (monsters) => {
     translatedMonster.damage_resistances = monster.damage_resistances;
     translatedMonster.damage_immunities = monster.damage_immunities;
     translatedMonster.damage_vulnerabilities = monster.damage_vulnerabilities;
-    translatedMonster.condition_immunities = monster.condition_immunities; 
+    translatedMonster.condition_immunities = monster.condition_immunities;
     translatedMonster.senses = "";
     Object.entries(monster.senses).forEach((element) => {
       translatedMonster.senses = translatedMonster.senses.concat(
@@ -164,15 +165,7 @@ export const translateMonsters = (monsters) => {
 
 export function monsterFileExists() {
   try {
-    let filePath = "";
-    if (window.isDev) {
-      filePath = "./src/InitiativeTrackerApp/assets/monsters.json";
-    } else {
-      filePath = path.join(
-        global.__dirname,
-        "../src/InitiativeTrackerApp/assets/monsters.json"
-      );
-    }
+    let filePath = "monsters.json";
     return fs.existsSync(filePath);
   } catch (error) {
     console.error(error);
@@ -181,15 +174,7 @@ export function monsterFileExists() {
 
 export function readMonsterFile() {
   try {
-    let filePath = "";
-    if (window.isDev) {
-      filePath = "./src/InitiativeTrackerApp/assets/monsters.json";
-    } else {
-      filePath = path.join(
-        global.__dirname,
-        "../src/InitiativeTrackerApp/assets/monsters.json"
-      );
-    }
+    let filePath = "monsters.json";
     const data = fs.readFileSync(filePath, "utf8");
     return JSON.parse(data);
   } catch (err) {
@@ -199,17 +184,9 @@ export function readMonsterFile() {
 
 export function writeMonsterFile(translatedMonster) {
   try {
-    let filePath = "";
-    if (window.isDev) {
-      filePath = "./src/InitiativeTrackerApp/assets/monsters.json";
-    } else {
-      filePath = path.join(
-        global.__dirname,
-        "../src/InitiativeTrackerApp/assets/monsters.json"
-      );
-    }
+    let filePath = "monsters.json";
     fs.writeFileSync(filePath, JSON.stringify(translatedMonster));
   } catch (e) {
-    console.log(e.message);
+    console.error(e.message);
   }
 }

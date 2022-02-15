@@ -1,4 +1,6 @@
 import Button from "@material-ui/core/Button";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
 import Checkbox from "@material-ui/core/Checkbox";
 import Dialog from "@material-ui/core/Dialog";
 import MuiDialogActions from "@material-ui/core/DialogActions";
@@ -6,6 +8,7 @@ import MuiDialogContent from "@material-ui/core/DialogContent";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
+import Popover from "@material-ui/core/Popover";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
@@ -17,12 +20,9 @@ import React, { useEffect } from "react";
 import { ajax } from "rxjs/ajax";
 import { loadConditions } from "../../../services/ConditionService";
 import { loadSpells } from "../../../services/SpellService";
-import MonsterTemplate from "../../templates/monsterTemplate.json";
 import AddSpell from "../AddSpell";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import Popover from "@material-ui/core/Popover";
 import SkillSelect from "../Modals/SkillSelect";
+import { Monster } from "../../templates/monster";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -58,8 +58,8 @@ const useStyles = makeStyles((theme) => ({
     "flex-direction": "column",
   },
   dialogSize: {
-    minHeight: "65%",
-    minWidth: "40%",
+    minHeight: "600px",
+    minWidth: "800px",
     maxWidth: "40%",
     maxHeight: "65%",
   },
@@ -117,10 +117,14 @@ export default function CreateChar(props) {
   const [damageTypes, setDamageTypes] = React.useState([]);
   const [conditions, setConditions] = React.useState([]);
   const [spells, setSpells] = React.useState([]);
+  const [selectedSpells, setSelectedSpells] = React.useState([]);
   const [isSpellCaster, setIsSpellCaster] = React.useState(false);
   const [isLegendary, setIsLegendary] = React.useState(false);
   const [hasLair, setHasLair] = React.useState(false);
   const [anchorSkills, setAnchorSkills] = React.useState(null);
+  const [subtype, setSubtype] = React.useState("");
+  const [savingThrows, setSavingThrows] = React.useState([]);
+  const [damageImmunities, setDamageImmunities] = React.useState([]);
 
   useEffect(() => {
     ajax
@@ -136,7 +140,6 @@ export default function CreateChar(props) {
     });
   }, []);
 
-  let monster = { ...MonsterTemplate };
   const handleSkillsClick = (event) => {
     setAnchorSkills(event.currentTarget);
   };
@@ -191,17 +194,36 @@ export default function CreateChar(props) {
   };
 
   const handleSubtypeSelected = (e, value) => {
-    monster.subtype = value.toString();
+    setSubtype(value.toString());
   };
 
   const handleSavingThrowSelected = (e, value) => {
-    monster.saving_throws = value;
+    setSavingThrows(value);
   };
 
+  const handleDamageImmunSelected = (e, value) => {
+    setDamageImmunities(value);
+  };
+
+  // const handleSavingThrowSelected = (e, value) => {
+  //   setSavingThrows(value);
+  // };
+
+  // const handleSavingThrowSelected = (e, value) => {
+  //   setSavingThrows(value);
+  // };
+
+  // const handleSavingThrowSelected = (e, value) => {
+  //   setSavingThrows(value);
+  // };
+
   const handleSubmit = (e) => {
+    let monster = new Monster();
+
     if (e.target) {
       monster.name = e.target.elements.name.value.toString();
       monster.type = e.target.elements.type.value;
+      monster.subtype = subtype;
       monster.size = e.target.elements.size.value;
       monster.alignment = e.target.elements.alignment.value;
       monster.challenge_rating = e.target.elements.challenge_rating.value;
@@ -225,6 +247,17 @@ export default function CreateChar(props) {
           e.target.elements.legendary_actions_description.value
         );
       }
+      if (selectedSpells.length > 0) {
+        let maxSpellLevel = Math.max(...selectedSpells.map(spell => spell.level));
+        let sortedSpells = selectedSpells.sort((a, b) => {
+          return a.level - b.level
+        })
+        monster.spell_casting.spells = sortedSpells
+        monster.special_abilities.push({
+          "name": "Spell Casting",
+          "desc": `The ${monster.name} is a ${getNumberWithOrdinal(maxSpellLevel)}-level spellcaster. Its spellcasting ability is ${e.target.elements.spell_casting_ability.value} (spell save DC ${e.target.elements.spell_save_dc.value}, ${e.target.elements.spell_attack_bonus.value} to hit with spell attacks).`
+        })
+      }
       // if (e.target.elements.lair_actions_description.value.length !== 0) {
       //   monster.lair_actions = parseTextDescription(
       //     e.target.elements.lair_actions_description.value
@@ -235,6 +268,8 @@ export default function CreateChar(props) {
       monster.hit_dice =
         e.target.elements.hit_dice_count.value +
         e.target.elements.hit_dice_value.value;
+      monster.senses = e.target.elements.senses.value;
+      monster.saving_throws = savingThrows;
       monster.stats.strength = e.target.elements.strength.value;
       monster.stats.dexterity = e.target.elements.dexterity.value;
       monster.stats.constitution = e.target.elements.constitution.value;
@@ -249,7 +284,6 @@ export default function CreateChar(props) {
 
   //Reset states on close
   const handleClose = () => {
-    monster = { ...MonsterTemplate };
     onClose();
   };
 
@@ -272,9 +306,10 @@ export default function CreateChar(props) {
                 <TextField
                   className={classes.textField}
                   id="outlined-basic"
-                  label="Monster Name*"
+                  label="Monster Name"
                   variant="outlined"
                   name="name"
+                  required
                 />
               </Grid>
               <Grid item xs={4}>
@@ -286,9 +321,10 @@ export default function CreateChar(props) {
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="Monster Type*"
+                      label="Monster Type"
                       variant="outlined"
                       name="type"
+                      required
                     />
                   )}
                 />
@@ -334,9 +370,10 @@ export default function CreateChar(props) {
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="Size*"
+                      label="Size"
                       variant="outlined"
                       name="size"
+                      required
                     />
                   )}
                 />
@@ -359,19 +396,13 @@ export default function CreateChar(props) {
                 />
               </Grid>
               <Grid item xs={4}>
-                <Autocomplete
-                  freeSolo
-                  id="combo-box-demo"
-                  options={monsterCRs}
-                  getOptionLabel={(option) => option}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Challenge Rating*"
-                      variant="outlined"
-                      name="challenge_rating"
-                    />
-                  )}
+                <TextField
+                  className={classes.textField}
+                  id="outlined-basic"
+                  label="Challenge Rating"
+                  variant="outlined"
+                  name="challenge_rating"
+                  required
                 />
               </Grid>
             </Grid>
@@ -472,7 +503,7 @@ export default function CreateChar(props) {
                 {isSpellCaster === true && (
                   <Card>
                     <CardContent>
-                      <AddSpell spells={spells}></AddSpell>
+                      <AddSpell setSelectedSpells={setSelectedSpells} spells={spells}></AddSpell>
                       <Grid className={classes.padding16} container spacing={3}>
                         <Grid item xs>
                           <Typography>Spell Slots</Typography>
@@ -598,27 +629,30 @@ export default function CreateChar(props) {
                 <TextField
                   className={classes.textField}
                   id="outlined-basic"
-                  label="Armor Class*"
+                  label="Armor Class"
                   variant="outlined"
                   name="armor_class"
+                  required
                 />
               </Grid>
               <Grid item xs={3}>
                 <TextField
                   className={classes.textField}
                   id="outlined-basic"
-                  label="Speed*"
+                  label="Speed"
                   variant="outlined"
                   name="speed"
+                  required
                 />
               </Grid>
               <Grid item xs={3}>
                 <TextField
                   className={classes.textField}
                   id="outlined-basic"
-                  label="Hit Points Die Count*"
+                  label="Hit Points Die Count"
                   variant="outlined"
                   name="hit_dice_count"
+                  required
                 />
               </Grid>
               <Grid item xs={3}>
@@ -629,9 +663,10 @@ export default function CreateChar(props) {
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="Hit Points Die Value*"
+                      label="Hit Points Die Value"
                       variant="outlined"
                       name="hit_dice_value"
+                      required
                     />
                   )}
                 />
@@ -683,27 +718,30 @@ export default function CreateChar(props) {
                 <TextField
                   className={classes.textField}
                   id="outlined-basic"
-                  label="STR Score*"
+                  label="STR Score"
                   variant="outlined"
                   name="strength"
+                  required
                 />
               </Grid>
               <Grid item xs={4}>
                 <TextField
                   className={classes.textField}
                   id="outlined-basic"
-                  label="DEX Score*"
+                  label="DEX Score"
                   variant="outlined"
                   name="dexterity"
+                  required
                 />
               </Grid>
               <Grid item xs={4}>
                 <TextField
                   className={classes.textField}
                   id="outlined-basic"
-                  label="CON Score*"
+                  label="CON Score"
                   variant="outlined"
                   name="constitution"
+                  required
                 />
               </Grid>
             </Grid>
@@ -712,48 +750,52 @@ export default function CreateChar(props) {
                 <TextField
                   className={classes.textField}
                   id="outlined-basic"
-                  label="INT Score*"
+                  label="INT Score"
                   variant="outlined"
                   name="intelligence"
+                  required
                 />
               </Grid>
               <Grid item xs={4}>
                 <TextField
                   className={classes.textField}
                   id="outlined-basic"
-                  label="WIS Score*"
+                  label="WIS Score"
                   variant="outlined"
                   name="wisdom"
+                  required
                 />
               </Grid>
               <Grid item xs={4}>
                 <TextField
                   className={classes.textField}
                   id="outlined-basic"
-                  label="CHA Score*"
+                  label="CHA Score"
                   variant="outlined"
                   name="charisma"
+                  required
                 />
               </Grid>
             </Grid>
             <Grid container spacing={3}>
-              <Grid item xs={3}>
+              <Grid item xs={4}>
                 <TextField
                   className={classes.textField}
                   id="outlined-basic"
-                  label="Average Hit Points*"
+                  label="Average HP"
                   variant="outlined"
                   name="hit_points"
+                  required
                 />
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={8}>
                 <Autocomplete
                   id="combo-box-demo"
                   multiple
                   disableCloseOnSelect
                   options={damageTypes}
                   getOptionLabel={(option) => option.name}
-                  //onChange={handleConditionSelected}
+                  onChange={handleDamageImmunSelected}
                   renderOption={(option, { selected }) => (
                     <React.Fragment>
                       <Checkbox
@@ -769,13 +811,13 @@ export default function CreateChar(props) {
                     <TextField
                       {...params}
                       variant="outlined"
-                      label="Damage Immunities"
+                      label="Damage Immun."
                       name="damage_immunities"
                     />
                   )}
                 />
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={6}>
                 <Autocomplete
                   id="combo-box-demo"
                   multiple
@@ -798,13 +840,13 @@ export default function CreateChar(props) {
                     <TextField
                       {...params}
                       variant="outlined"
-                      label="Damage Vulnerabilities"
+                      label="Damage Vuln."
                       name="damage_vulnerabilities"
                     />
                   )}
                 />
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={6}>
                 <Autocomplete
                   id="combo-box-demo"
                   multiple
@@ -827,13 +869,13 @@ export default function CreateChar(props) {
                     <TextField
                       {...params}
                       variant="outlined"
-                      label="Damage Resistances"
+                      label="Damage Res."
                       name="damage_resistances"
                     />
                   )}
                 />
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={6}>
                 <Autocomplete
                   id="combo-box-demo"
                   multiple
@@ -856,13 +898,13 @@ export default function CreateChar(props) {
                     <TextField
                       {...params}
                       variant="outlined"
-                      label="Condition Immunities"
+                      label="Condition Immun."
                       name="condition_immunities"
                     />
                   )}
                 />
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={6}>
                 <TextField
                   className={classes.textField}
                   id="outlined-basic"
@@ -871,7 +913,7 @@ export default function CreateChar(props) {
                   name="languages"
                 />
               </Grid>
-              <Grid item xs={4} style={{ height: "150%!", display: "grid" }}>
+              <Grid item xs={4}>
                 <Button
                   aria-describedby={idSkills}
                   variant="outlined"
@@ -933,4 +975,11 @@ export default function CreateChar(props) {
     });
     return parsedSections;
   }
+
+  function getNumberWithOrdinal(n) {
+    var s = ["th", "st", "nd", "rd"],
+      v = n % 100;
+    return n + (s[(v - 20) % 10] || s[v] || s[0]);
+  }
+
 }

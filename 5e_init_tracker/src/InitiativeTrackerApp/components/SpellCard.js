@@ -47,26 +47,27 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CharacterCard(props) {
+export default function SpellCard(props) {
   const classes = useStyles();
   const { ipcRenderer } = window.require("electron");
 
-  const handleOpenNewMonsterWindow = () => {
-    if (props.character.isPlayer === false) {
-      ipcRenderer.send("new-window", "monster", props.character.name);
-    }
-  };
+  // const handleOpenNewMonsterWindow = () => {
+  //   if (props.character.isPlayer === false) {
+  //     ipcRenderer.send("new-window", "monster", props.character.name);
+  //   }
+  // };
 
   return (
     <Card
       className={classes.cardwidth}
-      onClick={() => {
-        if (props.selected === false) {
-          props.addToSelectedList(props.character);
-        } else {
-          //props.removeFromSelectedList(props.character);
-        }
-      }}
+    // onClick={() => {
+    //   console.log(props.selected);
+    //   if (props.selected === false) {
+    //     props.addToSelectedList(props.character);
+    //   } else {
+    //     //props.removeFromSelectedList(props.character);
+    //   }
+    // }}
     >
       <CardContent>
         <div className={classes.align_center}>
@@ -74,8 +75,8 @@ export default function CharacterCard(props) {
             <Grid className={classes.col} item xs>
               <Avatar
                 className={classes.char_portrait}
-                src={props.character.img}
-                onClick={handleOpenNewMonsterWindow}
+                src={props.spell.img}
+              //onClick={handleOpenNewMonsterWindow}
               >
                 <SvgIcon>
                   <Demo />
@@ -83,17 +84,7 @@ export default function CharacterCard(props) {
               </Avatar>
               <div className={classes.charname}>
                 <Typography variant="h6" gutterBottom>
-                  {props.character.name}
-                </Typography>
-                <Typography variant="subtitle2" gutterBottom>
-                  {props.character.type}:{" "}
-                  {props.character.isPlayer ? "LVL " : "CR "}
-                  {props.character.isPlayer === true && (
-                    <span>{props.character.level}</span>
-                  )}
-                  {props.character.isPlayer === false && (
-                    <span> {props.character.challenge_rating}</span>
-                  )}
+                  {props.spell.name}
                 </Typography>
               </div>
             </Grid>

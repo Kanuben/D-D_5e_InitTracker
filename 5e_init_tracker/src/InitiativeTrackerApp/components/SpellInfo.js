@@ -1,16 +1,15 @@
-import AppBar from "@material-ui/core/AppBar";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Divider from "@material-ui/core/Divider";
 import Grid from "@material-ui/core/Grid";
-import IconButton from "@material-ui/core/IconButton";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import React, { useEffect } from "react";
 import { map } from "rxjs/operators";
 import { loadSpellData } from "../../services/SpellService";
+import { ReactComponent as Fireball } from "../assets/fire-ball.svg";
+import SvgIcon from "@material-ui/core/SvgIcon";
 
 const useStyles = makeStyles((theme) => ({
   cardwidth: {
@@ -47,14 +46,16 @@ const useStyles = makeStyles((theme) => ({
   },
 
   background: {
-    "background-color": theme.palette.primary.main,
+    "background-color": theme.palette.spell.main,
   },
 }));
 
-export default function SpellCard(props) {
+export default function SpellInfo(props) {
   const theme = useTheme();
   const classes = useStyles(theme);
   const [spell, setSpell] = React.useState();
+
+
 
   useEffect(() => {
     if (props.match) {
@@ -66,13 +67,7 @@ export default function SpellCard(props) {
         )
         .subscribe();
     } else if (props.id) {
-      loadSpellData(props.id)
-        .pipe(
-          map((spell) => {
-            setSpell(spell);
-          })
-        )
-        .subscribe();
+      setSpell(props.selectedSpell)
     }
   }, props);
 
@@ -85,6 +80,14 @@ export default function SpellCard(props) {
       {spell && (
         <div>
           <Toolbar className={classes.background}>
+            <Typography variant="h4">
+              <SvgIcon
+                style={{ "font-size": "1.5em" }}
+                color="action"
+              >
+                <Fireball />
+              </SvgIcon>
+            </Typography>
             {/* <IconButton
             onClick={handleBackClick}
             edge="start"
@@ -108,7 +111,7 @@ export default function SpellCard(props) {
                 spacing={1}
               >
                 <Grid item xs={3}>
-                  Level
+                  LEVEL
                 </Grid>
                 <Grid item xs={3}>
                   CASTING TIME

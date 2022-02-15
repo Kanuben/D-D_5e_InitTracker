@@ -7,10 +7,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import SvgIcon from "@material-ui/core/SvgIcon";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import DeleteIcon from "@material-ui/icons/Delete";
+import SortIcon from '@material-ui/icons/Sort';
 import React, { useEffect } from "react";
 import { ReactComponent as Logo } from "../assets/download.svg";
 import CharacterCard from "./CharacterCard";
-import SortIcon from '@material-ui/icons/Sort';
 
 const useStyles = makeStyles(() => ({
   toolbar: {
@@ -23,14 +23,12 @@ export default function InitiativeTracker(props) {
   const classes = useStyles();
 
   useEffect(() => {
-    console.log(props.charList);
-
   }, props);
 
   return (
     <div>
       <Toolbar className={classes.toolbar}>
-      <div>
+        <div>
           <IconButton
             aria-label="delete"
             onClick={() => {
@@ -40,7 +38,7 @@ export default function InitiativeTracker(props) {
               props.setInitiativeList(newList);
             }}
           >
-          <SortIcon/>
+            <SortIcon />
           </IconButton>
         </div>
         <div>
@@ -73,7 +71,7 @@ export default function InitiativeTracker(props) {
             <Slide direction="up" in={true} mountOnEnter>
               <ListItem key={character.id}>
                 <CharacterCard
-                  character = {character}
+                  character={character}
                   charList={props.charList}
                   setInitiativeList={props.setInitiativeList}
                   sortInitList={props.sortInitList}

@@ -53,7 +53,7 @@ const styles = (theme) => ({
 
 const DialogTitle = withStyles(styles)((props) => {
   const { children, classes, onClose, ...other } = props;
-  
+
   return (
     <MuiDialogTitle disableTypography className={classes.root} {...other}>
       <Typography variant="h6">{children}</Typography>
@@ -89,7 +89,7 @@ export default function ConditionPicker(props) {
   const onClose = props.onClose;
 
   const [conditions, setConditions] = React.useState([]);
-  const [selectedConditions, setSelectedConditions]= React.useState([]);
+  const [selectedConditions, setSelectedConditions] = React.useState([]);
 
   const addConditions = () => {
     let newList = [];
@@ -98,13 +98,13 @@ export default function ConditionPicker(props) {
       if (character.id === props.character.id) {
         let tempStatuses = [];
         Object.assign(tempStatuses, character.statuses);
-        selectedConditions.map(condition =>{
-          if(!tempStatuses.includes(condition)){
+        selectedConditions.map(condition => {
+          if (!tempStatuses.includes(condition)) {
             tempStatuses.push(condition)
           }
         })
         character.statuses = tempStatuses;
-      } 
+      }
     });
     props.setInitiativeList(newList);
     setSelectedConditions([]);
@@ -125,7 +125,7 @@ export default function ConditionPicker(props) {
     onClose();
   };
 
-  const handleConditionSelected = (e,val) => {
+  const handleConditionSelected = (e, val) => {
     setSelectedConditions(val);
   }
 
@@ -138,12 +138,12 @@ export default function ConditionPicker(props) {
         fullWidth={true}
       >
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-         Add Condition
+          Add Condition
         </DialogTitle>
 
         <DialogContent>
           <div>
-          <Autocomplete
+            <Autocomplete
               id="combo-box-demo"
               multiple
               disableCloseOnSelect
@@ -163,13 +163,13 @@ export default function ConditionPicker(props) {
                 </React.Fragment>
               )}
               renderInput={(params) => (
-                <TextField {...params} variant="outlined" label="Conditions"  />
+                <TextField {...params} variant="outlined" label="Conditions" />
               )}
             />
           </div>
         </DialogContent>
         <DialogActions>
-        <Button
+          <Button
             variant="contained"
             disabled={selectedConditions.length === 0}
             autoFocus

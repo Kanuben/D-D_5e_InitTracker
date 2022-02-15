@@ -8,6 +8,8 @@ import ListItem from "@material-ui/core/ListItem";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import { bindNodeCallback } from "rxjs";
+import { ReactComponent as Monster } from "../../assets/monster.svg";
+import SvgIcon from "@material-ui/core/SvgIcon";
 
 const useStyles = makeStyles((theme) => ({
   popover: {
@@ -162,9 +164,7 @@ export default function MainStats(props) {
 
     props.monster.saving_throws.forEach((element) => {
       let index = savingThrows.findIndex((item) => item.name === element);
-      savingThrows[index].value =
-        savingThrows[index].value +
-        getProficiencyBonus(props.monster.challenge_rating);
+      savingThrows[index].value += getProficiencyBonus(parseInt(props.monster.challenge_rating));
     });
 
     props.monster.proficiencies.forEach((element) => {
@@ -204,6 +204,14 @@ export default function MainStats(props) {
     <div>
       <AppBar position="fixed">
         <Toolbar>
+          <Typography variant="h4">
+            <SvgIcon
+              style={{ "font-size": "1.5em" }}
+              color="action"
+            >
+              <Monster />
+            </SvgIcon>
+          </Typography>
           <Typography variant="h4" gutterBottom>
             {props.monster.name}
           </Typography>
@@ -438,7 +446,7 @@ export default function MainStats(props) {
         </ListItem>
       </List>
       <Divider />
-      
+
       {props.monster.special_abilities.length !== 0 && (
         <div>
           <Typography variant="h6">Special Abilities</Typography>

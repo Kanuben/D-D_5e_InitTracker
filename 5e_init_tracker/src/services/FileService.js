@@ -12,7 +12,7 @@ export default async function loadFile(callback) {
       reader.readAsText(fileList[0]);
       reader.onload = async (e) => {
         const text = e.target.result;
-        fileInput.value='';
+        fileInput.value = '';
         callback(JSON.parse(text));
       };
     }

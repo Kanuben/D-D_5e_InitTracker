@@ -52,13 +52,13 @@ export default function ConditionCard(props) {
   const [condition, setCondition] = React.useState();
 
   useEffect(() => {
-      loadConditionData(props.id)
-        .pipe(
-          map((conditon) => {
-            setCondition(conditon);
-          })
-        )
-        .subscribe();
+    loadConditionData(props.id)
+      .pipe(
+        map((conditon) => {
+          setCondition(conditon);
+        })
+      )
+      .subscribe();
   }, props);
 
   const handleBackClick = () => {
@@ -78,7 +78,7 @@ export default function ConditionCard(props) {
             <div>
               {condition.desc.map((description, index) => (
                 <div>
-                    <Typography variant="body2">{description}</Typography>
+                  <Typography variant="body2">{description}</Typography>
                   <br></br>
                 </div>
               ))}

@@ -1,11 +1,11 @@
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
-import {makeStyles, useTheme} from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import List from '@material-ui/core/List';
 
-const useStyles = makeStyles (theme => ({
+const useStyles = makeStyles(theme => ({
   popover: {
     pointerEvents: 'none',
   },
@@ -27,7 +27,7 @@ const useStyles = makeStyles (theme => ({
     'font-size': '1em',
   },
   col: {
-    padding: theme.spacing (2),
+    padding: theme.spacing(2),
     color: theme.palette.text.secondary,
     'align-items': 'center',
     display: 'inline-flex',
@@ -35,8 +35,8 @@ const useStyles = makeStyles (theme => ({
     'white-space': 'nowrap',
   },
   char_portrait: {
-    width: theme.spacing (8),
-    height: theme.spacing (8),
+    width: theme.spacing(8),
+    height: theme.spacing(8),
     'border-style': 'solid',
     'border-color': 'darkgrey',
     'border-width': '.25em',
@@ -54,23 +54,23 @@ const useStyles = makeStyles (theme => ({
   },
 }));
 
-export default function ActionsReactions (props) {
-  const theme = useTheme ();
-  const classes = useStyles (theme);
+export default function ActionsReactions(props) {
+  const theme = useTheme();
+  const classes = useStyles(theme);
 
   let actions = [];
   let reactions = [];
 
   if (props.monster) {
     if (props.monster.actions !== undefined) {
-      props.monster.actions.forEach (item => {
-        actions.push (item);
+      props.monster.actions.forEach(item => {
+        actions.push(item);
       });
     }
 
     if (props.monster.reactions !== undefined) {
-      props.monster.reactions.forEach (item => {
-        reactions.push (item);
+      props.monster.reactions.forEach(item => {
+        reactions.push(item);
       });
     }
   }
@@ -81,34 +81,34 @@ export default function ActionsReactions (props) {
         <div>
           <Typography variant="h6">Actions</Typography>
           <List>
-          {actions.map ((item, index) => (
-            <ListItem dense={true}>
+            {actions.map((item, index) => (
+              <ListItem dense={true}>
                 <div>
-              <Typography variant="body1" className={classes.headingColor}>
-                {item.name}:
-              </Typography>
-              <Typography variant="body2"> {item.desc} </Typography>
-              </div>
-            </ListItem>
-          ))}
+                  <Typography variant="body1" className={classes.headingColor}>
+                    {item.name}:
+                  </Typography>
+                  <Typography variant="body2"> {item.desc} </Typography>
+                </div>
+              </ListItem>
+            ))}
           </List>
         </div>}
 
-        {reactions.length !== 0 &&
+      {reactions.length !== 0 &&
         <div>
           <Typography variant="h6">Reactions</Typography>
           <List>
-          {reactions.map ((item, index) => (
-            <ListItem dense={true}>
+            {reactions.map((item, index) => (
+              <ListItem dense={true}>
                 <div>
-              <Typography variant="body1" className={classes.headingColor}>
-                {item.name}:
-              </Typography>
-              <Typography variant="body2"> {item.desc} </Typography>
-              </div>
-            </ListItem>
-          ))}
-          <Divider />
+                  <Typography variant="body1" className={classes.headingColor}>
+                    {item.name}:
+                  </Typography>
+                  <Typography variant="body2"> {item.desc} </Typography>
+                </div>
+              </ListItem>
+            ))}
+            <Divider />
           </List>
         </div>}
     </div>

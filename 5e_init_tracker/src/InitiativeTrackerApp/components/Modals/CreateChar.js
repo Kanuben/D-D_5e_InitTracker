@@ -4,7 +4,7 @@ import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
-import {makeStyles, withStyles} from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
@@ -14,23 +14,23 @@ import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import Button from '@material-ui/core/Button';
 import charClassList from '../../assets/characterClasses.json';
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import CharacterTemplate from '../../templates/characterTemplate.json';
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-const useStyles = makeStyles (theme => ({
+const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
   },
   menuButton: {
-    marginRight: theme.spacing (2),
+    marginRight: theme.spacing(2),
   },
   title: {
     flexGrow: 1,
     display: 'none',
-    [theme.breakpoints.up ('sm')]: {
+    [theme.breakpoints.up('sm')]: {
       display: 'block',
     },
   },
@@ -68,174 +68,174 @@ const useStyles = makeStyles (theme => ({
 const styles = theme => ({
   root: {
     margin: 0,
-    padding: theme.spacing (2),
+    padding: theme.spacing(2),
   },
   closeButton: {
     position: 'absolute',
-    right: theme.spacing (1),
-    top: theme.spacing (1),
+    right: theme.spacing(1),
+    top: theme.spacing(1),
     color: theme.palette.grey[500],
   },
 });
 
-const DialogTitle = withStyles (styles) (props => {
-  const {children, classes, onClose, ...other} = props;
+const DialogTitle = withStyles(styles)(props => {
+  const { children, classes, onClose, ...other } = props;
   return (
     <MuiDialogTitle disableTypography className={classes.root} {...other}>
       <Typography variant="h6">{children}</Typography>
       {onClose
         ? <IconButton
-            aria-label="close"
-            className={classes.closeButton}
-            onClick={onClose}
-          >
-            <CloseIcon />
-          </IconButton>
+          aria-label="close"
+          className={classes.closeButton}
+          onClick={onClose}
+        >
+          <CloseIcon />
+        </IconButton>
         : null}
     </MuiDialogTitle>
   );
 });
 
-const DialogContent = withStyles (theme => ({
+const DialogContent = withStyles(theme => ({
   root: {
-    padding: theme.spacing (2),
+    padding: theme.spacing(2),
   },
-})) (MuiDialogContent);
+}))(MuiDialogContent);
 
-const DialogActions = withStyles (theme => ({
+const DialogActions = withStyles(theme => ({
   root: {
     margin: 0,
-    padding: theme.spacing (1),
+    padding: theme.spacing(1),
   },
-})) (MuiDialogActions);
+}))(MuiDialogActions);
 
-export default function CreateChar (props) {
+export default function CreateChar(props) {
   //Imported classes for class select
-  const [characterClasses, setCharacterClasses] = React.useState (
+  const [characterClasses, setCharacterClasses] = React.useState(
     charClassList
   );
   //Entryfield States
-  const [name, setName] = React.useState ('');
-  const [hp, setHp] = React.useState ('');
-  const [ac, setAc] = React.useState ('');
-  const [initBonus, setInitBonus] = React.useState ('');
-  const [selectedClasses, setSelectedClasses] = React.useState ('none');
+  const [name, setName] = React.useState('');
+  const [hp, setHp] = React.useState('');
+  const [ac, setAc] = React.useState('');
+  const [initBonus, setInitBonus] = React.useState('');
+  const [selectedClasses, setSelectedClasses] = React.useState('none');
 
   //Textfield Error States
-  const [nameError, setNameError] = React.useState ();
-  const [hpError, setHpError] = React.useState ();
-  const [acError, setAcError] = React.useState ();
-  const [initBonusError, setInitBonusError] = React.useState ();
-  const [buttonDisable, setButtonDisable] = React.useState (true);
+  const [nameError, setNameError] = React.useState();
+  const [hpError, setHpError] = React.useState();
+  const [acError, setAcError] = React.useState();
+  const [initBonusError, setInitBonusError] = React.useState();
+  const [buttonDisable, setButtonDisable] = React.useState(true);
 
-  useEffect (
+  useEffect(
     () => {
-      validateCharacterIb (initBonus);
+      validateCharacterIb(initBonus);
     },
     [initBonus]
   );
 
-  useEffect (
+  useEffect(
     () => {
-      validateCharacterHp (hp);
+      validateCharacterHp(hp);
     },
     [hp]
   );
 
-  useEffect (
+  useEffect(
     () => {
-      validateCharacterAc (ac);
+      validateCharacterAc(ac);
     },
     [ac]
   );
 
-  useEffect (
+  useEffect(
     () => {
-      validateCharacterName (name);
+      validateCharacterName(name);
     },
     [name]
   );
 
-  useEffect (
+  useEffect(
     () => {
-      checkAllFields ();
+      checkAllFields();
     },
     [nameError, hpError, acError, initBonusError]
   );
 
-  const classes = useStyles ();
+  const classes = useStyles();
   const open = props.openCreateCharacter;
   const onClose = props.onClose;
 
   //Reset states on close
   const handleClose = () => {
-    setName ('');
-    setHp ('');
-    setAc ('');
-    setInitBonus ('');
-    setSelectedClasses ('');
+    setName('');
+    setHp('');
+    setAc('');
+    setInitBonus('');
+    setSelectedClasses('');
 
-    onClose ();
+    onClose();
   };
 
   const handleCharClassSelected = (e, val) => {
-    setSelectedClasses (val);
+    setSelectedClasses(val);
   };
 
   const handleCreateChar = () => {
-    let newCharacter = {...CharacterTemplate};
+    let newCharacter = { ...CharacterTemplate };
     newCharacter.name = name;
-    newCharacter.hit_points =  parseInt(hp);
+    newCharacter.hit_points = parseInt(hp);
     newCharacter.armor_class = parseInt(ac);
     newCharacter.initBonus = parseInt(initBonus);
     newCharacter.type = selectedClasses;
 
-    props.handleAppendCharacterList ([newCharacter]);
-    handleClose ();
+    props.handleAppendCharacterList([newCharacter]);
+    handleClose();
   };
 
   const handleCharacterNameChange = e => {
-    setName (e.target.value);
+    setName(e.target.value);
   };
 
   const handleCharacterHpChange = e => {
-    setHp (e.target.value);
+    setHp(e.target.value);
   };
 
   const handleCharacterAcChange = e => {
-    setAc (e.target.value);
+    setAc(e.target.value);
   };
 
   const handleCharacterIbChange = e => {
-    setInitBonus (e.target.value);
+    setInitBonus(e.target.value);
   };
 
   const validateCharacterName = value => {
     let regex = '[^A-Za-z0-9\\s]';
-    if (value === '') setNameError (true);
-    else if (value.match (regex)) setNameError (true);
-    else setNameError (false);
+    if (value === '') setNameError(true);
+    else if (value.match(regex)) setNameError(true);
+    else setNameError(false);
   };
 
   const validateCharacterHp = value => {
     let regex = '[^0-9]';
-    if (value === '') setHpError (true);
-    else if (value.match (regex)) setHpError (true);
-    else setHpError (false);
+    if (value === '') setHpError(true);
+    else if (value.match(regex)) setHpError(true);
+    else setHpError(false);
   };
 
   const validateCharacterAc = value => {
     let regex = '[^0-9]';
-    if (value === '') setAcError (true);
-    else if (value.match (regex)) setAcError (true);
-    else setAcError (false);
+    if (value === '') setAcError(true);
+    else if (value.match(regex)) setAcError(true);
+    else setAcError(false);
   };
 
   const validateCharacterIb = value => {
     let regex = '[^0-9-+]';
-    if (value === '') setInitBonusError (true);
-    else if (value.match (regex)) setInitBonusError (true);
-    else setInitBonusError (false);
+    if (value === '') setInitBonusError(true);
+    else if (value.match(regex)) setInitBonusError(true);
+    else setInitBonusError(false);
   };
 
   const checkAllFields = () => {
@@ -246,8 +246,8 @@ export default function CreateChar (props) {
       (acError === false && ac !== '') &&
       (initBonusError === false && initBonus !== '');
 
-    if (flag === true) setButtonDisable (false);
-    else setButtonDisable (true);
+    if (flag === true) setButtonDisable(false);
+    else setButtonDisable(true);
   };
 
   return (
@@ -257,7 +257,7 @@ export default function CreateChar (props) {
         aria-labelledby="customized-dialog-title"
         open={open}
         fullWidth={true}
-        classes={{paper: classes.dialogSize}}
+        classes={{ paper: classes.dialogSize }}
       >
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
           Create Character
@@ -341,13 +341,13 @@ export default function CreateChar (props) {
                   options={characterClasses}
                   getOptionLabel={characterClasses => characterClasses}
                   onChange={handleCharClassSelected}
-                  style={{width: '100%'}}
-                  renderOption={(option, {selected}) => (
+                  style={{ width: '100%' }}
+                  renderOption={(option, { selected }) => (
                     <React.Fragment>
                       <Checkbox
                         icon={icon}
                         checkedIcon={checkedIcon}
-                        style={{marginRight: 8}}
+                        style={{ marginRight: 8 }}
                         checked={selected}
                       />
                       {option}

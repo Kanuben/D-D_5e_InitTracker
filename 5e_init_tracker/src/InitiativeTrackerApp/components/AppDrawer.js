@@ -179,7 +179,7 @@ export default function PersistentDrawerLeft() {
           setLoaded(true);
         }
       );
-    } else{
+    } else {
       setMonsterList(readMonsterFile());
       setLoaded(true);
 
@@ -229,7 +229,7 @@ export default function PersistentDrawerLeft() {
       monster.isPlayer = false;
       monster.statuses = [];
       monster.damage = 0;
-      if(newList.filter(e => isEqual(e,monster)).length === 0){
+      if (newList.filter(e => isEqual(e, monster)).length === 0) {
         newList.push(monster);
       }
     });
@@ -242,7 +242,7 @@ export default function PersistentDrawerLeft() {
     Object.assign(newList, characterList);
     appendList.forEach((character) => {
       character.initiative = 0;
-      if(newList.filter(e => isEqual(e,character)).length === 0){
+      if (newList.filter(e => isEqual(e, character)).length === 0) {
         newList.push(character);
       }
     });
@@ -382,9 +382,6 @@ export default function PersistentDrawerLeft() {
     if (typeof s !== "string") return "";
     return s.charAt(0).toUpperCase() + s.slice(1);
   };
-
-  //Check the character list state
-  //console.log("Character List" + JSON.stringify(characterList));
 
   return (
     <div className={classes.root}>
