@@ -66,7 +66,7 @@ export const translateMonsters = (monsters) => {
           );
         } else {
           translatedMonster.proficiencies.push({
-            name: element.proficiency.name,
+            name: element.proficiency.name.substring(element.proficiency.name.indexOf(':')+1),
             value: element.value,
           });
         }

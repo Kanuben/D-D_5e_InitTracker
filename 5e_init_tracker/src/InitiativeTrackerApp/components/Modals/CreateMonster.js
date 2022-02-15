@@ -8,7 +8,6 @@ import MuiDialogContent from "@material-ui/core/DialogContent";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
-import Popover from "@material-ui/core/Popover";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
@@ -20,9 +19,8 @@ import React, { useEffect } from "react";
 import { ajax } from "rxjs/ajax";
 import { loadConditions } from "../../../services/ConditionService";
 import { loadSpells } from "../../../services/SpellService";
-import AddSpell from "../AddSpell";
-import SkillSelect from "../Modals/SkillSelect";
 import { Monster } from "../../templates/monster";
+import AddSpell from "../AddSpell";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -125,6 +123,9 @@ export default function CreateChar(props) {
   const [subtype, setSubtype] = React.useState("");
   const [savingThrows, setSavingThrows] = React.useState([]);
   const [damageImmunities, setDamageImmunities] = React.useState([]);
+  const [damageVulnerabilties, setDamageVulnerabilties] = React.useState([]);
+  const [damageResistances, setDamageResistances] = React.useState([]);
+  const [condidtionImmunities, setCondidtionImmunities] = React.useState([]);
 
   useEffect(() => {
     ajax
@@ -140,16 +141,16 @@ export default function CreateChar(props) {
     });
   }, []);
 
-  const handleSkillsClick = (event) => {
-    setAnchorSkills(event.currentTarget);
-  };
+  // const handleSkillsClick = (event) => {
+  //   setAnchorSkills(event.currentTarget);
+  // };
 
-  const handleSkillsClose = () => {
-    setAnchorSkills(null);
-  };
+  // const handleSkillsClose = () => {
+  //   setAnchorSkills(null);
+  // };
 
-  const openSkills = Boolean(anchorSkills);
-  const idSkills = openSkills ? "simple-popover" : undefined;
+  // const openSkills = Boolean(anchorSkills);
+  // const idSkills = openSkills ? "simple-popover" : undefined;
 
   let monsterTypes = [];
   let monsterSubtypes = [];
@@ -202,20 +203,24 @@ export default function CreateChar(props) {
   };
 
   const handleDamageImmunSelected = (e, value) => {
-    setDamageImmunities(value);
+    let nameArray = value.map(item => item.name);
+    setDamageImmunities(nameArray);
   };
 
-  // const handleSavingThrowSelected = (e, value) => {
-  //   setSavingThrows(value);
-  // };
+  const handleDamageVulnSelected = (e, value) => {
+    let nameArray = value.map(item => item.name);
+    setDamageVulnerabilties(nameArray);
+  };
 
-  // const handleSavingThrowSelected = (e, value) => {
-  //   setSavingThrows(value);
-  // };
+  const handleDamageResSelected = (e, value) => {
+    let nameArray = value.map(item => item.name);
+    setDamageResistances(nameArray);
+  };
 
-  // const handleSavingThrowSelected = (e, value) => {
-  //   setSavingThrows(value);
-  // };
+  const handleConditionImmunSelected = (e, value) => {
+    let nameArray = value.map(item => item.name);
+    setCondidtionImmunities(nameArray);
+  };
 
   const handleSubmit = (e) => {
     let monster = new Monster();
@@ -247,6 +252,11 @@ export default function CreateChar(props) {
           e.target.elements.legendary_actions_description.value
         );
       }
+      // if (e.target.elements.lair_actions_description.value.length !== 0) {
+      //   monster.lair_actions = parseTextDescription(
+      //     e.target.elements.lair_actions_description.value
+      //   );
+      // }
       if (selectedSpells.length > 0) {
         let maxSpellLevel = Math.max(...selectedSpells.map(spell => spell.level));
         let sortedSpells = selectedSpells.sort((a, b) => {
@@ -258,12 +268,8 @@ export default function CreateChar(props) {
           "desc": `The ${monster.name} is a ${getNumberWithOrdinal(maxSpellLevel)}-level spellcaster. Its spellcasting ability is ${e.target.elements.spell_casting_ability.value} (spell save DC ${e.target.elements.spell_save_dc.value}, ${e.target.elements.spell_attack_bonus.value} to hit with spell attacks).`
         })
       }
-      // if (e.target.elements.lair_actions_description.value.length !== 0) {
-      //   monster.lair_actions = parseTextDescription(
-      //     e.target.elements.lair_actions_description.value
-      //   );
-      // }
       monster.armor_class = e.target.elements.armor_class.value;
+      monster.speed = e.target.elements.speed.value;
       monster.hit_points = e.target.elements.hit_points.value;
       monster.hit_dice =
         e.target.elements.hit_dice_count.value +
@@ -276,6 +282,12 @@ export default function CreateChar(props) {
       monster.stats.intelligence = e.target.elements.intelligence.value;
       monster.stats.wisdom = e.target.elements.wisdom.value;
       monster.stats.charisma = e.target.elements.charisma.value;
+      monster.languages = e.target.elements.languages.value
+      monster.proficiencies = parseSkillsDescription(e.target.elements.skills.value);
+      monster.damage_immunities = damageImmunities;
+      monster.damage_resistances = damageResistances;
+      monster.damage_vulnerabilities = damageVulnerabilties;
+      monster.condition_immunities = condidtionImmunities;
       props.handleAppendMonsterList([monster]);
     }
     e.preventDefault();
@@ -406,28 +418,327 @@ export default function CreateChar(props) {
                 />
               </Grid>
             </Grid>
-
             <Grid container spacing={3}>
-              <Grid item xs={6}>
+              <Grid item xs={2}>
                 <TextField
                   className={classes.textField}
-                  id="outlined-multiline-static"
-                  label="REACTIONS DESCRIPTION"
-                  multiline
-                  rows={6}
+                  id="outlined-basic"
+                  label="Armor Class"
                   variant="outlined"
-                  name="reactions_description"
+                  name="armor_class"
+                  required
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <TextField
+                  className={classes.textField}
+                  id="outlined-basic"
+                  label="Average HP"
+                  variant="outlined"
+                  name="hit_points"
+                  required
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <TextField
+                  className={classes.textField}
+                  id="outlined-basic"
+                  label="Hit Points Die Count"
+                  variant="outlined"
+                  name="hit_dice_count"
+                  required
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <Autocomplete
+                  id="combo-box-demo"
+                  options={monsterHitDiceValues}
+                  getOptionLabel={(option) => option}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Hit Points Die Value"
+                      variant="outlined"
+                      name="hit_dice_value"
+                      required
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <TextField
+                  className={classes.textField}
+                  id="outlined-basic"
+                  label="Speed"
+                  variant="outlined"
+                  name="speed"
+                  required
+                />
+              </Grid>
+            </Grid>
+            <Grid container spacing={3}>
+              <Grid item xs={4}>
+                <TextField
+                  className={classes.textField}
+                  id="outlined-basic"
+                  label="STR Score"
+                  variant="outlined"
+                  name="strength"
+                  required
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <TextField
+                  className={classes.textField}
+                  id="outlined-basic"
+                  label="DEX Score"
+                  variant="outlined"
+                  name="dexterity"
+                  required
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <TextField
+                  className={classes.textField}
+                  id="outlined-basic"
+                  label="CON Score"
+                  variant="outlined"
+                  name="constitution"
+                  required
+                />
+              </Grid>
+            </Grid>
+            <Grid container spacing={3}>
+              <Grid item xs={4}>
+                <TextField
+                  className={classes.textField}
+                  id="outlined-basic"
+                  label="INT Score"
+                  variant="outlined"
+                  name="intelligence"
+                  required
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <TextField
+                  className={classes.textField}
+                  id="outlined-basic"
+                  label="WIS Score"
+                  variant="outlined"
+                  name="wisdom"
+                  required
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <TextField
+                  className={classes.textField}
+                  id="outlined-basic"
+                  label="CHA Score"
+                  variant="outlined"
+                  name="charisma"
+                  required
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <Autocomplete
+                  id="combo-box-demo"
+                  multiple
+                  disableCloseOnSelect
+                  options={monsterStatTypes}
+                  getOptionLabel={(option) => option}
+                  onChange={handleSavingThrowSelected}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>
+                      <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={selected}
+                      />
+                      {option}
+                    </React.Fragment>
+                  )}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      label="Saving Throws"
+                      name="saving_throws"
+                    />
+                  )}
                 />
               </Grid>
               <Grid item xs={6}>
                 <TextField
                   className={classes.textField}
-                  id="outlined-multiline-static"
-                  label="ACTIONS DESCRIPTION"
-                  multiline
-                  rows={6}
+                  id="outlined-basic"
+                  label="Skills"
                   variant="outlined"
-                  name="actions_description"
+                  name="skills"
+                />
+              </Grid>
+              {/* <Grid item xs={4}>
+                <Button
+                  aria-describedby={idSkills}
+                  variant="outlined"
+                  onClick={handleSkillsClick}
+                  disabled
+                >
+                  Select Skills
+                </Button>
+                <Popover
+                  id={idSkills}
+                  open={openSkills}
+                  anchorEl={anchorSkills}
+                  onClose={handleSkillsClose}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "center",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "center",
+                  }}
+                >
+                  <SkillSelect />
+                </Popover>
+              </Grid> */}
+            </Grid>
+            <Grid container spacing={3}>
+              <Grid item xs={6}>
+                <TextField
+                  className={classes.textField}
+                  id="outlined-basic"
+                  label="Senses"
+                  variant="outlined"
+                  name="senses"
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  className={classes.textField}
+                  id="outlined-basic"
+                  label="Languages"
+                  variant="outlined"
+                  name="languages"
+                />
+              </Grid>
+            </Grid>
+            <Grid container spacing={3}>
+              <Grid item xs={6}>
+                <Autocomplete
+                  id="combo-box-demo"
+                  multiple
+                  disableCloseOnSelect
+                  options={damageTypes}
+                  getOptionLabel={(option) => option.name}
+                  onChange={handleDamageImmunSelected}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>
+                      <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={selected}
+                      />
+                      {option.name}
+                    </React.Fragment>
+                  )}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      label="Damage Immun."
+                      name="damage_immunities"
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <Autocomplete
+                  id="combo-box-demo"
+                  multiple
+                  disableCloseOnSelect
+                  options={damageTypes}
+                  getOptionLabel={(option) => option.name}
+                  onChange={handleDamageVulnSelected}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>
+                      <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={selected}
+                      />
+                      {option.name}
+                    </React.Fragment>
+                  )}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      label="Damage Vuln."
+                      name="damage_vulnerabilities"
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <Autocomplete
+                  id="combo-box-demo"
+                  multiple
+                  disableCloseOnSelect
+                  options={damageTypes}
+                  getOptionLabel={(option) => option.name}
+                  onChange={handleDamageResSelected}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>
+                      <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={selected}
+                      />
+                      {option.name}
+                    </React.Fragment>
+                  )}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      label="Damage Res."
+                      name="damage_resistances"
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <Autocomplete
+                  id="combo-box-demo"
+                  multiple
+                  disableCloseOnSelect
+                  options={conditions}
+                  getOptionLabel={(option) => option.name}
+                  onChange={handleConditionImmunSelected}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>
+                      <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={selected}
+                      />
+                      {option.name}
+                    </React.Fragment>
+                  )}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      label="Condition Immun."
+                      name="condition_immunities"
+                    />
+                  )}
                 />
               </Grid>
             </Grid>
@@ -443,54 +754,6 @@ export default function CreateChar(props) {
                   name="special_traits_description"
                 />
               </Grid>
-            </Grid>
-            <Grid container spacing={3}>
-              <Grid item xs={6}>
-                <div style={{ display: "inline-flex", alignItems: "center" }}>
-                  <Checkbox
-                    checked={isLegendary}
-                    onChange={handleLegendaryCheckbox}
-                    inputProps={{ "aria-label": "primary checkbox" }}
-                  />
-                  <Typography>LEGENDARY?</Typography>
-                </div>
-                {isLegendary === true && (
-                  <TextField
-                    className={classes.textField}
-                    id="outlined-multiline-static"
-                    label="LEGENDARY ACTIONS DESCRIPTION"
-                    multiline
-                    rows={6}
-                    variant="outlined"
-                    disabled={!isLegendary}
-                    name="legendary_actions_description"
-                  />
-                )}
-              </Grid>
-              <Grid item xs={6}>
-                <div style={{ display: "inline-flex", alignItems: "center" }}>
-                  <Checkbox
-                    checked={hasLair}
-                    onChange={handleLairCheckbox}
-                    inputProps={{ "aria-label": "primary checkbox" }}
-                  />
-                  <Typography>LAIR?</Typography>
-                </div>
-                {hasLair === true && (
-                  <TextField
-                    className={classes.textField}
-                    id="outlined-multiline-static"
-                    label="LAIR AND LAIR ACTIONS DESCRIPTION"
-                    multiline
-                    rows={6}
-                    variant="outlined"
-                    disabled={!hasLair}
-                    name="lair_actions_description"
-                  />
-                )}
-              </Grid>
-            </Grid>
-            <Grid container spacing={3}>
               <Grid item xs={12}>
                 <div style={{ display: "inline-flex", alignItems: "center" }}>
                   <Checkbox
@@ -504,7 +767,7 @@ export default function CreateChar(props) {
                   <Card>
                     <CardContent>
                       <AddSpell setSelectedSpells={setSelectedSpells} spells={spells}></AddSpell>
-                      <Grid className={classes.padding16} container spacing={3}>
+                      {/* <Grid className={classes.padding16} container spacing={3}>
                         <Grid item xs>
                           <Typography>Spell Slots</Typography>
                         </Grid>
@@ -589,7 +852,7 @@ export default function CreateChar(props) {
                             name="lvl9_slots"
                           />
                         </Grid>
-                      </Grid>
+                      </Grid> */}
                       <Grid className={classes.padding16} container spacing={3}>
                         <Grid item xs>
                           <TextField
@@ -623,320 +886,73 @@ export default function CreateChar(props) {
                   </Card>
                 )}
               </Grid>
-            </Grid>
-            <Grid container spacing={3}>
-              <Grid item xs={3}>
+              <Grid item xs={12}>
                 <TextField
                   className={classes.textField}
-                  id="outlined-basic"
-                  label="Armor Class"
+                  id="outlined-multiline-static"
+                  label="ACTIONS DESCRIPTION"
+                  multiline
+                  rows={6}
                   variant="outlined"
-                  name="armor_class"
-                  required
+                  name="actions_description"
                 />
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={12}>
                 <TextField
                   className={classes.textField}
-                  id="outlined-basic"
-                  label="Speed"
+                  id="outlined-multiline-static"
+                  label="REACTIONS DESCRIPTION"
+                  multiline
+                  rows={6}
                   variant="outlined"
-                  name="speed"
-                  required
-                />
-              </Grid>
-              <Grid item xs={3}>
-                <TextField
-                  className={classes.textField}
-                  id="outlined-basic"
-                  label="Hit Points Die Count"
-                  variant="outlined"
-                  name="hit_dice_count"
-                  required
-                />
-              </Grid>
-              <Grid item xs={3}>
-                <Autocomplete
-                  id="combo-box-demo"
-                  options={monsterHitDiceValues}
-                  getOptionLabel={(option) => option}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Hit Points Die Value"
-                      variant="outlined"
-                      name="hit_dice_value"
-                      required
-                    />
-                  )}
+                  name="reactions_description"
                 />
               </Grid>
             </Grid>
             <Grid container spacing={3}>
-              <Grid item xs={6}>
-                <TextField
-                  className={classes.textField}
-                  id="outlined-basic"
-                  label="Senses"
-                  variant="outlined"
-                  name="senses"
-                />
+              <Grid item xs={12}>
+                <div style={{ display: "inline-flex", alignItems: "center" }}>
+                  <Checkbox
+                    checked={isLegendary}
+                    onChange={handleLegendaryCheckbox}
+                    inputProps={{ "aria-label": "primary checkbox" }}
+                  />
+                  <Typography>LEGENDARY?</Typography>
+                </div>
+                {isLegendary === true && (
+                  <TextField
+                    className={classes.textField}
+                    id="outlined-multiline-static"
+                    label="LEGENDARY ACTIONS DESCRIPTION"
+                    multiline
+                    rows={6}
+                    variant="outlined"
+                    disabled={!isLegendary}
+                    name="legendary_actions_description"
+                  />
+                )}
               </Grid>
-              <Grid item xs={6}>
-                <Autocomplete
-                  id="combo-box-demo"
-                  multiple
-                  disableCloseOnSelect
-                  options={monsterStatTypes}
-                  getOptionLabel={(option) => option}
-                  onChange={handleSavingThrowSelected}
-                  renderOption={(option, { selected }) => (
-                    <React.Fragment>
-                      <Checkbox
-                        icon={icon}
-                        checkedIcon={checkedIcon}
-                        style={{ marginRight: 8 }}
-                        checked={selected}
-                      />
-                      {option}
-                    </React.Fragment>
-                  )}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      variant="outlined"
-                      label="Saving Throws"
-                      name="saving_throws"
-                    />
-                  )}
-                />
-              </Grid>
-            </Grid>
-
-            <Grid container spacing={3}>
-              <Grid item xs={4}>
-                <TextField
-                  className={classes.textField}
-                  id="outlined-basic"
-                  label="STR Score"
-                  variant="outlined"
-                  name="strength"
-                  required
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <TextField
-                  className={classes.textField}
-                  id="outlined-basic"
-                  label="DEX Score"
-                  variant="outlined"
-                  name="dexterity"
-                  required
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <TextField
-                  className={classes.textField}
-                  id="outlined-basic"
-                  label="CON Score"
-                  variant="outlined"
-                  name="constitution"
-                  required
-                />
-              </Grid>
-            </Grid>
-            <Grid container spacing={3}>
-              <Grid item xs={4}>
-                <TextField
-                  className={classes.textField}
-                  id="outlined-basic"
-                  label="INT Score"
-                  variant="outlined"
-                  name="intelligence"
-                  required
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <TextField
-                  className={classes.textField}
-                  id="outlined-basic"
-                  label="WIS Score"
-                  variant="outlined"
-                  name="wisdom"
-                  required
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <TextField
-                  className={classes.textField}
-                  id="outlined-basic"
-                  label="CHA Score"
-                  variant="outlined"
-                  name="charisma"
-                  required
-                />
-              </Grid>
-            </Grid>
-            <Grid container spacing={3}>
-              <Grid item xs={4}>
-                <TextField
-                  className={classes.textField}
-                  id="outlined-basic"
-                  label="Average HP"
-                  variant="outlined"
-                  name="hit_points"
-                  required
-                />
-              </Grid>
-              <Grid item xs={8}>
-                <Autocomplete
-                  id="combo-box-demo"
-                  multiple
-                  disableCloseOnSelect
-                  options={damageTypes}
-                  getOptionLabel={(option) => option.name}
-                  onChange={handleDamageImmunSelected}
-                  renderOption={(option, { selected }) => (
-                    <React.Fragment>
-                      <Checkbox
-                        icon={icon}
-                        checkedIcon={checkedIcon}
-                        style={{ marginRight: 8 }}
-                        checked={selected}
-                      />
-                      {option.name}
-                    </React.Fragment>
-                  )}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      variant="outlined"
-                      label="Damage Immun."
-                      name="damage_immunities"
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <Autocomplete
-                  id="combo-box-demo"
-                  multiple
-                  disableCloseOnSelect
-                  options={damageTypes}
-                  getOptionLabel={(option) => option.name}
-                  //onChange={handleConditionSelected}
-                  renderOption={(option, { selected }) => (
-                    <React.Fragment>
-                      <Checkbox
-                        icon={icon}
-                        checkedIcon={checkedIcon}
-                        style={{ marginRight: 8 }}
-                        checked={selected}
-                      />
-                      {option.name}
-                    </React.Fragment>
-                  )}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      variant="outlined"
-                      label="Damage Vuln."
-                      name="damage_vulnerabilities"
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <Autocomplete
-                  id="combo-box-demo"
-                  multiple
-                  disableCloseOnSelect
-                  options={damageTypes}
-                  getOptionLabel={(option) => option.name}
-                  //onChange={handleConditionSelected}
-                  renderOption={(option, { selected }) => (
-                    <React.Fragment>
-                      <Checkbox
-                        icon={icon}
-                        checkedIcon={checkedIcon}
-                        style={{ marginRight: 8 }}
-                        checked={selected}
-                      />
-                      {option.name}
-                    </React.Fragment>
-                  )}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      variant="outlined"
-                      label="Damage Res."
-                      name="damage_resistances"
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <Autocomplete
-                  id="combo-box-demo"
-                  multiple
-                  disableCloseOnSelect
-                  options={conditions}
-                  getOptionLabel={(option) => option.name}
-                  //onChange={handleConditionSelected}
-                  renderOption={(option, { selected }) => (
-                    <React.Fragment>
-                      <Checkbox
-                        icon={icon}
-                        checkedIcon={checkedIcon}
-                        style={{ marginRight: 8 }}
-                        checked={selected}
-                      />
-                      {option.name}
-                    </React.Fragment>
-                  )}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      variant="outlined"
-                      label="Condition Immun."
-                      name="condition_immunities"
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  className={classes.textField}
-                  id="outlined-basic"
-                  label="Languages"
-                  variant="outlined"
-                  name="languages"
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <Button
-                  aria-describedby={idSkills}
-                  variant="outlined"
-                  onClick={handleSkillsClick}
-                >
-                  Select Skills
-                </Button>
-                <Popover
-                  id={idSkills}
-                  open={openSkills}
-                  anchorEl={anchorSkills}
-                  onClose={handleSkillsClose}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "center",
-                  }}
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "center",
-                  }}
-                >
-                  <SkillSelect />
-                </Popover>
+              <Grid item xs={12}>
+                <div style={{ display: "inline-flex", alignItems: "center" }}>
+                  <Checkbox
+                    checked={hasLair}
+                    onChange={handleLairCheckbox}
+                    inputProps={{ "aria-label": "primary checkbox" }}
+                  />
+                  <Typography>LAIR?</Typography>
+                </div>
+                {hasLair === true && (
+                  <TextField
+                    className={classes.textField}
+                    id="outlined-multiline-static"
+                    label="LAIR AND LAIR ACTIONS DESCRIPTION"
+                    multiline
+                    rows={6}
+                    variant="outlined"
+                    disabled={!hasLair}
+                    name="lair_actions_description"
+                  />
+                )}
               </Grid>
             </Grid>
           </div>
@@ -955,7 +971,7 @@ export default function CreateChar(props) {
           autoFocus
           color="primary"
         >
-          Create Monster
+          Create
         </Button>
       </DialogActions>
     </Dialog>
@@ -973,6 +989,22 @@ export default function CreateChar(props) {
       sectionObject.desc = section.substring(section.indexOf(".") + 1);
       parsedSections.push(sectionObject);
     });
+    return parsedSections;
+  }
+
+  function parseSkillsDescription(text) {
+    let sections = text.split(',')
+    let parsedSections = [];
+    sections.forEach((section) => {
+      section = section.trim();
+      let sectionObject = {
+        name: "",
+        value: ""
+      };
+      sectionObject.name = section.substring(0, section.indexOf(' '))
+      sectionObject.value = section.substring(section.indexOf(' ') + 2);
+      parsedSections.push(sectionObject);
+    })
     return parsedSections;
   }
 

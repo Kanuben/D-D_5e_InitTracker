@@ -74,9 +74,9 @@ export default function MainStats(props) {
   //helper functions
   const isSubtype = () => {
     let subtype = "";
-    if (props.monster.subtype !== null)
+    if (props.monster.subtype) {
       subtype = subtype.concat("(" + props.monster.subtype + ")");
-
+    }
     return subtype;
   };
 
@@ -285,26 +285,32 @@ export default function MainStats(props) {
         >
           <Grid item xs={2}>
             {props.monster.stats.strength} (
+            <span>{props.monster.stats.strength > 10 ? '+' : ''}</span>
             {Math.floor((props.monster.stats.strength - 10) / 2)})
           </Grid>
           <Grid item xs={2}>
             {props.monster.stats.dexterity} (
+            {props.monster.stats.dexterity > 10 ? '+' : ''}
             {Math.floor((props.monster.stats.dexterity - 10) / 2)})
           </Grid>
           <Grid item xs={2}>
             {props.monster.stats.constitution} (
+            {props.monster.stats.constitution > 10 ? '+' : ''}
             {Math.floor((props.monster.stats.constitution - 10) / 2)})
           </Grid>
           <Grid item xs={2}>
             {props.monster.stats.intelligence} (
+            {props.monster.stats.intelligence > 10 ? '+' : ''}
             {Math.floor((props.monster.stats.intelligence - 10) / 2)})
           </Grid>
           <Grid item xs={2}>
             {props.monster.stats.wisdom} (
+            {props.monster.stats.wisdom > 10 ? '+' : ''}
             {Math.floor((props.monster.stats.wisdom - 10) / 2)})
           </Grid>
           <Grid item xs={2}>
             {props.monster.stats.charisma} (
+            {props.monster.stats.charisma > 10 ? '+' : ''}
             {Math.floor((props.monster.stats.charisma - 10) / 2)})
           </Grid>
         </Grid>
@@ -322,6 +328,7 @@ export default function MainStats(props) {
             {savingThrows.map((savingThrow, index) => (
               <Grid item xs={2}>
                 <Typography className={classes.textColor}>
+                  {savingThrow.value > 0 ? '+' : ''}
                   {savingThrow.value}
                 </Typography>
               </Grid>
