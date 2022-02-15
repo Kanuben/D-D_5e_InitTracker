@@ -443,7 +443,7 @@ export default function CreateChar(props) {
                 <TextField
                   className={classes.textField}
                   id="outlined-basic"
-                  label="Hit Points Die Count"
+                  label="HP Die Count"
                   variant="outlined"
                   name="hit_dice_count"
                   required
@@ -457,7 +457,7 @@ export default function CreateChar(props) {
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="Hit Points Die Value"
+                      label="HP Die Value"
                       variant="outlined"
                       name="hit_dice_value"
                       required
