@@ -252,11 +252,11 @@ export default function CreateChar(props) {
           e.target.elements.legendary_actions_description.value
         );
       }
-      // if (e.target.elements.lair_actions_description.value.length !== 0) {
-      //   monster.lair_actions = parseTextDescription(
-      //     e.target.elements.lair_actions_description.value
-      //   );
-      // }
+      if (e.target.elements.lair_actions_description) {
+        monster.lair_actions = parseTextDescription(
+          e.target.elements.lair_actions_description.value
+        );
+      }
       if (selectedSpells.length > 0) {
         let maxSpellLevel = Math.max(...selectedSpells.map(spell => spell.level));
         let sortedSpells = selectedSpells.sort((a, b) => {
@@ -296,6 +296,14 @@ export default function CreateChar(props) {
 
   //Reset states on close
   const handleClose = () => {
+    setCondidtionImmunities([]);
+    setDamageImmunities([]);
+    setDamageResistances([]);
+    setDamageVulnerabilties([]);
+    setSelectedSpells([]);
+    setIsLegendary(false);
+    setIsSpellCaster(false);
+    setHasLair(false);
     onClose();
   };
 
@@ -993,6 +1001,9 @@ export default function CreateChar(props) {
   }
 
   function parseSkillsDescription(text) {
+    if(text == ''){
+      return [];
+    }
     let sections = text.split(',')
     let parsedSections = [];
     sections.forEach((section) => {
