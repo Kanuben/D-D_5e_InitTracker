@@ -77,7 +77,7 @@ export const translateMonsters = (monsters) => {
     translatedMonster.damage_resistances = monster.damage_resistances;
     translatedMonster.damage_immunities = monster.damage_immunities;
     translatedMonster.damage_vulnerabilities = monster.damage_vulnerabilities;
-    translatedMonster.condition_immunities = monster.condition_immunities;
+    translatedMonster.condition_immunities = monster.condition_immunities.map((immunity)=> immunity.name);
     translatedMonster.senses = "";
     Object.entries(monster.senses).forEach((element) => {
       translatedMonster.senses = translatedMonster.senses.concat(

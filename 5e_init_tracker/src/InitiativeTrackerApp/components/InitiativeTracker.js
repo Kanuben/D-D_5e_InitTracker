@@ -40,6 +40,8 @@ export default function InitiativeTracker(props) {
                         charList={props.charList}
                         setInitiativeList={props.setInitiativeList}
                         sortInitList={props.sortInitList}
+                        selectedCharacter={props.selectedCharacter}
+                        setSelectedCharacter={props.setSelectedCharacter}
                       />
                       <IconButton
                         onClick={() => {

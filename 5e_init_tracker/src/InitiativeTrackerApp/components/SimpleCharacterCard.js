@@ -64,7 +64,7 @@ export default function CharacterCard(props) {
         if (props.selected === false) {
           props.addToSelectedList(props.character);
         } else {
-          props.removeFromSelectedList(props.character);
+          //props.removeFromSelectedList(props.character);
         }
       }}
     >

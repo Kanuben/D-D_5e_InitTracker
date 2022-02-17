@@ -604,6 +604,7 @@ export default function PersistentDrawerLeft() {
                   sortInitList={sortInitList}
                   setInitiativeList={setInitiativeList}
                   selectedCharacter={selectedCharacter}
+                  setSelectedCharacter={setSelectedCharacter}
                 />
               </Box>
             )}

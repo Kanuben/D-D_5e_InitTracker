@@ -2,12 +2,9 @@ import { CardHeader } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { useTheme } from '@mui/material/styles';
-import makeStyles from '@mui/styles/makeStyles';
-import SvgIcon from "@mui/material/SvgIcon";
-import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import makeStyles from '@mui/styles/makeStyles';
 import React, { useEffect } from 'react';
-import { ReactComponent as Monster } from "../assets/monster.svg";
 import MainStats from '../components/MonsterInfo/MainStats';
 import SpellCasting from '../components/MonsterInfo/SpellCasting';
 import { readMonsterFile } from '../utilities/MonsterTranslator';
@@ -125,12 +122,12 @@ export default function MonsterInfo(props) {
             title={
               <div className={classes.cardheader}>
                 <Typography variant="h4">
-                  <SvgIcon
+                  {/* <SvgIcon
                     style={{ "font-size": "1.5em" }}
                     color="action"
                   >
                     <Monster />
-                  </SvgIcon>
+                  </SvgIcon> */}
                 </Typography>
                 <Typography variant="h4" gutterBottom>
                   {monster.name}

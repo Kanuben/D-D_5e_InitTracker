@@ -1,25 +1,24 @@
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CloseIcon from '@mui/icons-material/Close';
+import { Grid } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
 import Dialog from '@mui/material/Dialog';
 import MuiDialogActions from '@mui/material/DialogActions';
 import MuiDialogContent from '@mui/material/DialogContent';
 import MuiDialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
-import Paper from '@mui/material/Paper';
+import Skeleton from '@mui/material/Skeleton';
+import { styled } from '@mui/material/styles';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import makeStyles from '@mui/styles/makeStyles';
 import withStyles from '@mui/styles/withStyles';
-import Autocomplete from '@mui/material/Autocomplete';
-import Typography from '@mui/material/Typography';
-import CloseIcon from '@mui/icons-material/Close';
-import TextField from '@mui/material/TextField';
-import Checkbox from '@mui/material/Checkbox';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import Button from '@mui/material/Button';
-import charClassList from '../../assets/characterClasses.json';
-import React, { useState, useEffect } from 'react';
-import CharacterTemplate from '../../templates/characterTemplate.json';
-import { Grid } from '@mui/material';
-import Skeleton from '@mui/material/Skeleton';
-import Stack from '@mui/material/Stack';
+import { default as React } from "react";
+import { Character } from '../../templates/character';
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -116,14 +115,31 @@ const DialogActions = withStyles(theme => ({
 export default function CreateChar(props) {
   //Imported classes for class select
   const [characterClasses, setCharacterClasses] = React.useState(
-    charClassList
+    [
+      "Barbarian",
+      "Bard",
+      "Cleric",
+      "Druid",
+      "Fighter",
+      "Monk",
+      "Paladin",
+      "Ranger",
+      "Rogue",
+      "Sorcerer",
+      "Warlock",
+      "Wizard",
+      "Artificer"
+    ]
   );
   //Entryfield States
   const [name, setName] = React.useState('');
   const [hp, setHp] = React.useState('');
   const [ac, setAc] = React.useState('');
   const [initBonus, setInitBonus] = React.useState('');
+  const [level, setLevel] = React.useState('');
   const [selectedClasses, setSelectedClasses] = React.useState('none');
+  const [image, setImage] = React.useState();
+  const [imageLoaded, setImageLoaded] = React.useState(false);
 
   //Textfield Error States
   const [nameError, setNameError] = React.useState();
@@ -136,6 +152,11 @@ export default function CreateChar(props) {
   const open = props.openCreateCharacter;
   const onClose = props.onClose;
 
+
+  const Input = styled('input')({
+    display: 'none',
+  });
+
   //Reset states on close
   const handleClose = () => {
     setName('');
@@ -143,7 +164,8 @@ export default function CreateChar(props) {
     setAc('');
     setInitBonus('');
     setSelectedClasses('');
-
+    setImageLoaded(false);
+    setLevel('');
     onClose();
   };
 
@@ -152,13 +174,14 @@ export default function CreateChar(props) {
   };
 
   const handleCreateChar = () => {
-    let newCharacter = { ...CharacterTemplate };
+    let newCharacter = new Character();
     newCharacter.name = name;
+    newCharacter.level = level;
     newCharacter.hit_points = parseInt(hp);
     newCharacter.armor_class = parseInt(ac);
     newCharacter.initBonus = parseInt(initBonus);
     newCharacter.type = selectedClasses;
-
+    newCharacter.img = image;
     props.handleAppendCharacterList([newCharacter]);
     handleClose();
   };
@@ -166,6 +189,10 @@ export default function CreateChar(props) {
   const handleCharacterNameChange = e => {
     setName(e.target.value);
   };
+
+  const handleCharacterLevelChange = e => {
+    setLevel(e.target.value)
+  }
 
   const handleCharacterHpChange = e => {
     setHp(e.target.value);
@@ -175,8 +202,16 @@ export default function CreateChar(props) {
     setAc(e.target.value);
   };
 
-  const handleCharacterIbChange = e => {
+  const handleCharacterInitChange = e => {
     setInitBonus(e.target.value);
+  };
+
+  const handleFileUpload = e => {
+    setImageLoaded(true);
+    let img = document.getElementById('charImg');
+    img.style.display = "";
+    setImage(URL.createObjectURL(e.target.files[0]))
+    img.src = URL.createObjectURL(e.target.files[0]);
   };
 
   const validateCharacterName = value => {
@@ -207,15 +242,26 @@ export default function CreateChar(props) {
         </DialogTitle>
         <DialogContent>
           <div>
-            <Grid container spacing={3}>
+            <Grid sx={{ paddingTop: '16px' }} container spacing={3}>
               <Grid item xs={6}>
-                <Skeleton variant="rectangular" width={210} height={118} />
-                <div>
-                  <img
-                    src="https://reactnativecode.com/wp-content/uploads/2018/01/Error_Img.png"
-                    className={classes.centerImg}
-                  />
-                </div>
+                <Box>
+                  <img id='charImg' style={{
+                    height: '49vh',
+                    width: '100%',
+                    display: 'none'
+                  }}></img>
+                  {!imageLoaded &&
+                    <Skeleton animation={false} variant="rectangular" height={'50vh'} />
+                  }
+                </Box>
+                <Box sx={{ paddingTop: '16px' }}>
+                  <label htmlFor="contained-button-file">
+                    <Input onChange={handleFileUpload} accept="image/*" id="contained-button-file" multiple type="file" />
+                    <Button color="secondary" variant="outlined" component="span">
+                      Upload
+                    </Button>
+                  </label>
+                </Box>
               </Grid>
               <Grid item xs={6}>
                 <form className={classes.root}>
@@ -233,6 +279,21 @@ export default function CreateChar(props) {
                       error={nameError && name.length > 0 ? true : false}
                       value={name}
                     />
+                  </div>
+
+                  <div className={classes.padBot}>
+                    <TextField
+                      className={classes.textField}
+                      label="Level"
+                      id="NewCharacterLevel"
+                      helperText={
+                        hpError && level.length > 0 ? '*must contain only numbers' : ''
+                      }
+                      error={hpError && hp.length > 0 ? true : false}
+                      value={level}
+                      onChange={handleCharacterLevelChange}
+                    />
+
                   </div>
 
                   <div className={classes.padBot}>
@@ -268,14 +329,14 @@ export default function CreateChar(props) {
                     <TextField
                       className={classes.textField}
                       label="Initiative Bonus"
-                      id="NewcharacterIb"
+                      id="NewcharacterInitBonus"
                       error={initBonusError && initBonus.length > 0 ? true : false}
                       helperText={
                         initBonusError && initBonus.length > 0
                           ? '*must contain only numbers and + or -, example +5 or -5'
                           : ''
                       }
-                      onChange={handleCharacterIbChange}
+                      onChange={handleCharacterInitChange}
                       value={initBonus}
                     />
                   </div>
@@ -289,8 +350,8 @@ export default function CreateChar(props) {
                       getOptionLabel={characterClasses => characterClasses}
                       onChange={handleCharClassSelected}
                       style={{ width: '100%' }}
-                      renderOption={(option, { selected }) => (
-                        <React.Fragment>
+                      renderOption={(props, option, { selected }) => (
+                        <li {...props}>
                           <Checkbox
                             icon={icon}
                             checkedIcon={checkedIcon}
@@ -298,7 +359,7 @@ export default function CreateChar(props) {
                             checked={selected}
                           />
                           {option}
-                        </React.Fragment>
+                        </li>
                       )}
                       renderInput={params => (
                         <TextField {...params} variant="outlined" label="Classes" />
@@ -314,7 +375,6 @@ export default function CreateChar(props) {
         <DialogActions>
           <Button
             variant="contained"
-            disabled={buttonDisable}
             autoFocus
             onClick={handleCreateChar}
             color="primary"

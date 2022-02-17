@@ -1,23 +1,7 @@
-import Dialog from '@mui/material/Dialog';
-import MuiDialogActions from '@mui/material/DialogActions';
-import MuiDialogContent from '@mui/material/DialogContent';
-import MuiDialogTitle from '@mui/material/DialogTitle';
-import IconButton from '@mui/material/IconButton';
-import Paper from '@mui/material/Paper';
-import makeStyles from '@mui/styles/makeStyles';
-import withStyles from '@mui/styles/withStyles';
-import Autocomplete from '@mui/material/Autocomplete';
-import Typography from '@mui/material/Typography';
-import CloseIcon from '@mui/icons-material/Close';
-import TextField from '@mui/material/TextField';
-import Checkbox from '@mui/material/Checkbox';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import Button from '@mui/material/Button';
-import charClassList from '../../assets/characterClasses.json';
-import React, { useState, useEffect } from 'react';
-import CharacterTemplate from '../../templates/characterTemplate.json';
 import Grid from '@mui/material/Grid';
+import TextField from '@mui/material/TextField';
+import React from 'react';
 
 export default function CalculateDamage(props) {
   const [damage, setDamage] = React.useState('');

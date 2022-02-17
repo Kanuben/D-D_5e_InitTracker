@@ -152,8 +152,8 @@ export default function ConditionPicker(props) {
               getOptionLabel={(condition) => condition.name}
               onChange={handleConditionSelected}
               style={{ width: "85%" }}
-              renderOption={(option, { selected }) => (
-                <React.Fragment>
+              renderOption={(props, option, { selected }) => (
+                <li {...props}>
                   <Checkbox
                     icon={icon}
                     checkedIcon={checkedIcon}
@@ -161,7 +161,7 @@ export default function ConditionPicker(props) {
                     checked={selected}
                   />
                   {option.name}
-                </React.Fragment>
+                </li>
               )}
               renderInput={(params) => (
                 <TextField {...params} variant="outlined" label="Conditions" />

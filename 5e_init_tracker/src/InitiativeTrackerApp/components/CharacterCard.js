@@ -17,10 +17,14 @@ import ConditionCard from "./ConditionInfo";
 import PaletteIcon from "@mui/icons-material/Palette";
 import ColorSelect from "../components/Modals/ColorSelect";
 import CalculateDamage from "../components/Modals/CalculateDamage";
+import Box from "@mui/material/Box";
 
 const useStyles = makeStyles((theme) => ({
   cardwidth: {
     width: "inherit",
+  },
+  selected: {
+    border: '10'
   },
   root: {
     flexGrow: 1,
@@ -74,11 +78,17 @@ export default function CharacterCard(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [anchorE2, setAnchorE2] = React.useState(null);
   const [openedPopoverId, setOpenedPopoverId] = React.useState(null);
+  const [borderVal, setBorderVal] = React.useState();
 
   useEffect(() => {
     setDamage(props.character.damage);
     setInitiative(props.character.initiative);
-  }, []);
+    if(props.character == props.selectedCharacter){
+      setBorderVal(1)
+    } else{
+      setBorderVal(0)
+    }
+  });
 
   const handleConditionPickerOpen = () => {
     setOpenConditionPicker(true);
@@ -89,9 +99,11 @@ export default function CharacterCard(props) {
   };
 
   const handleOpenNewMonsterWindow = () => {
-    if (props.character.isPlayer === false) {
-      ipcRenderer.send("new-window", "monster", props.character.name);
-    }
+    props.setSelectedCharacter(props.character);
+    setBorderVal(1)
+    // if (props.character.isPlayer === false) {
+    //   ipcRenderer.send("new-window", "monster", props.character.name);
+    // }
   };
 
   const handleOpenNewConditionWindow = (status) => {
@@ -241,252 +253,254 @@ export default function CharacterCard(props) {
       className={classes.cardwidth}
       style={{ background: props.character.bg_color }}
     >
-      <CardContent>
-        <div className={classes.align_center}>
-          <Grid container spacing={5}>
-            <Grid className={classes.col} item xs>
-              <PaletteIcon
-                onClick={handleColorSelectOpen}
-                aria-describedby={openColorSelectID}
-                variant="contained"
-                style={{
-                  cursor: "pointer",
-                  alignSelf: "flex-start",
-                  display: "flex",
-                }}
-              />
-              <Popover
-                id={openColorSelectID}
-                open={openColorSelect}
-                anchorEl={colorSelect}
-                onClose={handleColorSelectClose}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "center",
-                }}
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "center",
-                }}
-              >
-                <ColorSelect
-                  handleColorSelectClose={handleColorSelectClose}
-                  getColor={getColor}
+      <Box sx={{ border: borderVal }}>
+        <CardContent>
+          <div className={classes.align_center}>
+            <Grid container spacing={5}>
+              <Grid className={classes.col} item xs>
+                <PaletteIcon
+                  onClick={handleColorSelectOpen}
+                  aria-describedby={openColorSelectID}
+                  variant="contained"
+                  style={{
+                    cursor: "pointer",
+                    alignSelf: "flex-start",
+                    display: "flex",
+                  }}
                 />
-              </Popover>
-              <Avatar
-                style={{ cursor: "pointer" }}
-                className={classes.char_portrait}
-                src={props.character.img}
-                onClick={handleOpenNewMonsterWindow}
-              />
-              <div className={classes.charname}>
-                <Typography variant="h6" gutterBottom>
-                  {props.character.name}
-                </Typography>
-                <Typography variant="subtitle2" gutterBottom>
-                  {props.character.type}:{" "}
-                  {props.character.isPlayer ? "LVL " : "CR "}
-                  {props.character.isPlayer === true && (
-                    <span>{props.character.level}</span>
-                  )}
-                  {props.character.isPlayer === false && (
-                    <span> {props.character.challenge_rating}</span>
-                  )}
-                </Typography>
-              </div>
-            </Grid>
-
-            <Grid className={classes.col} item xs>
-              <div>
-                <div
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
+                <Popover
+                  id={openColorSelectID}
+                  open={openColorSelect}
+                  anchorEl={colorSelect}
+                  onClose={handleColorSelectClose}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "center",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "center",
                   }}
                 >
+                  <ColorSelect
+                    handleColorSelectClose={handleColorSelectClose}
+                    getColor={getColor}
+                  />
+                </Popover>
+                <Avatar
+                  style={{ cursor: "pointer" }}
+                  className={classes.char_portrait}
+                  src={props.character.img}
+                  onClick={handleOpenNewMonsterWindow}
+                />
+                <div className={classes.charname}>
+                  <Typography variant="h6" gutterBottom>
+                    {props.character.name}
+                  </Typography>
                   <Typography variant="subtitle2" gutterBottom>
-                    Status
+                    {props.character.type}:{" "}
+                    {props.character.isPlayer ? "LVL " : "CR "}
+                    {props.character.isPlayer === true && (
+                      <span>{props.character.level}</span>
+                    )}
+                    {props.character.isPlayer === false && (
+                      <span> {props.character.challenge_rating}</span>
+                    )}
                   </Typography>
-                  <IconButton onClick={handleConditionPickerOpen} aria-label="delete" size="large">
-                    <AddCircleOutlineIcon />
-                  </IconButton>
                 </div>
-                <br />
-                <div
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <ConditionPicker
-                    character={props.character}
-                    onOpen={openConditionPicker}
-                    onClose={handleConditionPickerClose}
-                    setInitiativeList={props.setInitiativeList}
-                    initList={props.charList}
-                  />
-                  {props.character.statuses.map((status) => (
-                    <div>
-                      <Chip
-                        clickable
-                        color="secondary"
-                        label={status.name}
-                        onClick={(e) => handlePopoverOpen(e, status.index)}
-                        onDelete={() => handleDeleteCondition(status.index)}
-                      />
-                      <Popover
-                        id={status.index}
-                        className={classes.popover}
-                        classes={{
-                          paper: classes.paper,
-                        }}
-                        open={openedPopoverId === status.index}
-                        anchorEl={anchorEl}
-                        anchorOrigin={{
-                          vertical: "bottom",
-                          horizontal: "left",
-                        }}
-                        transformOrigin={{
-                          vertical: "bottom",
-                          horizontal: "left",
-                        }}
-                        onClose={handlePopoverClose}
-                        disableRestoreFocus
-                      >
-                        <ConditionCard id={status.index} />
-                      </Popover>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </Grid>
+              </Grid>
 
-            <Grid className={classes.col} item xs>
-              <div>
-                <Typography variant="subtitle2">AC</Typography>
-
-                <Typography variant="h4">
-                  {props.character.armor_class}
-                </Typography>
-              </div>
-            </Grid>
-
-            <Grid className={classes.col} item xs>
-              <div>
-                <div
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <Typography
-                    style={{ paddingRight: "12px" }}
-                    variant="subtitle2"
-                  >
-                    Damage
-                  </Typography>
-
-                  <Popover
-                    id={idDamage}
-                    open={openDamage}
-                    anchorEl={anchorE2}
-                    onClose={handleDamageClose}
-                    anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "center",
-                    }}
-                    transformOrigin={{
-                      vertical: "top",
-                      horizontal: "center",
-                    }}
-                  >
-                    <CalculateDamage
-                      handleDamageClose={handleDamageClose}
-                      handleDamageChange={handleDamageChange}
-                    />
-                  </Popover>
-
-                  <IconButton
-                    style={{ padding: "0px" }}
-                    onClick={handleVisibilityFullDamage}
-                    aria-label="delete"
-                    size="large">
-                    <VisibilityIcon />
-                  </IconButton>
-                </div>
-                <br />
-                <div
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    flexWrap: "wrap",
-                  }}
-                >
-                  {showFullDamage === false && (
-                    <Typography
-                      Typography
-                      variant="h4"
-                      onClick={handleDamageClick}
-                      aria-describedby={idDamage}
-                      style={{ cursor: "pointer" }}
-                    >
-                      {damage}
-                    </Typography>
-                  )}
-                  {showFullDamage === true && (
-                    <Typography
-                      variant="h4"
-                      onClick={handleDamageClick}
-                      aria-describedby={idDamage}
-                      style={{ cursor: "pointer" }}
-                    >
-                      {props.character.hit_points - damage}/
-                      {props.character.hit_points}
-                    </Typography>
-                  )}
-                </div>
-              </div>
-            </Grid>
-
-            <Grid className={classes.col} item xs>
-              <div>
-                <div
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <Typography style={{ paddingRight: "12px" }} variant="subtitle2" gutterBottom>
-                    Initiative
-                  </Typography>
-                  <IconButton
-                    style={{ padding: "0px" }}
-                    onClick={handleInitiativeRoll}
-                    aria-label="delete"
-                    size="large">
-                    <CasinoIcon />
-                  </IconButton>
-                </div>
-                <br />
+              <Grid className={classes.col} item xs>
                 <div>
-                  <TextField
-                    className={classes.textField}
-                    size="small"
-                    onChange={handleInitiativeChange}
-                    onKeyDown={handleEnterKey}
-                    onBlur={handleBlur}
-                    value={initiative}
-                    id="outlined-basic"
-                    variant="outlined"
-                  />
+                  <div
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Typography variant="subtitle2" gutterBottom>
+                      Status
+                    </Typography>
+                    <IconButton onClick={handleConditionPickerOpen} aria-label="delete" size="large">
+                      <AddCircleOutlineIcon />
+                    </IconButton>
+                  </div>
+                  <br />
+                  <div
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <ConditionPicker
+                      character={props.character}
+                      onOpen={openConditionPicker}
+                      onClose={handleConditionPickerClose}
+                      setInitiativeList={props.setInitiativeList}
+                      initList={props.charList}
+                    />
+                    {props.character.statuses.map((status) => (
+                      <div>
+                        <Chip
+                          clickable
+                          color="secondary"
+                          label={status.name}
+                          onClick={(e) => handlePopoverOpen(e, status.index)}
+                          onDelete={() => handleDeleteCondition(status.index)}
+                        />
+                        <Popover
+                          id={status.index}
+                          className={classes.popover}
+                          classes={{
+                            paper: classes.paper,
+                          }}
+                          open={openedPopoverId === status.index}
+                          anchorEl={anchorEl}
+                          anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "left",
+                          }}
+                          transformOrigin={{
+                            vertical: "bottom",
+                            horizontal: "left",
+                          }}
+                          onClose={handlePopoverClose}
+                          disableRestoreFocus
+                        >
+                          <ConditionCard id={status.index} />
+                        </Popover>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              </Grid>
+
+              <Grid className={classes.col} item xs>
+                <div>
+                  <Typography variant="subtitle2">AC</Typography>
+
+                  <Typography variant="h4">
+                    {props.character.armor_class}
+                  </Typography>
+                </div>
+              </Grid>
+
+              <Grid className={classes.col} item xs>
+                <div>
+                  <div
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Typography
+                      style={{ paddingRight: "12px" }}
+                      variant="subtitle2"
+                    >
+                      Damage
+                    </Typography>
+
+                    <Popover
+                      id={idDamage}
+                      open={openDamage}
+                      anchorEl={anchorE2}
+                      onClose={handleDamageClose}
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "center",
+                      }}
+                      transformOrigin={{
+                        vertical: "top",
+                        horizontal: "center",
+                      }}
+                    >
+                      <CalculateDamage
+                        handleDamageClose={handleDamageClose}
+                        handleDamageChange={handleDamageChange}
+                      />
+                    </Popover>
+
+                    <IconButton
+                      style={{ padding: "0px" }}
+                      onClick={handleVisibilityFullDamage}
+                      aria-label="delete"
+                      size="large">
+                      <VisibilityIcon />
+                    </IconButton>
+                  </div>
+                  <br />
+                  <div
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    {showFullDamage === false && (
+                      <Typography
+                        Typography
+                        variant="h4"
+                        onClick={handleDamageClick}
+                        aria-describedby={idDamage}
+                        style={{ cursor: "pointer" }}
+                      >
+                        {damage}
+                      </Typography>
+                    )}
+                    {showFullDamage === true && (
+                      <Typography
+                        variant="h4"
+                        onClick={handleDamageClick}
+                        aria-describedby={idDamage}
+                        style={{ cursor: "pointer" }}
+                      >
+                        {props.character.hit_points - damage}/
+                        {props.character.hit_points}
+                      </Typography>
+                    )}
+                  </div>
+                </div>
+              </Grid>
+
+              <Grid className={classes.col} item xs>
+                <div>
+                  <div
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Typography style={{ paddingRight: "12px" }} variant="subtitle2" gutterBottom>
+                      Initiative
+                    </Typography>
+                    <IconButton
+                      style={{ padding: "0px" }}
+                      onClick={handleInitiativeRoll}
+                      aria-label="delete"
+                      size="large">
+                      <CasinoIcon />
+                    </IconButton>
+                  </div>
+                  <br />
+                  <div>
+                    <TextField
+                      className={classes.textField}
+                      size="small"
+                      onChange={handleInitiativeChange}
+                      onKeyDown={handleEnterKey}
+                      onBlur={handleBlur}
+                      value={initiative}
+                      id="outlined-basic"
+                      variant="outlined"
+                    />
+                  </div>
+                </div>
+              </Grid>
             </Grid>
-          </Grid>
-        </div>
-        <div />
-      </CardContent>
+          </div>
+          <div />
+        </CardContent>
+      </Box>
     </Card>
   );
 }

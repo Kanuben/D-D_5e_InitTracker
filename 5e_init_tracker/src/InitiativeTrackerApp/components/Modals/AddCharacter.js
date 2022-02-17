@@ -105,6 +105,7 @@ export default function AddCharacter(props) {
   const [id, setId] = React.useState("c0");
 
   const classes = useStyles();
+  const containerRef = React.useRef(null);
 
   const handleClose = () => {
     onClose();
@@ -171,7 +172,7 @@ export default function AddCharacter(props) {
         </DialogTitle>
 
         <DialogContent>
-          <div className={classes.flex}>
+          <div ref={containerRef} className={classes.flex}>
             <Autocomplete
               id="combo-box-demo"
               freeSolo
@@ -225,7 +226,7 @@ export default function AddCharacter(props) {
                 {selectedList.map((character, index) => (
                   <Slide
                     key={character.id}
-                    direction="up"
+                    direction="down"
                     in={true}
                     mountOnEnter
                   >
