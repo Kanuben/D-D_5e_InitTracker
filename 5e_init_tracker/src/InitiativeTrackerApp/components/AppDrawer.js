@@ -426,7 +426,7 @@ export default function PersistentDrawerLeft() {
           <div className={classes.mainToolbar}>
             <div>
               <Typography variant="h4" noWrap>
-                Goblin Tracker
+                
               </Typography>
             </div>
             <div>

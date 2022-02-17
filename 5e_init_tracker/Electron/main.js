@@ -1,12 +1,13 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain, nativeTheme } = require('electron')
 const isDev = require("electron-is-dev");
 const path = require("path");
 const Store = require("./store.js");
 
+if (require('electron-squirrel-startup')) return app.quit();
+
 let mainWindow;
 let newWindow;
 
-const { ipcMain } = require("electron");
 ipcMain.on("new-window", (event, window, arg) => {
   if (window === "monster") {
     let deploymentURL = `file://${path.join(
@@ -65,6 +66,7 @@ store.set("isDev", isDev);
 function createWindow() {
   let { width, height } = store.get("windowBounds");
   let maximized = store.get("maximized");
+  
 
   mainWindow = new BrowserWindow({
     width,
@@ -96,14 +98,36 @@ function createWindow() {
 
   mainWindow.loadURL(startURL);
   //mainWindow.removeMenu();
+  // ipcMain.handle('dark-mode:toggle', () => {
+  //   if (nativeTheme.shouldUseDarkColors) {
+  //     nativeTheme.themeSource = 'light'
+  //   } else {
+  //     nativeTheme.themeSource = 'dark'
+  //   }
+  //   return nativeTheme.shouldUseDarkColors
+  // })
+
+  nativeTheme.themeSource = 'dark'
+
   mainWindow.once("ready-to-show", () => {
     if (maximized) {
       mainWindow.maximize();
     }
+    if (!isDev)
+      mainWindow.removeMenu();
     mainWindow.show();
   });
   mainWindow.on("closed", () => {
     mainWindow = null;
   });
 }
-app.on("ready", createWindow);
+
+app.whenReady().then(() => {
+  createWindow()
+
+  app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow()
+    }
+  })
+})

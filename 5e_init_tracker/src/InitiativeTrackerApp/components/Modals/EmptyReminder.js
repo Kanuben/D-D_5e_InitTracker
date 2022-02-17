@@ -91,7 +91,7 @@ export default function EmptyReminder(props) {
         fullWidth={true}
       >
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-          Hey dumb dumb
+          No characters available.
         </DialogTitle>
 
         <DialogContent>

@@ -1,5 +1,5 @@
 {
-  "name": "5e_init_tracker",
+  "name": "goblin-tracker",
   "homepage": "./",
   "main": "./electron/main.js",
   "version": "0.1.0",
@@ -19,6 +19,7 @@
     "concurrently": "^7.0.0",
     "electron-is-dev": "^1.2.0",
     "electron-squirrel-startup": "^1.0.0",
+    "electron-winstaller": "^5.0.0",
     "lodash": "^4.17.21",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
@@ -36,7 +37,8 @@
     "ebuild": "npm run build && node_modules/.bin/build",
     "dev": "concurrently \"npm start\" \"wait-on http://localhost:3000 && electron .\"",
     "package": "electron-forge package",
-    "make": "electron-forge make"
+    "make": "npm run build && electron-forge make",
+    "setup": "electron-installer-windows --src out/goblin-tracker-win32-x64/ --dest dist/installers/"
   },
   "eslintConfig": {
     "extends": [
@@ -62,16 +64,22 @@
     "@electron-forge/maker-rpm": "^6.0.0-beta.63",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.63",
     "@electron-forge/maker-zip": "^6.0.0-beta.63",
-    "electron": "^11.5.0"
+    "electron": "^11.5.0",
+    "electron-installer-windows": "^3.0.0",
+    "electron-packager": "^15.4.0"
   },
   "config": {
     "forge": {
-      "packagerConfig": {},
+      "packagerConfig": {
+        "prune":true
+      },
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "5e_init_tracker"
+            "name": "Goblin-Tracker",
+            "authors": "Our Code World Inc.",
+            "description":"my own app"
           }
         },
         {
