@@ -1,20 +1,20 @@
-import Avatar from "@material-ui/core/Avatar";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import Grid from "@material-ui/core/Grid";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
+import Avatar from "@mui/material/Avatar";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Grid from "@mui/material/Grid";
+import makeStyles from '@mui/styles/makeStyles';
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
 import React, { useEffect } from "react";
-import Chip from "@material-ui/core/Chip";
-import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
-import IconButton from "@material-ui/core/IconButton";
+import Chip from "@mui/material/Chip";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import IconButton from "@mui/material/IconButton";
 import ConditionPicker from "./Modals/ConditionPicker";
-import VisibilityIcon from "@material-ui/icons/Visibility";
-import CasinoIcon from "@material-ui/icons/Casino";
-import Popover from "@material-ui/core/Popover";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import CasinoIcon from "@mui/icons-material/Casino";
+import Popover from "@mui/material/Popover";
 import ConditionCard from "./ConditionInfo";
-import PaletteIcon from "@material-ui/icons/Palette";
+import PaletteIcon from "@mui/icons-material/Palette";
 import ColorSelect from "../components/Modals/ColorSelect";
 import CalculateDamage from "../components/Modals/CalculateDamage";
 
@@ -78,7 +78,7 @@ export default function CharacterCard(props) {
   useEffect(() => {
     setDamage(props.character.damage);
     setInitiative(props.character.initiative);
-  }, props.charList);
+  }, []);
 
   const handleConditionPickerOpen = () => {
     setOpenConditionPicker(true);
@@ -308,10 +308,7 @@ export default function CharacterCard(props) {
                   <Typography variant="subtitle2" gutterBottom>
                     Status
                   </Typography>
-                  <IconButton
-                    onClick={handleConditionPickerOpen}
-                    aria-label="delete"
-                  >
+                  <IconButton onClick={handleConditionPickerOpen} aria-label="delete" size="large">
                     <AddCircleOutlineIcon />
                   </IconButton>
                 </div>
@@ -414,7 +411,7 @@ export default function CharacterCard(props) {
                     style={{ padding: "0px" }}
                     onClick={handleVisibilityFullDamage}
                     aria-label="delete"
-                  >
+                    size="large">
                     <VisibilityIcon />
                   </IconButton>
                 </div>
@@ -467,7 +464,7 @@ export default function CharacterCard(props) {
                     style={{ padding: "0px" }}
                     onClick={handleInitiativeRoll}
                     aria-label="delete"
-                  >
+                    size="large">
                     <CasinoIcon />
                   </IconButton>
                 </div>

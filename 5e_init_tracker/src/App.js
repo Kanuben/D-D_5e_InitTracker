@@ -1,14 +1,14 @@
+import { adaptV4Theme, createTheme, StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
+import { Route } from "react-router-dom";
 import AppDrawer from "./InitiativeTrackerApp/components/AppDrawer";
-import { Link, Route, Switch } from "react-router-dom";
+import ConditionInfo from "./InitiativeTrackerApp/components/ConditionInfo";
 import MonsterInfo from "./InitiativeTrackerApp/components/MonsterInfo";
 import SpellInfo from "./InitiativeTrackerApp/components/SpellInfo";
-import ConditionInfo from "./InitiativeTrackerApp/components/ConditionInfo";
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 
-const theme = createMuiTheme({
+const theme = createTheme(adaptV4Theme({
   palette: {
-    type: 'dark',
+    mode: 'dark',
     primary: {
       main: '#b53f3f',
     },
@@ -21,26 +21,28 @@ const theme = createMuiTheme({
     }
   },
   typography: {
-    // h4: {
-    //   fontFamily: 'New Rocker',
+    // h3: {
+    //   fontFamily: 'MedievalSharp',
     // },
   },
-});
+}));
 
 export default function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <div>
-        <Route exact path="/">
-          <AppDrawer />
-        </Route>
-        <Route exact path="/monster/:id" component={MonsterInfo}>
-        </Route>
-        <Route exact path="/spell/:id" component={SpellInfo}>
-        </Route>
-        <Route exact path="/condition/:id" component={ConditionInfo}>
-        </Route>
-      </div>
-    </ThemeProvider>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={theme}>
+        <div>
+          <Route exact path="/">
+            <AppDrawer />
+          </Route>
+          <Route exact path="/monster/:id" component={MonsterInfo}>
+          </Route>
+          <Route exact path="/spell/:id" component={SpellInfo}>
+          </Route>
+          <Route exact path="/condition/:id" component={ConditionInfo}>
+          </Route>
+        </div>
+      </ThemeProvider>
+    </StyledEngineProvider>
   );
 }

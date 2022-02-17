@@ -1,12 +1,12 @@
-import { Card, CardContent, ListItem } from "@material-ui/core";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import List from "@material-ui/core/List";
-import Slide from "@material-ui/core/Slide";
-import { makeStyles } from "@material-ui/core/styles";
-import SvgIcon from "@material-ui/core/SvgIcon";
-import TextField from "@material-ui/core/TextField";
-import Autocomplete from "@material-ui/lab/Autocomplete";
+import { Card, CardContent, ListItem } from "@mui/material";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import List from "@mui/material/List";
+import Slide from "@mui/material/Slide";
+import makeStyles from '@mui/styles/makeStyles';
+import SvgIcon from "@mui/material/SvgIcon";
+import TextField from "@mui/material/TextField";
+import Autocomplete from '@mui/material/Autocomplete';
 import React from "react";
 import SpellCard from "./SpellCard";
 import { loadSpellData } from "../../services/SpellService";
@@ -121,11 +121,12 @@ export default function AddSpell(props) {
           options={props.spells}
           getOptionLabel={(spell) => spell.name}
           onChange={handleSelectedSpell}
-          renderOption={(spell) => (
-            <React.Fragment>
-              <Avatar />
-              <span style={{ padding: "1em" }}>{spell.name}</span>
-            </React.Fragment>
+          renderOption={(props, option, { selected }) => (
+            <li {...props}>
+              <Avatar>
+              </Avatar>
+              <span style={{ padding: "1em" }}>{option.name}</span>
+            </li>
           )}
           style={{ width: "85%" }}
           renderInput={(params) => (
@@ -142,10 +143,11 @@ export default function AddSpell(props) {
             addToSelectedList(selectedSpell);
           }}
           autoFocus
-          color="primary"
-          variant="contained"
+          color="secondary"
+          variant="outlined"
+          sx={{ width: 100 }}
         >
-          Add To List
+          Add
         </Button>
       </div>
       {selectedList.length === 0 && <div className={classes.placeholder}></div>}

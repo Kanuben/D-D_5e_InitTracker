@@ -1,20 +1,21 @@
-import { ListItem } from '@material-ui/core';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import MuiDialogActions from '@material-ui/core/DialogActions';
-import MuiDialogContent from '@material-ui/core/DialogContent';
-import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import List from '@material-ui/core/List';
-import Slide from '@material-ui/core/Slide';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import SvgIcon from '@material-ui/core/SvgIcon';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-import CloseIcon from '@material-ui/icons/Close';
-import DeleteIcon from "@material-ui/icons/Delete";
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import { ListItem } from '@mui/material';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import MuiDialogActions from '@mui/material/DialogActions';
+import MuiDialogContent from '@mui/material/DialogContent';
+import MuiDialogTitle from '@mui/material/DialogTitle';
+import IconButton from '@mui/material/IconButton';
+import List from '@mui/material/List';
+import Slide from '@mui/material/Slide';
+import makeStyles from '@mui/styles/makeStyles';
+import withStyles from '@mui/styles/withStyles';
+import SvgIcon from '@mui/material/SvgIcon';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import CloseIcon from '@mui/icons-material/Close';
+import DeleteIcon from "@mui/icons-material/Delete";
+import Autocomplete from '@mui/material/Autocomplete';
 import React from 'react';
 import { ReactComponent as Demo } from '../../assets/demo.svg';
 import { ReactComponent as Dragon } from '../../assets/dragon.svg';
@@ -37,6 +38,7 @@ const useStyles = makeStyles(theme => ({
   },
   flex: {
     display: 'flex',
+    paddingTop: theme.spacing(2),
     justifyContent: 'space-between',
   },
   placeholder: {
@@ -69,14 +71,14 @@ const styles = theme => ({
 const DialogTitle = withStyles(styles)(props => {
   const { children, classes, onClose, ...other } = props;
   return (
-    <MuiDialogTitle disableTypography className={classes.root} {...other}>
-      <Typography variant="h6">{children}</Typography>
+    <MuiDialogTitle className={classes.root} {...other}>
+      <Typography>{children}</Typography>
       {onClose
         ? <IconButton
           aria-label="close"
           className={classes.closeButton}
           onClick={onClose}
-        >
+          size="large">
           <CloseIcon />
         </IconButton>
         : null}
@@ -104,10 +106,8 @@ export default function AddMonster(props) {
   const [selectedList, setSelectedList] = React.useState([]);
   const [id, setId] = React.useState('m0');
 
-
   const classes = useStyles();
-
-
+  const containerRef = React.useRef(null);
 
   const handleClose = () => {
     setSelectedMon({});
@@ -122,24 +122,23 @@ export default function AddMonster(props) {
     let newList = [];
     Object.assign(newList, props.initList);
     newList.push(...selectedList);
-    props.setInitiativeList(newList);
+    props.handleSetInitList(newList);
     setSelectedList([]);
     setId('m0');
     handleClose();
   };
 
   const addToSelectedList = selectedMon => {
-    let tempList = Object.create(selectedList);
-    let filteredCharList = props.monList.filter(mon => mon === selectedMon);
-    if (filteredCharList.length !== 0) {
-      let tempChar = {};
-      Object.assign(tempChar, ...filteredCharList);
-      tempChar.id = generateId();
-      tempList.push(tempChar);
-      setSelectedList(tempList);
-    } else {
-      return;
+    let tempList = selectedList;
+    let tempChar = JSON.parse(JSON.stringify(selectedMon))
+    let filteredList = tempList.filter((char) => char.index === tempChar.index);
+    if (filteredList.length > 0) {
+      tempChar.name += ' ' + filteredList.length;
     }
+    tempChar.id = generateId();
+    tempChar.numberOfOthers = 0;
+    tempList.push(tempChar);
+    setSelectedList(tempList);
   };
 
   const removeFromSelectedList = monster => {
@@ -173,24 +172,25 @@ export default function AddMonster(props) {
           Add Monster
         </DialogTitle>
 
-        <DialogContent>
-          <div className={classes.flex}>
+        <DialogContent >
+          <div ref={containerRef} className={classes.flex}>
             <Autocomplete
               id="combo-box-demo"
               freeSolo
               disableClearable
               options={props.monList.sort((a, b) => a.name.localeCompare(b.name))}
-              getOptionLabel={mon => mon.name}
+              getOptionLabel={(mon) => mon.name}
+              sx={{ width: 300 }}
               onChange={handleSelectedMon}
-              renderOption={mon => (
-                <React.Fragment>
+              renderOption={(props, option, { selected }) => (
+                <li {...props}>
                   <Avatar>
                     <SvgIcon>
                       <Demo />
                     </SvgIcon>
                   </Avatar>
-                  <span style={{ padding: '1em' }}>{mon.name}</span>
-                </React.Fragment>
+                  <span style={{ padding: "1em" }}>{option.name}</span>
+                </li>
               )}
               style={{ width: '85%' }}
               renderInput={params => (
@@ -207,10 +207,11 @@ export default function AddMonster(props) {
                 addToSelectedList(selectedMon);
               }}
               autoFocus
-              color="primary"
-              variant="contained"
+              color="secondary"
+              variant="outlined"
+              sx={{ width: 100 }}
             >
-              Add To List
+              Add
             </Button>
           </div>
           {selectedList.length === 0 &&
@@ -225,7 +226,7 @@ export default function AddMonster(props) {
             <div>
               <List>
                 {selectedList.map((monster, index) => (
-                  <Slide key={monster.id} direction="up" in={true} mountOnEnter>
+                  <Slide key={monster.id} direction="down" in={true} container={containerRef.current} mountOnEnter>
                     <ListItem key={monster.id}>
                       <SimpleCharacterCard
                         character={monster}
@@ -237,7 +238,7 @@ export default function AddMonster(props) {
                           removeFromSelectedList(monster);
                         }}
                         aria-label="delete"
-                      >
+                        size="large">
                         <DeleteIcon fontSize="large" />
                       </IconButton>
                     </ListItem>

@@ -1,5 +1,6 @@
 export class Monster {
     name = "";
+    index= "";
     size = "";
     type = "";
     subtype = "";

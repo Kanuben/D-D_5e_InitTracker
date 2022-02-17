@@ -1,15 +1,16 @@
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import Divider from "@material-ui/core/Divider";
-import Grid from "@material-ui/core/Grid";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Divider from "@mui/material/Divider";
+import Grid from "@mui/material/Grid";
+import { useTheme } from "@mui/material/styles";
+import makeStyles from '@mui/styles/makeStyles';
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
 import React, { useEffect } from "react";
 import { map } from "rxjs/operators";
 import { loadSpellData } from "../../services/SpellService";
 import { ReactComponent as Fireball } from "../assets/fire-ball.svg";
-import SvgIcon from "@material-ui/core/SvgIcon";
+import SvgIcon from "@mui/material/SvgIcon";
 
 const useStyles = makeStyles((theme) => ({
   cardwidth: {
@@ -105,7 +106,7 @@ export default function SpellInfo(props) {
               <Grid
                 container
                 direction="row"
-                justify="center"
+                justifyContent="center"
                 alignItems="flex-start"
                 container
                 spacing={1}
@@ -140,7 +141,7 @@ export default function SpellInfo(props) {
               <Grid
                 container
                 direction="row"
-                justify="center"
+                justifyContent="center"
                 alignItems="flex-start"
                 container
                 spacing={1}

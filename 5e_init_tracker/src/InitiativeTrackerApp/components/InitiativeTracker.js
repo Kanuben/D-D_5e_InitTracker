@@ -1,94 +1,70 @@
-import { Toolbar } from "@material-ui/core";
-import IconButton from "@material-ui/core/IconButton";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import Slide from "@material-ui/core/Slide";
-import { makeStyles } from "@material-ui/core/styles";
-import SvgIcon from "@material-ui/core/SvgIcon";
-import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
-import DeleteIcon from "@material-ui/icons/Delete";
-import SortIcon from '@material-ui/icons/Sort';
-import React, { useEffect } from "react";
-import { ReactComponent as Logo } from "../assets/download.svg";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Grid from "@mui/material/Grid";
+import Grow from "@mui/material/Grow";
+import IconButton from "@mui/material/IconButton";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import Slide from "@mui/material/Slide";
+import { useTheme } from "@mui/material/styles";
+import makeStyles from '@mui/styles/makeStyles';
+import { default as React, useEffect } from "react";
 import CharacterCard from "./CharacterCard";
+import MonsterInfo from "./MonsterInfo";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   toolbar: {
+    width: '100%',
     "justify-content": "flex-end",
-    "padding-right": "5em",
+    'z-index': 1000,
+    background: theme.palette.secondary.main
   },
 }));
 
 export default function InitiativeTracker(props) {
   const classes = useStyles();
-
-  useEffect(() => {
-  }, props);
+  const theme = useTheme();
 
   return (
-    <div>
-      <Toolbar className={classes.toolbar}>
-        <div>
-          <IconButton
-            aria-label="delete"
-            onClick={() => {
-              let newList = [];
-              Object.assign(newList, props.charList);
-              props.sortInitList(newList);
-              props.setInitiativeList(newList);
-            }}
-          >
-            <SortIcon />
-          </IconButton>
-        </div>
-        <div>
-          <IconButton
-            aria-label="delete"
-            onClick={() => {
-              props.handleRollInit();
-            }}
-          >
-            <SvgIcon style={{ fontSize: 40 }} color="action">
-              <Logo />
-            </SvgIcon>
-          </IconButton>
-        </div>
-        <div>
-          <IconButton
-            onClick={() => {
-              props.handleInitAdvance();
-            }}
-            aria-label="advance"
-          >
-            <ArrowUpwardIcon style={{ fontSize: 40 }} />
-          </IconButton>
-        </div>
-      </Toolbar>
-      {/* If charList is defined display the list */}
-      {props.charList && (
-        <List>
-          {props.charList.map((character) => (
-            <Slide direction="up" in={true} mountOnEnter>
-              <ListItem key={character.id}>
-                <CharacterCard
-                  character={character}
-                  charList={props.charList}
-                  setInitiativeList={props.setInitiativeList}
-                  sortInitList={props.sortInitList}
-                />
-                <IconButton
-                  onClick={() => {
-                    props.handleRemove(character);
-                  }}
-                  aria-label="delete"
-                >
-                  <DeleteIcon fontSize="large" />
-                </IconButton>
-              </ListItem>
-            </Slide>
-          ))}
-        </List>
-      )}
+    <div >
+      <div >
+        {/* If charList is defined display the list */}
+        {props.charList && (
+          <Grid container spacing={3}>
+            <Grid item xs={props.selectedCharacter.isPlayer ? 12 : 8}>
+              <List>
+                {props.charList.map((character) => (
+                  <Slide direction="up" in={true} mountOnEnter>
+                    <ListItem key={character.id}>
+                      <CharacterCard
+                        character={character}
+                        charList={props.charList}
+                        setInitiativeList={props.setInitiativeList}
+                        sortInitList={props.sortInitList}
+                      />
+                      <IconButton
+                        onClick={() => {
+                          props.handleRemove(character);
+                        }}
+                        aria-label="delete"
+                        size="large">
+                        <DeleteIcon fontSize="large" />
+                      </IconButton>
+                    </ListItem>
+                  </Slide>
+                ))}
+              </List>
+            </Grid>
+            {props.selectedCharacter.isPlayer == false && (
+              <Grow in={!props.selectedCharacter.isPlayer}>
+                <Grid item xs={4}>
+                  <MonsterInfo monster={props.selectedCharacter}>
+                  </MonsterInfo>
+                </Grid>
+              </Grow>
+            )}
+          </Grid>
+        )}
+      </div>
     </div>
   );
 }

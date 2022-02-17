@@ -1,9 +1,11 @@
-import Divider from '@material-ui/core/Divider';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import Popover from '@material-ui/core/Popover';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+import { ListItemText, ListSubheader } from '@mui/material';
+import Divider from '@mui/material/Divider';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import Popover from '@mui/material/Popover';
+import { useTheme } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
+import Typography from '@mui/material/Typography';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { map } from "rxjs/operators";
@@ -15,7 +17,7 @@ const useStyles = makeStyles(theme => ({
     pointerEvents: 'none',
   },
   link: {
-    color: theme.palette.secondary.main,
+    color: 'white',
   },
   cardwidth: {
     width: 'inherit',
@@ -49,7 +51,10 @@ const useStyles = makeStyles(theme => ({
   paper_padding: {
     padding: '1em',
   },
-
+  headingColor: {
+    color: theme.palette.secondary.main,
+    "font-weight": "bold",
+  },
   background_blue: {
     'background-color': 'blue',
   },
@@ -89,7 +94,7 @@ export default function SpellCasting(props) {
 
   };
 
-  const handlePopoverClose = () => {
+  const handlePopoverClose = (event) => {
     setOpenedPopoverId(null);
     setAnchorEl(null);
   };
@@ -100,19 +105,23 @@ export default function SpellCasting(props) {
     <div>
       <List>
         {props.monster.spell_casting.spells.length !== 0 &&
-          <ListItem dense={true}>
-            <div>
-              {props.monster.spell_casting.spells.map((item, index) => (
+          <div>
+            {props.monster.spell_casting.spells.map((item, index) => (
+              <ListItem>
                 <div>
                   {index == 0 &&
-                    <div>
-                      <Typography variant="body1">{item.level > 0 ? 'Level ' + item.level : 'Cantrips:'}</Typography>
-                    </div>
+                    <ListItemText>
+                      <div>
+                        <Typography className={classes.headingColor} variant="body1">{item.level > 0 ? 'Level ' + item.level : 'Cantrips:'}</Typography>
+                      </div>
+                    </ListItemText>
                   }
                   {index > 0 && props.monster.spell_casting.spells[index - 1].level != item.level &&
-                    <div>
-                      <Typography variant="body1">Level {item.level}:</Typography>
-                    </div>
+                    <ListItemText>
+                      <div>
+                        <Typography className={classes.headingColor} variant="body1">Level {item.level}:</Typography>
+                      </div>
+                    </ListItemText>
                   }
                   <span>&nbsp;</span>
                   <Link
@@ -141,15 +150,18 @@ export default function SpellCasting(props) {
                       vertical: 'top',
                       horizontal: 'left',
                     }}
+                    PaperProps={{
+                      style: { maxWidth: '800px' },
+                    }}
                     onClose={handlePopoverClose}
                     disableRestoreFocus
                   >
                     <SpellInfo selectedSpell={selectedSpell} id={item.url} />
                   </Popover>
                 </div>
-              ))}
-            </div>
-          </ListItem>}
+              </ListItem>
+            ))}
+          </div>}
       </List>
       <Divider />
 

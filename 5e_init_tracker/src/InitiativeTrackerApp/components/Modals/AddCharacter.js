@@ -1,22 +1,24 @@
-import { ListItem } from "@material-ui/core";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import MuiDialogActions from "@material-ui/core/DialogActions";
-import MuiDialogContent from "@material-ui/core/DialogContent";
-import MuiDialogTitle from "@material-ui/core/DialogTitle";
-import IconButton from "@material-ui/core/IconButton";
-import List from "@material-ui/core/List";
-import Slide from "@material-ui/core/Slide";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import SvgIcon from "@material-ui/core/SvgIcon";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
-import CloseIcon from "@material-ui/icons/Close";
-import Autocomplete from "@material-ui/lab/Autocomplete";
+import { ListItem } from "@mui/material";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import MuiDialogActions from "@mui/material/DialogActions";
+import MuiDialogContent from "@mui/material/DialogContent";
+import MuiDialogTitle from "@mui/material/DialogTitle";
+import IconButton from "@mui/material/IconButton";
+import List from "@mui/material/List";
+import Slide from "@mui/material/Slide";
+import makeStyles from '@mui/styles/makeStyles';
+import withStyles from '@mui/styles/withStyles';
+import SvgIcon from "@mui/material/SvgIcon";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import CloseIcon from "@mui/icons-material/Close";
+import Autocomplete from '@mui/material/Autocomplete';
 import React from "react";
 import { ReactComponent as Dragon } from "../../assets/dragon.svg";
 import SimpleCharacterCard from "../SimpleCharacterCard";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
   },
   flex: {
     display: "flex",
+    paddingTop: theme.spacing(2),
     justifyContent: "space-between",
   },
   placeholder: {
@@ -66,14 +69,14 @@ const styles = (theme) => ({
 const DialogTitle = withStyles(styles)((props) => {
   const { children, classes, onClose, ...other } = props;
   return (
-    <MuiDialogTitle disableTypography className={classes.root} {...other}>
+    <MuiDialogTitle className={classes.root} {...other}>
       <Typography variant="h6">{children}</Typography>
       {onClose ? (
         <IconButton
           aria-label="close"
           className={classes.closeButton}
           onClick={onClose}
-        >
+          size="large">
           <CloseIcon />
         </IconButton>
       ) : null}
@@ -115,20 +118,19 @@ export default function AddCharacter(props) {
     let newList = [];
     Object.assign(newList, props.initList);
     newList.push(...selectedList);
-    props.setInitiativeList(newList);
+    props.handleSetInitList(newList);
     setSelectedList([]);
     setId("c0");
     handleClose();
   };
 
   const addToSelectedList = (selectedChar) => {
-    let tempList = Object.create(selectedList);
-    let filteredCharList = props.charList.filter(
-      (char) => char === selectedChar
+    let tempList = selectedList;
+    let tempChar = JSON.parse(JSON.stringify(selectedChar))
+    let filteredCharList = tempList.filter(
+      (char) => char.name === selectedChar.name
     );
-    if (filteredCharList.length !== 0) {
-      let tempChar = {};
-      Object.assign(tempChar, ...filteredCharList);
+    if (filteredCharList.length == 0) {
       tempChar.id = generateId();
       tempList.push(tempChar);
       setSelectedList(tempList);
@@ -177,11 +179,11 @@ export default function AddCharacter(props) {
               options={props.charList}
               getOptionLabel={(char) => char.name}
               onChange={handleSelectedChar}
-              renderOption={(char) => (
-                <React.Fragment>
-                  <Avatar src={char.img} />
-                  <span style={{ padding: "1em" }}>{char.name}</span>
-                </React.Fragment>
+              renderOption={(props, option, { selected }) => (
+                <li {...props}>
+                  <Avatar src={option.img} />
+                  <span style={{ padding: "1em" }}>{option.name}</span>
+                </li>
               )}
               style={{ width: "85%" }}
               renderInput={(params) => (
@@ -198,10 +200,11 @@ export default function AddCharacter(props) {
                 addToSelectedList(selectedChar);
               }}
               autoFocus
-              color="primary"
-              variant="contained"
+              color="secondary"
+              variant="outlined"
+              sx={{ width: 100 }}
             >
-              Add To List
+              Add
             </Button>
           </div>
           {selectedList.length === 0 && (
@@ -233,6 +236,14 @@ export default function AddCharacter(props) {
                         selected={true}
                         removeFromSelectedList={removeFromSelectedList}
                       />
+                      <IconButton
+                        onClick={() => {
+                          removeFromSelectedList(character);
+                        }}
+                        aria-label="delete"
+                        size="large">
+                        <DeleteIcon fontSize="large" />
+                      </IconButton>
                     </ListItem>
                   </Slide>
                 ))}

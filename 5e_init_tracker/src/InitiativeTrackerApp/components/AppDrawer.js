@@ -1,40 +1,42 @@
-import AppBar from "@material-ui/core/AppBar";
-import Box from "@material-ui/core/Box";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Divider from "@material-ui/core/Divider";
-import Drawer from "@material-ui/core/Drawer";
-import Grow from "@material-ui/core/Grow";
-import IconButton from "@material-ui/core/IconButton";
-import LinearProgress from "@material-ui/core/LinearProgress";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import SvgIcon from "@material-ui/core/SvgIcon";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import CreateIcon from "@material-ui/icons/Create";
-import MenuBookIcon from "@material-ui/icons/MenuBook";
-import MenuOpenIcon from "@material-ui/icons/MenuOpen";
-import PersonAddIcon from "@material-ui/icons/PersonAdd";
-import PublishIcon from "@material-ui/icons/Publish";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import CreateIcon from "@mui/icons-material/Create";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
+import MenuOpenIcon from "@mui/icons-material/MenuOpen";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import PublishIcon from "@mui/icons-material/Publish";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import Divider from "@mui/material/Divider";
+import Drawer from "@mui/material/Drawer";
+import Grow from "@mui/material/Grow";
+import IconButton from "@mui/material/IconButton";
+import LinearProgress from "@mui/material/LinearProgress";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import { useTheme } from "@mui/material/styles";
+import SvgIcon from "@mui/material/SvgIcon";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import makeStyles from '@mui/styles/makeStyles';
 import clsx from "clsx";
 import { isEqual } from 'lodash';
 import PropTypes from "prop-types";
-import React, { useEffect } from "react";
+import { default as React, useEffect } from "react";
 import { forkJoin } from "rxjs";
 import { map } from "rxjs/operators";
 import loadFile from "../../services/FileService";
 import { loadMonsterData, loadMonsters } from "../../services/MonsterService";
+import { ReactComponent as Logo } from "../assets/download.svg";
 import { ReactComponent as Dragon } from "../assets/dragon.svg";
 import {
   monsterFileExists,
   readMonsterFile, translateMonsters,
-
-
   writeMonsterFile
 } from "../utilities/MonsterTranslator";
 import InitiativeTracker from "./InitiativeTracker";
@@ -43,6 +45,7 @@ import AddMonster from "./Modals/AddMonster";
 import CreateChar from "./Modals/CreateChar";
 import CreateMonster from "./Modals/CreateMonster";
 import EmptyReminder from "./Modals/EmptyReminder";
+
 
 function LinearProgressWithLabel(props) {
   return (
@@ -74,6 +77,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
   },
   appBar: {
+    background: theme.palette.primary.main,
     transition: theme.transitions.create(["margin", "width"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
@@ -107,6 +111,14 @@ const useStyles = makeStyles((theme) => ({
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
     justifyContent: "flex-end",
+    justifyContent: 'space-around',
+
+  },
+  mainToolbar: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   content: {
     flexGrow: 1,
@@ -131,6 +143,7 @@ const useStyles = makeStyles((theme) => ({
     height: "80vh",
     "flex-direction": "column",
   },
+
 }));
 
 export default function PersistentDrawerLeft() {
@@ -149,6 +162,7 @@ export default function PersistentDrawerLeft() {
   const [monsterList, setMonsterList] = React.useState([]);
   const [spellList, setSpellList] = React.useState([]);
   const [initiativeList, setInitiativeList] = React.useState([]);
+  const [selectedCharacter, setSelectedCharacter] = React.useState({});
   const [monsterProgress, setMonsterProgress] = React.useState(0);
   const [spellProgress, setSpellProgress] = React.useState(0);
 
@@ -220,6 +234,11 @@ export default function PersistentDrawerLeft() {
   //     })
   //   );
   // };
+
+  const handleSetInitList = (newList) => {
+    setSelectedCharacter(newList[0]);
+    setInitiativeList(newList);
+  }
 
   const handleAppendMonsterList = (appendList) => {
     let newList = [];
@@ -324,6 +343,7 @@ export default function PersistentDrawerLeft() {
   const handleRemove = (character) => {
     const newList = initiativeList.filter((item) => item.id !== character.id);
     setInitiativeList(newList);
+    setSelectedCharacter(newList[0]);
   };
 
   const handleInitAdvance = () => {
@@ -331,6 +351,7 @@ export default function PersistentDrawerLeft() {
     Object.assign(newList, initiativeList);
     newList.push(newList.shift());
     setInitiativeList(newList);
+    setSelectedCharacter(newList[0]);
   };
 
   const handleRollInit = () => {
@@ -352,8 +373,8 @@ export default function PersistentDrawerLeft() {
       newList.push(tempChar);
     });
     sortInitList(newList);
-
     setInitiativeList(newList);
+    setSelectedCharacter(newList[0]);
   };
 
   const sortInitList = (list) => {
@@ -393,18 +414,47 @@ export default function PersistentDrawerLeft() {
         })}
       >
         <Toolbar>
-          <IconButton
+          <Button
             color="inherit"
             aria-label="open drawer"
             onClick={handleDrawerOpen}
             edge="start"
             className={clsx(classes.menuButton, open && classes.hide)}
-          >
-            <MenuOpenIcon style={{ fontSize: 40 }} />
-          </IconButton>
-          <Typography variant="h6" noWrap>
-            Initiative Tracker
-          </Typography>
+            size="large"
+            endIcon={<MenuOpenIcon style={{ fontSize: 40 }} />}>
+          </Button>
+          <div className={classes.mainToolbar}>
+            <div>
+              <Typography variant="h4" noWrap>
+                Goblin Tracker
+              </Typography>
+            </div>
+            <div>
+              <Button
+                color="inherit"
+                onClick={() => {
+                  handleRollInit();
+                }}
+                size="large"
+                endIcon={<SvgIcon style={{ fontSize: 40 }}>
+                  <Logo />
+                </SvgIcon>}
+              >
+                Roll
+              </Button>
+              <Button
+                color="inherit"
+                onClick={() => {
+                  handleInitAdvance();
+                }}
+                aria-label="advance"
+                size="large"
+                endIcon={<ArrowUpwardIcon style={{ fontSize: 40 }} ></ArrowUpwardIcon>}
+              >
+                Advance
+              </Button>
+            </div>
+          </div>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -417,7 +467,10 @@ export default function PersistentDrawerLeft() {
         }}
       >
         <div className={classes.drawerHeader}>
-          <IconButton onClick={handleDrawerClose}>
+          <Typography variant="h6" noWrap>
+            Main Menu
+          </Typography>
+          <IconButton onClick={handleDrawerClose} size="large">
             {theme.direction === "ltr" ? (
               <ChevronLeftIcon />
             ) : (
@@ -487,7 +540,7 @@ export default function PersistentDrawerLeft() {
           <AddMonster
             openAddMonster={openAddMonster}
             onClose={handleAddMonsterClose}
-            setInitiativeList={setInitiativeList}
+            handleSetInitList={handleSetInitList}
             initList={initiativeList}
             monList={monsterList}
           />
@@ -495,7 +548,7 @@ export default function PersistentDrawerLeft() {
           <AddCharacter
             openAddCharacter={openAddCharacter}
             onClose={handleAddCharacterClose}
-            setInitiativeList={setInitiativeList}
+            handleSetInitList={handleSetInitList}
             initList={initiativeList}
             charList={characterList.filter((char) => char.isPlayer === true)}
           />
@@ -542,14 +595,17 @@ export default function PersistentDrawerLeft() {
         {appLoaded === true && (
           <div>
             {initiativeList.length !== 0 && (
-              <InitiativeTracker
-                handleRemove={handleRemove}
-                handleInitAdvance={handleInitAdvance}
-                charList={initiativeList}
-                handleRollInit={handleRollInit}
-                sortInitList={sortInitList}
-                setInitiativeList={setInitiativeList}
-              />
+              <Box>
+                <InitiativeTracker
+                  handleRemove={handleRemove}
+                  handleInitAdvance={handleInitAdvance}
+                  charList={initiativeList}
+                  handleRollInit={handleRollInit}
+                  sortInitList={sortInitList}
+                  setInitiativeList={setInitiativeList}
+                  selectedCharacter={selectedCharacter}
+                />
+              </Box>
             )}
             {initiativeList.length === 0 && (
               <div className={classes.placeholder}>

@@ -1,10 +1,10 @@
-import Avatar from "@material-ui/core/Avatar";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import Grid from "@material-ui/core/Grid";
-import { makeStyles } from "@material-ui/core/styles";
-import SvgIcon from "@material-ui/core/SvgIcon";
-import Typography from "@material-ui/core/Typography";
+import Avatar from "@mui/material/Avatar";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Grid from "@mui/material/Grid";
+import makeStyles from '@mui/styles/makeStyles';
+import SvgIcon from "@mui/material/SvgIcon";
+import Typography from "@mui/material/Typography";
 import React from "react";
 import { ReactComponent as Demo } from "../assets/demo.svg";
 

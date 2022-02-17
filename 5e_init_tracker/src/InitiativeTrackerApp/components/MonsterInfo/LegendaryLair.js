@@ -1,10 +1,11 @@
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+import Divider from '@mui/material/Divider';
+import ListItem from '@mui/material/ListItem';
+import { useTheme } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
+import Typography from '@mui/material/Typography';
 import React, { useEffect } from 'react';
-import List from '@material-ui/core/List';
-import Checkbox from '@material-ui/core/Checkbox';
+import List from '@mui/material/List';
+import Checkbox from '@mui/material/Checkbox';
 
 const useStyles = makeStyles(theme => ({
   popover: {
@@ -50,7 +51,7 @@ const useStyles = makeStyles(theme => ({
     'background-color': 'blue',
   },
   headingColor: {
-    color: theme.palette.primary.main,
+    color: theme.palette.secondary.main,
     'font-weight': 'bold',
   },
 }));
@@ -75,9 +76,9 @@ export default function LegendaryLair(props) {
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <Typography variant="h6">Legendary Actions</Typography>
 
-          {props.monster.legendary_actions.actions_per_turn.map(
+          {/* {props.monster.legendary_actions.actions_per_turn.map(
             (item, index) => <Checkbox />
-          )}
+          )} */}
         </div>}
       <List>
         {legendaryActions.map((item, index) => (
@@ -98,9 +99,9 @@ export default function LegendaryLair(props) {
           <Divider />
           <Typography variant="h6">Lair Actions</Typography>
 
-          {props.monster.legendary_actions.actions_per_turn.map(
+          {/* {props.monster.legendary_actions.actions_per_turn.map(
             (item, index) => <Checkbox />
-          )}
+          )} */}
         </div>}
       <List>
         {props.monster.lair_actions.map((item, index) => (

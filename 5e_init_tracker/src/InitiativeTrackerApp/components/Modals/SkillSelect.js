@@ -1,9 +1,9 @@
 
-import { Grid, Typography } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Grid, Typography } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import React from 'react';
-import Checkbox from '@material-ui/core/Checkbox';
-import Button from '@material-ui/core/Button';
+import Checkbox from '@mui/material/Checkbox';
+import Button from '@mui/material/Button';
 
 const useStyles = makeStyles(theme => ({
   inLine: {

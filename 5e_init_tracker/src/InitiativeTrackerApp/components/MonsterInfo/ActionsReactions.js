@@ -1,9 +1,10 @@
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+import Divider from '@mui/material/Divider';
+import ListItem from '@mui/material/ListItem';
+import { useTheme } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
+import Typography from '@mui/material/Typography';
 import React, { useEffect } from 'react';
-import List from '@material-ui/core/List';
+import List from '@mui/material/List';
 
 const useStyles = makeStyles(theme => ({
   popover: {
@@ -49,7 +50,7 @@ const useStyles = makeStyles(theme => ({
     'background-color': 'blue',
   },
   headingColor: {
-    color: theme.palette.primary.main,
+    color: theme.palette.secondary.main,
     'font-weight': 'bold',
   },
 }));

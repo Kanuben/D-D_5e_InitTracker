@@ -1,3 +1,4 @@
+import { toLower } from "lodash";
 import { Monster } from "../templates/monster";
 
 const fs = window.require("fs");
@@ -5,13 +6,14 @@ const path = window.require("path");
 const app = window.require('electron')
 
 export const translateMonsters = (monsters) => {
-  let translatedMonsters = [];
+  let translatedMons = [];
   monsters.forEach((monster) => {
     let translatedMonster = new Monster();
     if (monster.img) {
       translatedMonster.img = monster.img;
     }
     translatedMonster.name = monster.name;
+    translatedMonster.index = toLower(monster.name);
     translatedMonster.size = monster.size;
     translatedMonster.type = monster.type;
     translatedMonster.subtype = monster.subtype;
@@ -66,7 +68,7 @@ export const translateMonsters = (monsters) => {
           );
         } else {
           translatedMonster.proficiencies.push({
-            name: element.proficiency.name.substring(element.proficiency.name.indexOf(':')+1),
+            name: element.proficiency.name.substring(element.proficiency.name.indexOf(':') + 1),
             value: element.value,
           });
         }
@@ -158,9 +160,9 @@ export const translateMonsters = (monsters) => {
         });
       });
     }
-    translatedMonsters.push(translatedMonster);
+    translatedMons.push(translatedMonster);
   });
-  return translatedMonsters;
+  return translatedMons;
 };
 
 export function monsterFileExists() {

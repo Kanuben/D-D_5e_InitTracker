@@ -1,15 +1,16 @@
-import Typography from "@material-ui/core/Typography";
-import Toolbar from "@material-ui/core/Toolbar";
-import CardContent from "@material-ui/core/CardContent";
-import AppBar from "@material-ui/core/AppBar";
-import Divider from "@material-ui/core/Divider";
-import Grid from "@material-ui/core/Grid";
-import ListItem from "@material-ui/core/ListItem";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import List from "@material-ui/core/List";
+import Typography from "@mui/material/Typography";
+import Toolbar from "@mui/material/Toolbar";
+import CardContent from "@mui/material/CardContent";
+import AppBar from "@mui/material/AppBar";
+import Divider from "@mui/material/Divider";
+import Grid from "@mui/material/Grid";
+import ListItem from "@mui/material/ListItem";
+import { useTheme } from "@mui/material/styles";
+import makeStyles from '@mui/styles/makeStyles';
+import List from "@mui/material/List";
 import { bindNodeCallback } from "rxjs";
 import { ReactComponent as Monster } from "../../assets/monster.svg";
-import SvgIcon from "@material-ui/core/SvgIcon";
+import SvgIcon from "@mui/material/SvgIcon";
 
 const useStyles = makeStyles((theme) => ({
   popover: {
@@ -55,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
     "background-color": "blue",
   },
   headingColor: {
-    color: theme.palette.primary.main,
+    color: theme.palette.secondary.main,
     "font-weight": "bold",
   },
   textColor: {
@@ -70,15 +71,6 @@ export default function MainStats(props) {
   //styling
   const theme = useTheme();
   const classes = useStyles(theme);
-
-  //helper functions
-  const isSubtype = () => {
-    let subtype = "";
-    if (props.monster.subtype) {
-      subtype = subtype.concat("(" + props.monster.subtype + ")");
-    }
-    return subtype;
-  };
 
   //monster varaibles
   let savingThrows = [];
@@ -195,33 +187,13 @@ export default function MainStats(props) {
     //load condidtion immunities
     if (props.monster.condition_immunities !== undefined) {
       props.monster.condition_immunities.forEach((item) => {
-        condidtionImmunities.push(item.name);
+        condidtionImmunities.push(item);
       });
     }
   }
 
   return (
     <div>
-      <AppBar position="fixed">
-        <Toolbar>
-          <Typography variant="h4">
-            <SvgIcon
-              style={{ "font-size": "1.5em" }}
-              color="action"
-            >
-              <Monster />
-            </SvgIcon>
-          </Typography>
-          <Typography variant="h4" gutterBottom>
-            {props.monster.name}
-          </Typography>
-          <Typography variant="body1" gutterBottom>
-            &nbsp;( {props.monster.size} - {props.monster.type}
-            {isSubtype()}, {props.monster.alignment} )
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Toolbar />
       <div>Armor Class {props.monster.armor_class}</div>
       <div>
         Hit Points {props.monster.hit_points} ({props.monster.hit_dice}+
@@ -234,7 +206,7 @@ export default function MainStats(props) {
         <div
           style={{
             display: "flex",
-            "flex-direction": "row-reverse",
+            flexDirection: "row-reverse",
             color: "red",
           }}
         >
@@ -249,7 +221,7 @@ export default function MainStats(props) {
         <Grid
           container
           direction="row"
-          justify="center"
+          justifyContent="center"
           alignItems="flex-start"
           container
           spacing={1}
@@ -278,7 +250,7 @@ export default function MainStats(props) {
         <Grid
           container
           direction="row"
-          justify="center"
+          justifyContent="center"
           alignItems="flex-start"
           container
           spacing={1}
@@ -320,7 +292,7 @@ export default function MainStats(props) {
           <Grid
             container
             direction="row"
-            justify="center"
+            justifyContent="center"
             alignItems="flex-start"
             container
             spacing={1}

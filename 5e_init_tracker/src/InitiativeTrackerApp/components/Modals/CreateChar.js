@@ -1,21 +1,25 @@
-import Dialog from '@material-ui/core/Dialog';
-import MuiDialogActions from '@material-ui/core/DialogActions';
-import MuiDialogContent from '@material-ui/core/DialogContent';
-import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import Paper from '@material-ui/core/Paper';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import Typography from '@material-ui/core/Typography';
-import CloseIcon from '@material-ui/icons/Close';
-import TextField from '@material-ui/core/TextField';
-import Checkbox from '@material-ui/core/Checkbox';
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import Button from '@material-ui/core/Button';
+import Dialog from '@mui/material/Dialog';
+import MuiDialogActions from '@mui/material/DialogActions';
+import MuiDialogContent from '@mui/material/DialogContent';
+import MuiDialogTitle from '@mui/material/DialogTitle';
+import IconButton from '@mui/material/IconButton';
+import Paper from '@mui/material/Paper';
+import makeStyles from '@mui/styles/makeStyles';
+import withStyles from '@mui/styles/withStyles';
+import Autocomplete from '@mui/material/Autocomplete';
+import Typography from '@mui/material/Typography';
+import CloseIcon from '@mui/icons-material/Close';
+import TextField from '@mui/material/TextField';
+import Checkbox from '@mui/material/Checkbox';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import Button from '@mui/material/Button';
 import charClassList from '../../assets/characterClasses.json';
 import React, { useState, useEffect } from 'react';
 import CharacterTemplate from '../../templates/characterTemplate.json';
+import { Grid } from '@mui/material';
+import Skeleton from '@mui/material/Skeleton';
+import Stack from '@mui/material/Stack';
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -81,14 +85,14 @@ const styles = theme => ({
 const DialogTitle = withStyles(styles)(props => {
   const { children, classes, onClose, ...other } = props;
   return (
-    <MuiDialogTitle disableTypography className={classes.root} {...other}>
+    <MuiDialogTitle className={classes.root} {...other}>
       <Typography variant="h6">{children}</Typography>
       {onClose
         ? <IconButton
           aria-label="close"
           className={classes.closeButton}
           onClick={onClose}
-        >
+          size="large">
           <CloseIcon />
         </IconButton>
         : null}
@@ -127,41 +131,6 @@ export default function CreateChar(props) {
   const [acError, setAcError] = React.useState();
   const [initBonusError, setInitBonusError] = React.useState();
   const [buttonDisable, setButtonDisable] = React.useState(true);
-
-  useEffect(
-    () => {
-      validateCharacterIb(initBonus);
-    },
-    [initBonus]
-  );
-
-  useEffect(
-    () => {
-      validateCharacterHp(hp);
-    },
-    [hp]
-  );
-
-  useEffect(
-    () => {
-      validateCharacterAc(ac);
-    },
-    [ac]
-  );
-
-  useEffect(
-    () => {
-      validateCharacterName(name);
-    },
-    [name]
-  );
-
-  useEffect(
-    () => {
-      checkAllFields();
-    },
-    [nameError, hpError, acError, initBonusError]
-  );
 
   const classes = useStyles();
   const open = props.openCreateCharacter;
@@ -217,37 +186,11 @@ export default function CreateChar(props) {
     else setNameError(false);
   };
 
-  const validateCharacterHp = value => {
+  const validateNumberField = value => {
     let regex = '[^0-9]';
     if (value === '') setHpError(true);
     else if (value.match(regex)) setHpError(true);
     else setHpError(false);
-  };
-
-  const validateCharacterAc = value => {
-    let regex = '[^0-9]';
-    if (value === '') setAcError(true);
-    else if (value.match(regex)) setAcError(true);
-    else setAcError(false);
-  };
-
-  const validateCharacterIb = value => {
-    let regex = '[^0-9-+]';
-    if (value === '') setInitBonusError(true);
-    else if (value.match(regex)) setInitBonusError(true);
-    else setInitBonusError(false);
-  };
-
-  const checkAllFields = () => {
-    let flag =
-      nameError === false &&
-      name != '' &&
-      (hpError === false && hp !== '') &&
-      (acError === false && ac !== '') &&
-      (initBonusError === false && initBonus !== '');
-
-    if (flag === true) setButtonDisable(false);
-    else setButtonDisable(true);
   };
 
   return (
@@ -264,104 +207,108 @@ export default function CreateChar(props) {
         </DialogTitle>
         <DialogContent>
           <div>
-            <div>
-              <img
-                src="https://reactnativecode.com/wp-content/uploads/2018/01/Error_Img.png"
-                className={classes.centerImg}
-              />
-            </div>
+            <Grid container spacing={3}>
+              <Grid item xs={6}>
+                <Skeleton variant="rectangular" width={210} height={118} />
+                <div>
+                  <img
+                    src="https://reactnativecode.com/wp-content/uploads/2018/01/Error_Img.png"
+                    className={classes.centerImg}
+                  />
+                </div>
+              </Grid>
+              <Grid item xs={6}>
+                <form className={classes.root}>
+                  <div className={classes.padBot}>
+                    <TextField
+                      className={classes.textField}
+                      label="Character Name"
+                      id="NewCharacterName"
+                      helperText={
+                        nameError && name.length > 0
+                          ? '*must contain only letters'
+                          : ''
+                      }
+                      onChange={handleCharacterNameChange}
+                      error={nameError && name.length > 0 ? true : false}
+                      value={name}
+                    />
+                  </div>
 
-            <form className={classes.root}>
-              <div className={classes.padBot}>
-                <TextField
-                  className={classes.textField}
-                  label="Character Name"
-                  id="NewCharacterName"
-                  helperText={
-                    nameError && name.length > 0
-                      ? '*must contain only letters'
-                      : ''
-                  }
-                  onChange={handleCharacterNameChange}
-                  error={nameError && name.length > 0 ? true : false}
-                  value={name}
-                />
-              </div>
+                  <div className={classes.padBot}>
+                    <TextField
+                      className={classes.textField}
+                      label="Max HP"
+                      id="NewCharacterHp"
+                      helperText={
+                        hpError && hp.length > 0 ? '*must contain only numbers' : ''
+                      }
+                      error={hpError && hp.length > 0 ? true : false}
+                      value={hp}
+                      onChange={handleCharacterHpChange}
+                    />
 
-              <div className={classes.padBot}>
-                <TextField
-                  className={classes.textField}
-                  label="Max HP"
-                  id="NewCharacterHp"
-                  helperText={
-                    hpError && hp.length > 0 ? '*must contain only numbers' : ''
-                  }
-                  error={hpError && hp.length > 0 ? true : false}
-                  value={hp}
-                  onChange={handleCharacterHpChange}
-                />
+                  </div>
 
-              </div>
+                  <div className={classes.padBot}>
+                    <TextField
+                      className={classes.textField}
+                      label="AC"
+                      id="NewCharacterAC"
+                      error={acError && ac.length > 0 ? true : false}
+                      helperText={
+                        acError && ac.length > 0 ? '*must contain only numbers' : ''
+                      }
+                      onChange={handleCharacterAcChange}
+                      value={ac}
+                    />
+                  </div>
 
-              <div className={classes.padBot}>
-                <TextField
-                  className={classes.textField}
-                  label="AC"
-                  id="NewCharacterAC"
-                  error={acError && ac.length > 0 ? true : false}
-                  helperText={
-                    acError && ac.length > 0 ? '*must contain only numbers' : ''
-                  }
-                  onChange={handleCharacterAcChange}
-                  value={ac}
-                />
-              </div>
+                  <div className={classes.padBot}>
+                    <TextField
+                      className={classes.textField}
+                      label="Initiative Bonus"
+                      id="NewcharacterIb"
+                      error={initBonusError && initBonus.length > 0 ? true : false}
+                      helperText={
+                        initBonusError && initBonus.length > 0
+                          ? '*must contain only numbers and + or -, example +5 or -5'
+                          : ''
+                      }
+                      onChange={handleCharacterIbChange}
+                      value={initBonus}
+                    />
+                  </div>
 
-              <div className={classes.padBot}>
-                <TextField
-                  className={classes.textField}
-                  label="Initiative Bonus"
-                  id="NewcharacterIb"
-                  error={initBonusError && initBonus.length > 0 ? true : false}
-                  helperText={
-                    initBonusError && initBonus.length > 0
-                      ? '*must contain only numbers and + or -, example +5 or -5'
-                      : ''
-                  }
-                  onChange={handleCharacterIbChange}
-                  value={initBonus}
-                />
-              </div>
-
-              <div className={classes.padBot}>
-                <Autocomplete
-                  id="CharacterClassSelect"
-                  multiple
-                  disableCloseOnSelect
-                  options={characterClasses}
-                  getOptionLabel={characterClasses => characterClasses}
-                  onChange={handleCharClassSelected}
-                  style={{ width: '100%' }}
-                  renderOption={(option, { selected }) => (
-                    <React.Fragment>
-                      <Checkbox
-                        icon={icon}
-                        checkedIcon={checkedIcon}
-                        style={{ marginRight: 8 }}
-                        checked={selected}
-                      />
-                      {option}
-                    </React.Fragment>
-                  )}
-                  renderInput={params => (
-                    <TextField {...params} variant="outlined" label="Classes" />
-                  )}
-                />
-              </div>
-            </form>
-
+                  <div className={classes.padBot}>
+                    <Autocomplete
+                      id="CharacterClassSelect"
+                      multiple
+                      disableCloseOnSelect
+                      options={characterClasses}
+                      getOptionLabel={characterClasses => characterClasses}
+                      onChange={handleCharClassSelected}
+                      style={{ width: '100%' }}
+                      renderOption={(option, { selected }) => (
+                        <React.Fragment>
+                          <Checkbox
+                            icon={icon}
+                            checkedIcon={checkedIcon}
+                            style={{ marginRight: 8 }}
+                            checked={selected}
+                          />
+                          {option}
+                        </React.Fragment>
+                      )}
+                      renderInput={params => (
+                        <TextField {...params} variant="outlined" label="Classes" />
+                      )}
+                    />
+                  </div>
+                </form>
+              </Grid>
+            </Grid>
           </div>
-
         </DialogContent>
 
         <DialogActions>

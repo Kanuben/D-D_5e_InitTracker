@@ -1,22 +1,23 @@
-import Dialog from '@material-ui/core/Dialog';
-import MuiDialogActions from '@material-ui/core/DialogActions';
-import MuiDialogContent from '@material-ui/core/DialogContent';
-import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import Paper from '@material-ui/core/Paper';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import Typography from '@material-ui/core/Typography';
-import CloseIcon from '@material-ui/icons/Close';
-import TextField from '@material-ui/core/TextField';
-import Checkbox from '@material-ui/core/Checkbox';
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import Button from '@material-ui/core/Button';
+import Dialog from '@mui/material/Dialog';
+import MuiDialogActions from '@mui/material/DialogActions';
+import MuiDialogContent from '@mui/material/DialogContent';
+import MuiDialogTitle from '@mui/material/DialogTitle';
+import IconButton from '@mui/material/IconButton';
+import Paper from '@mui/material/Paper';
+import makeStyles from '@mui/styles/makeStyles';
+import withStyles from '@mui/styles/withStyles';
+import Autocomplete from '@mui/material/Autocomplete';
+import Typography from '@mui/material/Typography';
+import CloseIcon from '@mui/icons-material/Close';
+import TextField from '@mui/material/TextField';
+import Checkbox from '@mui/material/Checkbox';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import Button from '@mui/material/Button';
 import charClassList from '../../assets/characterClasses.json';
 import React, { useState, useEffect } from 'react';
 import CharacterTemplate from '../../templates/characterTemplate.json';
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 
 export default function CalculateDamage(props) {
   const [damage, setDamage] = React.useState('');
@@ -76,7 +77,7 @@ export default function CalculateDamage(props) {
     <div style={{ maxWidth: '200px', minHeight: '250px', padding: '2%' }}>
 
       <TextField disabled="true" value={damage} />
-      <Grid container spacing={1} justify="center">
+      <Grid container spacing={1} justifyContent="center">
         <Grid item xs={12}>
           <Button onClick={handleNumClick}>7</Button>
           <Button onClick={handleNumClick}>8</Button>
