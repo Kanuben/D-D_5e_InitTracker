@@ -185,6 +185,9 @@ export default function CharacterCard(props) {
         character.initiative = parseInt(d20 + mod);
       }
     });
+    props.sortInitList(newList);
+    props.setInitiativeList(newList);
+    props.setSelectedCharacter(newList[0]);
   };
 
   const handleEnterKey = (e) => {
@@ -193,6 +196,7 @@ export default function CharacterCard(props) {
       Object.assign(newList, props.charList);
       props.sortInitList(newList);
       props.setInitiativeList(newList);
+      props.setSelectedCharacter(newList[0]);
     }
   };
 
@@ -201,6 +205,7 @@ export default function CharacterCard(props) {
     Object.assign(newList, props.charList);
     props.sortInitList(newList);
     props.setInitiativeList(newList);
+    props.setSelectedCharacter(newList[0]);
   };
 
   const handlePopoverOpen = (event, popoverId) => {

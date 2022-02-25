@@ -34,6 +34,7 @@ import loadFile from "../../services/FileService";
 import { loadMonsterData, loadMonsters } from "../../services/MonsterService";
 import { ReactComponent as Logo } from "../assets/download.svg";
 import { ReactComponent as Dragon } from "../assets/dragon.svg";
+import { characterFileExists, readCharacterFile, writeCharacterFile } from "../utilities/CharacterReader";
 import {
   monsterFileExists,
   readMonsterFile, translateMonsters,
@@ -168,6 +169,9 @@ export default function PersistentDrawerLeft() {
 
   useEffect(() => {
     let tasks = [];
+    if (characterFileExists() === true) {
+      setCharacterList(readCharacterFile());
+    }
     if (monsterFileExists() === false) {
       tasks.push(getAllMonster());
       forkJoin(tasks).subscribe(
@@ -196,7 +200,6 @@ export default function PersistentDrawerLeft() {
     } else {
       setMonsterList(readMonsterFile());
       setLoaded(true);
-
     }
   }, []);
 
@@ -265,6 +268,7 @@ export default function PersistentDrawerLeft() {
         newList.push(character);
       }
     });
+    writeCharacterFile(newList)
     setCharacterList(newList);
   };
 
@@ -426,34 +430,36 @@ export default function PersistentDrawerLeft() {
           <div className={classes.mainToolbar}>
             <div>
               <Typography variant="h4" noWrap>
-                
+
               </Typography>
             </div>
-            <div>
-              <Button
-                color="inherit"
-                onClick={() => {
-                  handleRollInit();
-                }}
-                size="large"
-                endIcon={<SvgIcon style={{ fontSize: 40 }}>
-                  <Logo />
-                </SvgIcon>}
-              >
-                Roll
-              </Button>
-              <Button
-                color="inherit"
-                onClick={() => {
-                  handleInitAdvance();
-                }}
-                aria-label="advance"
-                size="large"
-                endIcon={<ArrowUpwardIcon style={{ fontSize: 40 }} ></ArrowUpwardIcon>}
-              >
-                Advance
-              </Button>
-            </div>
+            {initiativeList.length > 0 &&
+              <div>
+                <Button
+                  color="inherit"
+                  onClick={() => {
+                    handleRollInit();
+                  }}
+                  size="large"
+                  endIcon={<SvgIcon style={{ fontSize: 40 }}>
+                    <Logo />
+                  </SvgIcon>}
+                >
+                  Roll
+                </Button>
+                <Button
+                  color="inherit"
+                  onClick={() => {
+                    handleInitAdvance();
+                  }}
+                  aria-label="advance"
+                  size="large"
+                  endIcon={<ArrowUpwardIcon style={{ fontSize: 40 }} ></ArrowUpwardIcon>}
+                >
+                  Advance
+                </Button>
+              </div>
+            }
           </div>
         </Toolbar>
       </AppBar>

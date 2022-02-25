@@ -333,12 +333,12 @@ export default function MainStats(props) {
         {damageVulnerabilties.length !== 0 && (
           <ListItem dense={true}>
             <Typography variant="body1" className={classes.headingColor}>
-              Damage Vulnerabilties:<span>&nbsp;&nbsp;</span>
+              Damage Vuln.:<span>&nbsp;&nbsp;</span>
             </Typography>
             <div className={classes.proficienciesDesc}>
               {damageVulnerabilties.map((vulnerabilties, index) => (
                 <Typography variant="body2">
-                  {vulnerabilties} <span>&nbsp;&nbsp;</span>
+                  {vulnerabilties} {index >= 0 && damageVulnerabilties.length != index+1 ? ', ' : ' '}
                 </Typography>
               ))}
             </div>
@@ -349,12 +349,12 @@ export default function MainStats(props) {
         {damageResistances.length !== 0 && (
           <ListItem dense={true}>
             <Typography variant="body1" className={classes.headingColor}>
-              Damage Resistance:<span>&nbsp;&nbsp;</span>
+              Damage Res.:<span>&nbsp;&nbsp;</span>
             </Typography>
             <div className={classes.proficienciesDesc}>
               {damageResistances.map((resistance, index) => (
                 <Typography variant="body2">
-                  {resistance} <span>&nbsp;&nbsp;</span>
+                  {resistance} {index >= 0 && damageResistances.length != index+1 ? ', ' : ' '}
                 </Typography>
               ))}
             </div>
@@ -365,12 +365,12 @@ export default function MainStats(props) {
         {damageImmunities.length !== 0 && (
           <ListItem dense={true}>
             <Typography variant="body1" className={classes.headingColor}>
-              Damage Immunities:<span>&nbsp;&nbsp;</span>
+              Damage Immun.:<span>&nbsp;&nbsp;</span>
             </Typography>
             <div className={classes.proficienciesDesc}>
               {damageImmunities.map((immunities, index) => (
                 <Typography variant="body2">
-                  {immunities} <span>&nbsp;&nbsp;</span>
+                  {immunities}{index > 0 && damageImmunities.length != index+1 ? ',' : ' '}
                 </Typography>
               ))}
             </div>
@@ -381,13 +381,12 @@ export default function MainStats(props) {
         {condidtionImmunities.length !== 0 && (
           <ListItem dense={true}>
             <Typography variant="body1" className={classes.headingColor}>
-              Condition Immunities:<span>&nbsp;&nbsp;</span>
+              Condition Immun.:<span>&nbsp;&nbsp;</span>
             </Typography>
             <div className={classes.proficienciesDesc}>
-              {" "}
               {condidtionImmunities.map((immunities, index) => (
                 <Typography variant="body2">
-                  {immunities} <span>&nbsp;&nbsp;</span>{" "}
+                  {immunities} {index >= 0 && condidtionImmunities.length != index+1 ? ', ' : ' '}
                 </Typography>
               ))}
             </div>

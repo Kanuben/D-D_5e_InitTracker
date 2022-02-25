@@ -20,6 +20,7 @@ import withStyles from '@mui/styles/withStyles';
 import { default as React } from "react";
 import { Character } from '../../templates/character';
 
+const fs = window.require("fs");
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
@@ -210,23 +211,28 @@ export default function CreateChar(props) {
     setImageLoaded(true);
     let img = document.getElementById('charImg');
     img.style.display = "";
-    setImage(URL.createObjectURL(e.target.files[0]))
-    img.src = URL.createObjectURL(e.target.files[0]);
+    const data = fs.readFileSync(e.target.files[0].path);
+    setImage('data:' + e.target.files[0].type + ';base64,' + data.toString('base64'));
+    img.setAttribute(
+      'src',
+      'data:' + e.target.files[0].type + ';base64,' + data.toString('base64')
+    );
+    //img.src = e.target.files[0].type + data;
   };
 
-  const validateCharacterName = value => {
-    let regex = '[^A-Za-z0-9\\s]';
-    if (value === '') setNameError(true);
-    else if (value.match(regex)) setNameError(true);
-    else setNameError(false);
-  };
+  // const validateCharacterName = value => {
+  //   let regex = '[^A-Za-z0-9\\s]';
+  //   if (value === '') setNameError(true);
+  //   else if (value.match(regex)) setNameError(true);
+  //   else setNameError(false);
+  // };
 
-  const validateNumberField = value => {
-    let regex = '[^0-9]';
-    if (value === '') setHpError(true);
-    else if (value.match(regex)) setHpError(true);
-    else setHpError(false);
-  };
+  // const validateNumberField = value => {
+  //   let regex = '[^0-9]';
+  //   if (value === '') setHpError(true);
+  //   else if (value.match(regex)) setHpError(true);
+  //   else setHpError(false);
+  // };
 
   return (
     <div>
@@ -246,12 +252,12 @@ export default function CreateChar(props) {
               <Grid item xs={6}>
                 <Box>
                   <img id='charImg' style={{
-                    height: '49vh',
+                    height: '40vh',
                     width: '100%',
                     display: 'none'
                   }}></img>
                   {!imageLoaded &&
-                    <Skeleton animation={false} variant="rectangular" height={'50vh'} />
+                    <Skeleton animation={false} variant="rectangular" height={'40vh'} />
                   }
                 </Box>
                 <Box sx={{ paddingTop: '16px' }}>

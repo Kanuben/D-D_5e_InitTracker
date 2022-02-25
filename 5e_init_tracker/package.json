@@ -1,5 +1,6 @@
 {
   "name": "goblin-tracker",
+  "productName": "Goblin Tracker",
   "homepage": "./",
   "main": "./electron/main.js",
   "version": "0.1.0",
@@ -78,8 +79,9 @@
           "name": "@electron-forge/maker-squirrel",
           "config": {
             "name": "Goblin-Tracker",
-            "authors": "Our Code World Inc.",
-            "description":"my own app"
+            "authors": "Gring Software",
+            "description":"DND 5e initiative tracker",
+            "loadingGif": "./public/goblintracker.gif"
           }
         },
         {
