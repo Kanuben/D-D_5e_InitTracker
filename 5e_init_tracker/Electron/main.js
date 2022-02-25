@@ -72,10 +72,13 @@ function createWindow() {
     width,
     height,
     show: false,
+    icon: path.join(__dirname, '/favicon.ico'),
     webPreferences: {
       nodeIntegration: true,
     },
   });
+
+  console.log(path.join(__dirname, 'public/favicon.ico'));
 
   mainWindow.on("resize", () => {
     let { width, height } = mainWindow.getBounds();
