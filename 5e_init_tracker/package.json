@@ -72,7 +72,8 @@
   "config": {
     "forge": {
       "packagerConfig": {
-        "prune":true
+        "prune": true,
+        "icon": "./public/favicon.ico"
       },
       "makers": [
         {
@@ -80,8 +81,10 @@
           "config": {
             "name": "Goblin-Tracker",
             "authors": "Gring Software",
-            "description":"DND 5e initiative tracker",
-            "loadingGif": "./public/goblintracker.gif"
+            "description": "DND 5e initiative tracker",
+            "loadingGif": "./public/goblintracker.gif",
+            "setupIcon": "./public/favicon.ico",
+            "iconUrl": "https://raw.githubusercontent.com/Alex-Shockency/Goblin-Tracker/main/5e_init_tracker/Electron/favicon.ico"
           }
         },
         {
