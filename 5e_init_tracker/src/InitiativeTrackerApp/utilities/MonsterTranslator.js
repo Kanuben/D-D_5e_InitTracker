@@ -1,9 +1,14 @@
 import { toLower } from "lodash";
 import { Monster } from "../templates/monster";
 
-const fs = window.require("fs");
-const path = window.require("path");
-const app = window.require('electron')
+let fs;
+let path;
+if (window && window.process && window.process.type) {
+  fs = window.require("fs");
+  path = window.require("path");
+  const app = window.require('electron')
+} 
+
 
 export const translateMonsters = (monsters) => {
   let translatedMons = [];
@@ -77,7 +82,7 @@ export const translateMonsters = (monsters) => {
     translatedMonster.damage_resistances = monster.damage_resistances;
     translatedMonster.damage_immunities = monster.damage_immunities;
     translatedMonster.damage_vulnerabilities = monster.damage_vulnerabilities;
-    translatedMonster.condition_immunities = monster.condition_immunities.map((immunity)=> immunity.name);
+    translatedMonster.condition_immunities = monster.condition_immunities.map((immunity) => immunity.name);
     translatedMonster.senses = "";
     Object.entries(monster.senses).forEach((element) => {
       translatedMonster.senses = translatedMonster.senses.concat(
@@ -168,7 +173,11 @@ export const translateMonsters = (monsters) => {
 export function monsterFileExists() {
   try {
     let filePath = "monsters.json";
-    return fs.existsSync(filePath);
+    if (window && window.process && window.process.type) {
+      return fs.existsSync(filePath);
+    } else {
+      return false;
+    }
   } catch (error) {
     console.error(error);
   }
@@ -177,8 +186,12 @@ export function monsterFileExists() {
 export function readMonsterFile() {
   try {
     let filePath = "monsters.json";
-    const data = fs.readFileSync(filePath, "utf8");
-    return JSON.parse(data);
+    if (window && window.process && window.process.type) {
+      const data = fs.readFileSync(filePath, "utf8");
+      return JSON.parse(data);
+    } else{
+      return null;
+    }
   } catch (err) {
     console.error(err);
   }
@@ -187,7 +200,9 @@ export function readMonsterFile() {
 export function writeMonsterFile(translatedMonster) {
   try {
     let filePath = "monsters.json";
-    fs.writeFileSync(filePath, JSON.stringify(translatedMonster));
+    if (window && window.process && window.process.type) {
+      fs.writeFileSync(filePath, JSON.stringify(translatedMonster));
+    }
   } catch (e) {
     console.error(e.message);
   }

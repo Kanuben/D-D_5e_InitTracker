@@ -5,11 +5,11 @@ import { useTheme } from '@mui/material/styles';
 import Typography from "@mui/material/Typography";
 import makeStyles from '@mui/styles/makeStyles';
 import React, { useEffect } from 'react';
-import MainStats from '../components/MonsterInfo/MainStats';
-import SpellCasting from '../components/MonsterInfo/SpellCasting';
-import { readMonsterFile } from '../utilities/MonsterTranslator';
-import ActionsReactions from './MonsterInfo/ActionsReactions';
-import LegendaryLair from './MonsterInfo/LegendaryLair';
+import MainStats from './MainStats';
+import SpellCasting from './SpellCasting';
+import { readMonsterFile } from '../../utilities/MonsterTranslator';
+import ActionsReactions from './ActionsReactions';
+import LegendaryLair from './LegendaryLair';
 
 
 const useStyles = makeStyles(theme => ({

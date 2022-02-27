@@ -2,7 +2,7 @@ import { adaptV4Theme, createTheme, StyledEngineProvider, ThemeProvider } from '
 import { Route } from "react-router-dom";
 import AppDrawer from "./InitiativeTrackerApp/components/AppDrawer";
 import ConditionInfo from "./InitiativeTrackerApp/components/ConditionInfo";
-import MonsterInfo from "./InitiativeTrackerApp/components/MonsterInfo";
+import MonsterInfo from "./InitiativeTrackerApp/components/MonsterInfo/MonsterInfo";
 import SpellInfo from "./InitiativeTrackerApp/components/SpellInfo";
 
 

@@ -69,7 +69,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function CharacterCard(props) {
   const classes = useStyles();
-  const { ipcRenderer } = window.require("electron");
   const [openConditionPicker, setOpenConditionPicker] = React.useState(false);
   const [showFullDamage, setShowFullDamage] = React.useState(false);
   const [damage, setDamage] = React.useState("");
@@ -101,13 +100,6 @@ export default function CharacterCard(props) {
   const handleOpenNewMonsterWindow = () => {
     props.setSelectedCharacter(props.character);
     setBorderVal(1)
-    // if (props.character.isPlayer === false) {
-    //   ipcRenderer.send("new-window", "monster", props.character.name);
-    // }
-  };
-
-  const handleOpenNewConditionWindow = (status) => {
-    ipcRenderer.send("new-window", "condition", status);
   };
 
   const handleVisibilityFullDamage = () => {

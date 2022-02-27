@@ -9,7 +9,7 @@ import { useTheme } from "@mui/material/styles";
 import makeStyles from '@mui/styles/makeStyles';
 import { default as React, useEffect } from "react";
 import CharacterCard from "./CharacterCard";
-import MonsterInfo from "./MonsterInfo";
+import MonsterInfo from "./MonsterInfo/MonsterInfo";
 
 const useStyles = makeStyles((theme) => ({
   toolbar: {

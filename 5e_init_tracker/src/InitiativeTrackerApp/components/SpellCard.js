@@ -49,25 +49,12 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SpellCard(props) {
   const classes = useStyles();
-  const { ipcRenderer } = window.require("electron");
 
-  // const handleOpenNewMonsterWindow = () => {
-  //   if (props.character.isPlayer === false) {
-  //     ipcRenderer.send("new-window", "monster", props.character.name);
-  //   }
-  // };
+
 
   return (
     <Card
       className={classes.cardwidth}
-    // onClick={() => {
-    //   console.log(props.selected);
-    //   if (props.selected === false) {
-    //     props.addToSelectedList(props.character);
-    //   } else {
-    //     //props.removeFromSelectedList(props.character);
-    //   }
-    // }}
     >
       <CardContent>
         <div className={classes.align_center}>
@@ -76,7 +63,6 @@ export default function SpellCard(props) {
               <Avatar
                 className={classes.char_portrait}
                 src={props.spell.img}
-              //onClick={handleOpenNewMonsterWindow}
               >
                 <SvgIcon>
                   <Demo />

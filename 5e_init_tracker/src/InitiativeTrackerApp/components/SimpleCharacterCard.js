@@ -7,6 +7,8 @@ import SvgIcon from "@mui/material/SvgIcon";
 import Typography from "@mui/material/Typography";
 import React from "react";
 import { ReactComponent as Demo } from "../assets/demo.svg";
+import MonsterInfo from "./MonsterInfo/MonsterInfo";
+import Popover from '@mui/material/Popover';
 
 const useStyles = makeStyles((theme) => ({
   cardwidth: {
@@ -37,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
     "border-style": "solid",
     "border-color": "darkgrey",
     "border-width": ".25em",
+    cursor: "pointer"
   },
   paper_padding: {
     padding: "1em",
@@ -49,13 +52,23 @@ const useStyles = makeStyles((theme) => ({
 
 export default function CharacterCard(props) {
   const classes = useStyles();
-  const { ipcRenderer } = window.require("electron");
 
-  const handleOpenNewMonsterWindow = () => {
+  const [anchorEl, setAnchorEl] = React.useState({});
+  const [openedPopoverId, setOpenedPopoverId] = React.useState({});
+
+  const handlePopoverOpen = (event) => {
     if (props.character.isPlayer === false) {
-      ipcRenderer.send("new-window", "monster", props.character.name);
+      setAnchorEl(event.currentTarget);
+      setOpenedPopoverId(props.character.name);
     }
   };
+
+  const handlePopoverClose = (event) => {
+    setOpenedPopoverId(null);
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
 
   return (
     <Card
@@ -75,12 +88,36 @@ export default function CharacterCard(props) {
               <Avatar
                 className={classes.char_portrait}
                 src={props.character.img}
-                onClick={handleOpenNewMonsterWindow}
+                onClick={handlePopoverOpen}
               >
                 <SvgIcon>
                   <Demo />
                 </SvgIcon>
               </Avatar>
+              <Popover
+                    id={props.character.name}
+                    className={classes.popover}
+                    classes={{
+                      paper: classes.paper,
+                    }}
+                    open={openedPopoverId === props.character.name}
+                    anchorEl={anchorEl}
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'left',
+                    }}
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'left',
+                    }}
+                    PaperProps={{
+                      style: { maxWidth: '800px' },
+                    }}
+                    onClose={handlePopoverClose}
+                    disableRestoreFocus
+                  >
+                    <MonsterInfo monster={props.character} />
+                  </Popover>
               <div className={classes.charname}>
                 <Typography variant="h6" gutterBottom>
                   {props.character.name}

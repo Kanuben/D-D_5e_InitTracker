@@ -14,7 +14,6 @@ import SpellInfo from '../SpellInfo';
 
 const useStyles = makeStyles(theme => ({
   popover: {
-    pointerEvents: 'none',
   },
   link: {
     color: 'white',
@@ -63,7 +62,6 @@ const useStyles = makeStyles(theme => ({
 export default function SpellCasting(props) {
   const theme = useTheme();
   const classes = useStyles(theme);
-  const { ipcRenderer } = window.require('electron');
 
   if (props.monster) {
     props.monster.spell_casting.spells.forEach(spell => {
@@ -72,10 +70,6 @@ export default function SpellCasting(props) {
       }
     });
   }
-
-  const handleOpenNewSpellWindow = spellUrl => {
-    ipcRenderer.send('new-window', 'spell', spellUrl);
-  };
 
   const [anchorEl, setAnchorEl] = React.useState({});
   const [openedPopoverId, setOpenedPopoverId] = React.useState({});
@@ -128,9 +122,7 @@ export default function SpellCasting(props) {
                     className={classes.link}
                     aria-owns={open ? 'mouse-over-popover' : undefined}
                     aria-haspopup="true"
-                    onClick={() => handleOpenNewSpellWindow(item.url)}
-                    onMouseEnter={e => handlePopoverOpen(e, item)}
-                    onMouseOut={handlePopoverClose}
+                    onClick={e => handlePopoverOpen(e, item)}
                   >
                     {item.name}
                   </Link>

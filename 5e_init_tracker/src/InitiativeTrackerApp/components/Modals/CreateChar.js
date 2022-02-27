@@ -20,7 +20,17 @@ import withStyles from '@mui/styles/withStyles';
 import { default as React } from "react";
 import { Character } from '../../templates/character';
 
-const fs = window.require("fs");
+let fs;
+let path;
+
+if (window && window.process && window.process.type) {
+  fs = window.require("fs");
+  path = window.require("path");
+  const app = window.require('electron')
+} else {
+
+
+}
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
@@ -211,13 +221,20 @@ export default function CreateChar(props) {
     setImageLoaded(true);
     let img = document.getElementById('charImg');
     img.style.display = "";
-    const data = fs.readFileSync(e.target.files[0].path);
-    setImage('data:' + e.target.files[0].type + ';base64,' + data.toString('base64'));
-    img.setAttribute(
-      'src',
-      'data:' + e.target.files[0].type + ';base64,' + data.toString('base64')
-    );
-    //img.src = e.target.files[0].type + data;
+    if (window && window.process && window.process.type) {
+      const data = fs.readFileSync(e.target.files[0].path);
+      setImage('data:' + e.target.files[0].type + ';base64,' + data.toString('base64'));
+      img.setAttribute(
+        'src',
+        'data:' + e.target.files[0].type + ';base64,' + data.toString('base64')
+      );
+    } else {
+      setImage(URL.createObjectURL(e.target.files[0]));
+      img.setAttribute(
+        'src',
+        URL.createObjectURL(e.target.files[0]),
+      );
+    }
   };
 
   // const validateCharacterName = value => {
