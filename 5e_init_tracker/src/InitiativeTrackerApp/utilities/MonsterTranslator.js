@@ -1,9 +1,10 @@
 import { toLower } from "lodash";
 import { Monster } from "../templates/monster";
+import {isElectron} from "./ElectronHelper";
 
 let fs;
 let path;
-if (window && window.process && window.process.type) {
+if (isElectron()) {
   fs = window.require("fs");
   path = window.require("path");
   const app = window.require('electron')
@@ -173,7 +174,7 @@ export const translateMonsters = (monsters) => {
 export function monsterFileExists() {
   try {
     let filePath = "monsters.json";
-    if (window && window.process && window.process.type) {
+    if (isElectron()) {
       return fs.existsSync(filePath);
     } else {
       return false;
@@ -186,7 +187,7 @@ export function monsterFileExists() {
 export function readMonsterFile() {
   try {
     let filePath = "monsters.json";
-    if (window && window.process && window.process.type) {
+    if (isElectron()) {
       const data = fs.readFileSync(filePath, "utf8");
       return JSON.parse(data);
     } else{
@@ -200,7 +201,7 @@ export function readMonsterFile() {
 export function writeMonsterFile(translatedMonster) {
   try {
     let filePath = "monsters.json";
-    if (window && window.process && window.process.type) {
+    if (isElectron()) {
       fs.writeFileSync(filePath, JSON.stringify(translatedMonster));
     }
   } catch (e) {

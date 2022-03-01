@@ -1,9 +1,10 @@
 
+import {isElectron} from "./ElectronHelper";
 
 let fs;
 let path;
 
-if (window && window.process && window.process.type) {
+if (isElectron()) {
     fs = window.require("fs");
     path = window.require("path");
     const app = window.require('electron')
@@ -17,7 +18,7 @@ export const translateCharacter = (characters) => {
 export function characterFileExists() {
     try {
         let filePath = "characters.json";
-        if (window && window.process && window.process.type) {
+        if (isElectron()) {
             return fs.existsSync(filePath);
         } else {
             return false;
@@ -30,7 +31,7 @@ export function characterFileExists() {
 export function readCharacterFile() {
     try {
         let filePath = "characters.json";
-        if (window && window.process && window.process.type) {
+        if (isElectron()) {
             const data = fs.readFileSync(filePath, "utf8");
             return JSON.parse(data);
         } else {
@@ -44,7 +45,7 @@ export function readCharacterFile() {
 export function writeCharacterFile(translatedMonster) {
     try {
         let filePath = "characters.json";
-        if (window && window.process && window.process.type) {
+        if (isElectron()) {
             fs.writeFileSync(filePath, JSON.stringify(translatedMonster));
         }
     } catch (e) {

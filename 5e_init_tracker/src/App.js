@@ -1,5 +1,6 @@
 import { adaptV4Theme, createTheme, StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
-import { Route } from "react-router-dom";
+import React, { Fragment } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import AppDrawer from "./InitiativeTrackerApp/components/AppDrawer";
 import ConditionInfo from "./InitiativeTrackerApp/components/ConditionInfo";
 import MonsterInfo from "./InitiativeTrackerApp/components/MonsterInfo/MonsterInfo";
@@ -31,17 +32,15 @@ export default function App() {
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
-        <div>
-          <Route exact path="/">
-            <AppDrawer />
-          </Route>
+        <AppDrawer></AppDrawer>
+        <Routes>
           <Route exact path="/monster/:id" component={MonsterInfo}>
           </Route>
           <Route exact path="/spell/:id" component={SpellInfo}>
           </Route>
           <Route exact path="/condition/:id" component={ConditionInfo}>
           </Route>
-        </div>
+        </Routes>
       </ThemeProvider>
     </StyledEngineProvider>
   );

@@ -151,7 +151,7 @@ export default function PersistentDrawerLeft() {
   const classes = useStyles();
   const theme = useTheme();
   const [appLoaded, setLoaded] = React.useState(false);
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
   const [openAddCharacter, setOpenAddCharacter] = React.useState(false);
 
   const [openCreateCharacter, setOpenCreateCharacter] = React.useState(false);
@@ -591,11 +591,17 @@ export default function PersistentDrawerLeft() {
       >
         <div className={classes.drawerHeader} />
         {appLoaded === false && (
-          <div>
-            Loading Monsters...
-            <LinearProgressWithLabel value={monsterProgress} />
-            Loading Spells...
-            <LinearProgressWithLabel value={spellProgress} />
+          <div className={classes.placeholder}>
+            <SvgIcon
+              style={{ width: "65vw", height: "65vh" }}
+              color="action"
+            >
+              <Dragon />
+            </SvgIcon>
+            <div style={{ width: "45vw" }}>
+              Loading Monsters...
+              <LinearProgressWithLabel value={monsterProgress} />
+            </div>
           </div>
         )}
         {appLoaded === true && (

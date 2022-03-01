@@ -1,13 +1,12 @@
-import { ListItemText, ListSubheader } from '@mui/material';
+import { ListItemText } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Popover from '@mui/material/Popover';
 import { useTheme } from '@mui/material/styles';
-import makeStyles from '@mui/styles/makeStyles';
 import Typography from '@mui/material/Typography';
+import makeStyles from '@mui/styles/makeStyles';
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { map } from "rxjs/operators";
 import { loadSpellData } from "../../../services/SpellService";
 import SpellInfo from '../SpellInfo';
@@ -17,6 +16,8 @@ const useStyles = makeStyles(theme => ({
   },
   link: {
     color: 'white',
+    cursor: 'pointer',
+    textDecoration: 'underline'
   },
   cardwidth: {
     width: 'inherit',
@@ -118,14 +119,14 @@ export default function SpellCasting(props) {
                     </ListItemText>
                   }
                   <span>&nbsp;</span>
-                  <Link
+                  <a
                     className={classes.link}
                     aria-owns={open ? 'mouse-over-popover' : undefined}
                     aria-haspopup="true"
                     onClick={e => handlePopoverOpen(e, item)}
                   >
                     {item.name}
-                  </Link>
+                  </a>
                   <Popover
                     id={item.name}
                     className={classes.popover}

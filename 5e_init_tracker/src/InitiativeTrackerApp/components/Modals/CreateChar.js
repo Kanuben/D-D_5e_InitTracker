@@ -19,11 +19,12 @@ import makeStyles from '@mui/styles/makeStyles';
 import withStyles from '@mui/styles/withStyles';
 import { default as React } from "react";
 import { Character } from '../../templates/character';
+import {isElectron} from "../../utilities/ElectronHelper";
 
 let fs;
 let path;
 
-if (window && window.process && window.process.type) {
+if (isElectron()) {
   fs = window.require("fs");
   path = window.require("path");
   const app = window.require('electron')
@@ -221,7 +222,7 @@ export default function CreateChar(props) {
     setImageLoaded(true);
     let img = document.getElementById('charImg');
     img.style.display = "";
-    if (window && window.process && window.process.type) {
+    if (isElectron()) {
       const data = fs.readFileSync(e.target.files[0].path);
       setImage('data:' + e.target.files[0].type + ';base64,' + data.toString('base64'));
       img.setAttribute(
