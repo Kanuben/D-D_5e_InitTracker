@@ -1,9 +1,10 @@
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import CreateIcon from "@mui/icons-material/Create";
+import EditIcon from '@mui/icons-material/Edit';
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import MenuOpenIcon from "@mui/icons-material/MenuOpen";
+import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import PublishIcon from "@mui/icons-material/Publish";
 import AppBar from "@mui/material/AppBar";
@@ -34,6 +35,7 @@ import loadFile from "../../services/FileService";
 import { loadMonsterData, loadMonsters } from "../../services/MonsterService";
 import { ReactComponent as Logo } from "../assets/download.svg";
 import { ReactComponent as Dragon } from "../assets/dragon.svg";
+import { Icon } from "../assets/logo.js";
 import { characterFileExists, readCharacterFile, writeCharacterFile } from "../utilities/CharacterReader";
 import {
   monsterFileExists,
@@ -41,12 +43,12 @@ import {
   writeMonsterFile
 } from "../utilities/MonsterTranslator";
 import InitiativeTracker from "./InitiativeTracker";
-import AddCharacter from "./Modals/AddCharacter";
-import AddMonster from "./Modals/AddMonster";
-import CreateChar from "./Modals/CreateChar";
-import CreateMonster from "./Modals/CreateMonster";
+import AddCharacter from "./Modals/Character/AddCharacter";
+import CreateChar from "./Modals/Character/CreateChar";
 import EmptyReminder from "./Modals/EmptyReminder";
-
+import AddMonster from "./Modals/Monster/AddMonster";
+import CreateMonster from "./Modals/Monster/CreateMonster";
+import EditMonster from "./Modals/Monster/EditMonster";
 
 function LinearProgressWithLabel(props) {
   return (
@@ -121,6 +123,8 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  initToolbar: {
+  },
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
@@ -151,10 +155,11 @@ export default function PersistentDrawerLeft() {
   const classes = useStyles();
   const theme = useTheme();
   const [appLoaded, setLoaded] = React.useState(false);
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
   const [openAddCharacter, setOpenAddCharacter] = React.useState(false);
 
   const [openCreateCharacter, setOpenCreateCharacter] = React.useState(false);
+  const [openEditMonster, setOpenEditMonster] = React.useState(false);
   const [openCreateMonster, setOpenCreateMonster] = React.useState(false);
 
   const [openAddMonster, setOpenAddMonster] = React.useState(false);
@@ -185,21 +190,25 @@ export default function PersistentDrawerLeft() {
               });
               handleAppendMonsterList(translateMonsters(monsterArr));
               setLoaded(true);
+              setOpen(true);
             },
             (err) => {
               alert(err);
               setLoaded(true);
+              setOpen(true);
             }
           );
         },
         (err) => {
           alert("Failed to load monsters from api" + err.message);
           setLoaded(true);
+          setOpen(true);
         }
       );
     } else {
       setMonsterList(readMonsterFile());
       setLoaded(true);
+      setOpen(true);
     }
   }, []);
 
@@ -221,27 +230,15 @@ export default function PersistentDrawerLeft() {
     );
   };
 
-  // const getAllSpells = () => {
-  //   return loadSpells().pipe(
-  //     map((spellList) => {
-  //       let count = 0;
-  //       return spellList.results.map((spell) => {
-  //         return loadSpellData(spell.index).pipe(
-  //           map((spell) => {
-  //             handleIncrementSpellProgress(spellList.count, count);
-  //             count++;
-  //             return spell;
-  //           })
-  //         );
-  //       });
-  //     })
-  //   );
-  // };
-
   const handleSetInitList = (newList) => {
     setSelectedCharacter(newList[0]);
     setInitiativeList(newList);
-  }
+  };
+
+  const updateMonsterList = (updateList) => {
+    writeMonsterFile(updateList);
+    setMonsterList(updateList);
+  };
 
   const handleAppendMonsterList = (appendList) => {
     let newList = [];
@@ -326,6 +323,14 @@ export default function PersistentDrawerLeft() {
 
   const handleCreateMonsterClose = () => {
     setOpenCreateMonster(false);
+  };
+
+  const handleEditMonsterOpen = () => {
+    setOpenEditMonster(true);
+  };
+
+  const handleEditMonsterClose = () => {
+    setOpenEditMonster(false);
   };
 
   const handleAddMonsterOpen = () => {
@@ -433,33 +438,33 @@ export default function PersistentDrawerLeft() {
 
               </Typography>
             </div>
-            {initiativeList.length > 0 &&
-              <div>
-                <Button
-                  color="inherit"
-                  onClick={() => {
-                    handleRollInit();
-                  }}
-                  size="large"
-                  endIcon={<SvgIcon style={{ fontSize: 40 }}>
-                    <Logo />
-                  </SvgIcon>}
-                >
-                  Roll
-                </Button>
-                <Button
-                  color="inherit"
-                  onClick={() => {
-                    handleInitAdvance();
-                  }}
-                  aria-label="advance"
-                  size="large"
-                  endIcon={<ArrowUpwardIcon style={{ fontSize: 40 }} ></ArrowUpwardIcon>}
-                >
-                  Advance
-                </Button>
-              </div>
-            }
+            <div className={classes.initToolbar}>
+              <Button
+                color="inherit"
+                disabled={initiativeList.length == 0}
+                onClick={() => {
+                  handleRollInit();
+                }}
+                size="large"
+                endIcon={<SvgIcon style={{ fontSize: 40 }}>
+                  <Logo />
+                </SvgIcon>}
+              >
+                Roll
+              </Button>
+              <Button
+                color="inherit"
+                disabled={initiativeList.length == 0}
+                onClick={() => {
+                  handleInitAdvance();
+                }}
+                aria-label="advance"
+                size="large"
+                endIcon={<ArrowUpwardIcon style={{ fontSize: 40 }} ></ArrowUpwardIcon>}
+              >
+                Advance
+              </Button>
+            </div>
           </div>
         </Toolbar>
       </AppBar>
@@ -504,7 +509,7 @@ export default function PersistentDrawerLeft() {
             onClick={handleCreateCharacterOpen}
           >
             <ListItemIcon>
-              <CreateIcon />
+              <NoteAddIcon />
             </ListItemIcon>
             <ListItemText primary={"Create Character"} />
           </ListItem>
@@ -523,13 +528,24 @@ export default function PersistentDrawerLeft() {
           <List>
             <ListItem
               button
-              key={"Create Character"}
+              key={"Create Monster"}
               onClick={handleCreateMonsterOpen}
             >
               <ListItemIcon>
-                <CreateIcon />
+                <NoteAddIcon />
               </ListItemIcon>
               <ListItemText primary={"Create Monster"} />
+            </ListItem>
+
+            <ListItem
+              button
+              key={"Edit Monster"}
+              onClick={handleEditMonsterOpen}
+            >
+              <ListItemIcon>
+                <EditIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Edit Monster"} />
             </ListItem>
 
             <ListItem
@@ -573,6 +589,12 @@ export default function PersistentDrawerLeft() {
             handleAppendMonsterList={handleAppendMonsterList}
             monsterList={monsterList}
           />
+          <EditMonster
+            onClose={handleEditMonsterClose}
+            openEditMonster={openEditMonster}
+            updateMonsterList={updateMonsterList}
+            monsterList={monsterList}>
+          </EditMonster>
         </List>
         <Divider />
         <List>
@@ -622,7 +644,6 @@ export default function PersistentDrawerLeft() {
             )}
             {initiativeList.length === 0 && (
               <div className={classes.placeholder}>
-                <Grow in={true}>
                   <div>
                     <SvgIcon
                       style={{ width: "65vw", height: "65vh" }}
@@ -631,7 +652,6 @@ export default function PersistentDrawerLeft() {
                       <Dragon />
                     </SvgIcon>
                   </div>
-                </Grow>
                 <div>
                   <p style={{ fontSize: "2em" }}>
                     The inn is empty. Recruit some more adventurers.

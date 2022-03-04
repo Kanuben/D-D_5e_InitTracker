@@ -60,39 +60,8 @@ export default function LegendaryLair(props) {
   const theme = useTheme();
   const classes = useStyles(theme);
 
-  let legendaryActions = [];
-
-  if (props.monster) {
-    if (props.monster.legendary_actions.actions !== undefined) {
-      props.monster.legendary_actions.actions.forEach(item => {
-        legendaryActions.push(item);
-      });
-    }
-  }
-
   return (
     <div>
-      {legendaryActions.length !== 0 &&
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <Typography variant="h6">Legendary Actions</Typography>
-
-          {/* {props.monster.legendary_actions.actions_per_turn.map(
-            (item, index) => <Checkbox />
-          )} */}
-        </div>}
-      <List>
-        {legendaryActions.map((item, index) => (
-          <ListItem dense={true}>
-            <div>
-              <Typography variant="body1" className={classes.headingColor}>
-                {item.name}:
-
-              </Typography>
-              <Typography variant="body2"> {item.desc} </Typography>
-            </div>
-          </ListItem>
-        ))}
-      </List>
 
       {props.monster.lair_actions.length !== 0 &&
         <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -104,17 +73,15 @@ export default function LegendaryLair(props) {
           )} */}
         </div>}
       <List>
-        {props.monster.lair_actions.map((item, index) => (
-          <ListItem dense={true}>
-            <div>
-              <Typography variant="body1" className={classes.headingColor}>
-                {item.name}:
 
-              </Typography>
-              <Typography variant="body2"> {item.desc} </Typography>
-            </div>
-          </ListItem>
-        ))}
+        <ListItem dense={true}>
+          <div>
+            <Typography variant="body1" className={classes.headingColor}>
+              {props.monster.lair_actions}
+            </Typography>
+          </div>
+        </ListItem>
+
       </List>
     </div>
   );

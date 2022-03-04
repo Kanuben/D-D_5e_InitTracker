@@ -1,13 +1,14 @@
 export class Monster {
     name = "";
-    index= "";
+    index = "";
     size = "";
     type = "";
-    subtype = "";
+    subtype = [];
     alignment = "";
     armor_class = 0;
     hit_points = 0;
-    hit_dice = 0;
+    hit_dice_count = 0;
+    hit_die ="";
     speed = "";
     stats = {
         strength: 0,
@@ -35,9 +36,9 @@ export class Monster {
     actions = [];
     reactions = [];
     legendary_actions = {
-        actions_per_turn: ["X", "X", "X"],
         actions: []
     };
-    lair_actions = [];
-    bg_color = ""
+    lair_actions = "";
+    bg_color = "";
+    user_created = false;
 }

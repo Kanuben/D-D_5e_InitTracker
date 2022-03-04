@@ -10,6 +10,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import React from "react";
 import SpellCard from "./SpellCard";
 import { loadSpellData } from "../../services/SpellService";
+import { grey } from "@mui/material/colors";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -39,6 +40,9 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: "300px",
     overflow: "auto",
   },
+  card: {
+    backgroundColor: grey[800]
+  }
 }));
 
 const styles = (theme) => ({
@@ -142,20 +146,18 @@ export default function AddSpell(props) {
           onClick={() => {
             addToSelectedList(selectedSpell);
           }}
-          autoFocus
           color="secondary"
-          variant="outlined"
           sx={{ width: 100 }}
         >
           Add
         </Button>
       </div>
       {selectedList.length === 0 && <div className={classes.placeholder}></div>}
-      {selectedList.length !== 0 && (
-        <Card>
+      {props.selectedSpells.length !== 0 && (
+        <Card className={classes.card}>
           <CardContent className={classes.spellList}>
             <List>
-              {selectedList.map((spell, index) => (
+              {props.selectedSpells.map((spell, index) => (
                 <Slide direction="up" in={true} mountOnEnter>
                   <ListItem>
                     <SpellCard

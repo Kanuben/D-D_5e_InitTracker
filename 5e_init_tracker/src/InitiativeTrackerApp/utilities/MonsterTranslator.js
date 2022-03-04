@@ -1,6 +1,6 @@
-import { toLower } from "lodash";
+import { indexOf, toLower } from "lodash";
 import { Monster } from "../templates/monster";
-import {isElectron} from "./ElectronHelper";
+import { isElectron } from "./ElectronHelper";
 
 let fs;
 let path;
@@ -8,7 +8,7 @@ if (isElectron()) {
   fs = window.require("fs");
   path = window.require("path");
   const app = window.require('electron')
-} 
+}
 
 
 export const translateMonsters = (monsters) => {
@@ -22,36 +22,69 @@ export const translateMonsters = (monsters) => {
     translatedMonster.index = toLower(monster.name);
     translatedMonster.size = monster.size;
     translatedMonster.type = monster.type;
-    translatedMonster.subtype = monster.subtype;
+    if (monster.subtype)
+      translatedMonster.subtype = monster.subtype.split(',');
     translatedMonster.alignment = monster.alignment;
     translatedMonster.armor_class = monster.armor_class;
     translatedMonster.hit_points = monster.hit_points;
-    translatedMonster.hit_dice = monster.hit_dice;
+    translatedMonster.hit_dice_count = monster.hit_dice.substring(0, monster.hit_dice.indexOf('d'));
+    translatedMonster.hit_die = monster.hit_dice.substring(monster.hit_dice.indexOf('d'));
+
     if (monster.speed.walk) {
-      translatedMonster.speed = translatedMonster.speed.concat(
-        monster.speed.walk + ", "
-      );
+      if (monster.speed.fly || monster.speed.climb || monster.speed.swim || monster.speed.burrow) {
+        translatedMonster.speed = translatedMonster.speed.concat(
+          monster.speed.walk + ", "
+        );
+      } else {
+        translatedMonster.speed = translatedMonster.speed.concat(
+          monster.speed.walk
+        );
+      }
     }
+
     if (monster.speed.fly) {
-      translatedMonster.speed = translatedMonster.speed.concat(
-        "fly " + monster.speed.fly + ", "
-      );
+      if (monster.speed.climb || monster.speed.swim || monster.speed.burrow) {
+        translatedMonster.speed = translatedMonster.speed.concat(
+          "fly " + monster.speed.fly + ", "
+        );
+      } else {
+        translatedMonster.speed = translatedMonster.speed.concat(
+          "fly " + monster.speed.fly
+        );
+      }
+
     }
+
     if (monster.speed.climb) {
-      translatedMonster.speed = translatedMonster.speed.concat(
-        "climb " + monster.speed.climb + ", "
-      );
+      if (monster.speed.swim || monster.speed.burrow) {
+        translatedMonster.speed = translatedMonster.speed.concat(
+          "climb " + monster.speed.climb + ", "
+        );
+      } else {
+        translatedMonster.speed = translatedMonster.speed.concat(
+          "climb " + monster.speed.climb
+        );
+      }
     }
+
     if (monster.speed.swim) {
-      translatedMonster.speed = translatedMonster.speed.concat(
-        "swim " + monster.speed.swim + ", "
-      );
+      if (monster.speed.burrow) {
+        translatedMonster.speed = translatedMonster.speed.concat(
+          "swim " + monster.speed.swim + ", "
+        );
+      } else {
+        translatedMonster.speed = translatedMonster.speed.concat(
+          "swim " + monster.speed.swim
+        );
+      }
     }
+
     if (monster.speed.burrow) {
       translatedMonster.speed = translatedMonster.speed.concat(
         "burrow " + monster.speed.burrow
       );
     }
+
     translatedMonster.stats = {};
     if (monster.strength) translatedMonster.stats.strength = monster.strength;
     if (monster.dexterity)
@@ -85,10 +118,16 @@ export const translateMonsters = (monsters) => {
     translatedMonster.damage_vulnerabilities = monster.damage_vulnerabilities;
     translatedMonster.condition_immunities = monster.condition_immunities.map((immunity) => immunity.name);
     translatedMonster.senses = "";
-    Object.entries(monster.senses).forEach((element) => {
-      translatedMonster.senses = translatedMonster.senses.concat(
-        element[0].replace("_", " ") + " " + element[1] + ", "
-      );
+    Object.entries(monster.senses).forEach((element, index) => {
+      if ( Object.entries(monster.senses).length === index + 1) {
+        translatedMonster.senses = translatedMonster.senses.concat(
+          element[0].replace("_", " ") + " " + element[1]
+        );
+      } else {
+        translatedMonster.senses = translatedMonster.senses.concat(
+          element[0].replace("_", " ") + " " + element[1] + ", "
+        );
+      }
     });
     if (monster.languages.length > 0)
       translatedMonster.languages = monster.languages;
@@ -142,7 +181,6 @@ export const translateMonsters = (monsters) => {
     }
     if (monster.legendary_actions) {
       translatedMonster.legendary_actions = {};
-      translatedMonster.legendary_actions.actions_per_turn = ["X", "X", "X"];
       translatedMonster.legendary_actions.actions = [];
       if (monster.legendary_actions.actions) {
         translatedMonster.legendary_actions.actions =
@@ -190,7 +228,7 @@ export function readMonsterFile() {
     if (isElectron()) {
       const data = fs.readFileSync(filePath, "utf8");
       return JSON.parse(data);
-    } else{
+    } else {
       return null;
     }
   } catch (err) {

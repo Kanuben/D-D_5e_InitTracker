@@ -7,7 +7,7 @@ import MonsterInfo from "./InitiativeTrackerApp/components/MonsterInfo/MonsterIn
 import SpellInfo from "./InitiativeTrackerApp/components/SpellInfo";
 
 
-const theme = createTheme(adaptV4Theme({
+const theme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
@@ -26,7 +26,7 @@ const theme = createTheme(adaptV4Theme({
     //   fontFamily: 'MedievalSharp',
     // },
   },
-}));
+});
 
 export default function App() {
   return (
