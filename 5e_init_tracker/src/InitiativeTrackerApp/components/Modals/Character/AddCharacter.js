@@ -16,8 +16,8 @@ import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import Autocomplete from '@mui/material/Autocomplete';
 import React from "react";
-import { ReactComponent as Dragon } from "../../assets/dragon.svg";
-import SimpleCharacterCard from "../SimpleCharacterCard";
+import { ReactComponent as Dragon } from "../../../assets/dragon.svg";
+import SimpleCharacterCard from "../../../components/SimpleCharacterCard";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 const useStyles = makeStyles((theme) => ({
@@ -175,7 +175,6 @@ export default function AddCharacter(props) {
           <div ref={containerRef} className={classes.flex}>
             <Autocomplete
               id="combo-box-demo"
-              freeSolo
               disableClearable
               options={props.charList}
               getOptionLabel={(char) => char.name}

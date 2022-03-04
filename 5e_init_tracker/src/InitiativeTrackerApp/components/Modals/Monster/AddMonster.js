@@ -17,9 +17,9 @@ import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from "@mui/icons-material/Delete";
 import Autocomplete from '@mui/material/Autocomplete';
 import React from 'react';
-import { ReactComponent as Demo } from '../../assets/demo.svg';
-import { ReactComponent as Dragon } from '../../assets/dragon.svg';
-import SimpleCharacterCard from '../SimpleCharacterCard';
+import { ReactComponent as Demo } from '../../../assets/demo.svg';
+import { ReactComponent as Dragon } from '../../../assets/dragon.svg';
+import SimpleCharacterCard from '../../SimpleCharacterCard';
 
 
 const useStyles = makeStyles(theme => ({
@@ -50,7 +50,6 @@ const useStyles = makeStyles(theme => ({
   dialogSize: {
     minHeight: '65%',
     minWidth: '40%',
-    maxWidth: '40%',
     maxHeight: '65%',
   },
 }));
@@ -176,11 +175,9 @@ export default function AddMonster(props) {
           <div ref={containerRef} className={classes.flex}>
             <Autocomplete
               id="combo-box-demo"
-              freeSolo
               disableClearable
               options={props.monList.sort((a, b) => a.name.localeCompare(b.name))}
               getOptionLabel={(mon) => mon.name}
-              sx={{ width: 300 }}
               onChange={handleSelectedMon}
               renderOption={(props, option, { selected }) => (
                 <li {...props}>

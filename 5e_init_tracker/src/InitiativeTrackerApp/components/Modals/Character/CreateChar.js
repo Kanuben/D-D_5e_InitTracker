@@ -18,8 +18,8 @@ import Typography from '@mui/material/Typography';
 import makeStyles from '@mui/styles/makeStyles';
 import withStyles from '@mui/styles/withStyles';
 import { default as React } from "react";
-import { Character } from '../../templates/character';
-import {isElectron} from "../../utilities/ElectronHelper";
+import { Character } from '../../../templates/character';
+import { isElectron } from "../../../utilities/ElectronHelper";
 
 let fs;
 let path;
@@ -60,10 +60,9 @@ const useStyles = makeStyles(theme => ({
     'flex-direction': 'column',
   },
   dialogSize: {
-    minHeight: '65%',
-    minWidth: '40%',
-    maxWidth: '40%',
-    maxHeight: '65%',
+    minHeight: "600px",
+    minWidth: "800px",
+    maxHeight: "65%",
   },
   textField: {
     width: '100%',
