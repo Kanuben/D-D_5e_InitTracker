@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import React, { useEffect } from 'react';
 import List from '@mui/material/List';
 import Checkbox from '@mui/material/Checkbox';
+import TextField from '@mui/material/TextField';
 
 const useStyles = makeStyles(theme => ({
   popover: {
@@ -60,29 +61,56 @@ export default function LegendaryLair(props) {
   const theme = useTheme();
   const classes = useStyles(theme);
 
+  let legendaryActions = [];
+
+  if (props.monster) {
+    if (props.monster.legendary_actions.actions !== undefined) {
+      props.monster.legendary_actions.actions.forEach(item => {
+        legendaryActions.push(item);
+      });
+    }
+  }
+
   return (
     <div>
-
-      {props.monster.lair_actions.length !== 0 &&
+      {legendaryActions.length !== 0 &&
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <Divider />
-          <Typography variant="h6">Lair Actions</Typography>
+          <Typography variant="h6">Legendary Actions</Typography>
 
           {/* {props.monster.legendary_actions.actions_per_turn.map(
             (item, index) => <Checkbox />
           )} */}
         </div>}
       <List>
+        {legendaryActions.map((item, index) => (
+          <ListItem dense={true}>
+            <div>
+              <Typography variant="body1" className={classes.headingColor}>
+                {item.name}:
 
-        <ListItem dense={true}>
-          <div>
-            <Typography variant="body1" className={classes.headingColor}>
-              {props.monster.lair_actions}
-            </Typography>
-          </div>
-        </ListItem>
-
+              </Typography>
+              <Typography variant="body2"> {item.desc} </Typography>
+            </div>
+          </ListItem>
+        ))}
       </List>
-    </div>
+      {props.monster.lair_actions.length !== 0 && (
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <Divider />
+          <Typography variant="h6">Lair Actions</Typography>
+        </div>)}
+      {props.monster.lair_actions.length !== 0 && (
+        <List>
+          <ListItem dense={true}>
+            <TextField
+              style={{ width: '100%' }}
+              multiline
+              value={props.monster.lair_actions}
+              disabled
+            >
+            </TextField>
+          </ListItem>
+        </List>
+      )}</div>
   );
 }

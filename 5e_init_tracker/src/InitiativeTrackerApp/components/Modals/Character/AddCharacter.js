@@ -204,7 +204,7 @@ export default function AddCharacter(props) {
               variant="outlined"
               sx={{ width: 100 }}
             >
-              Add
+               Select
             </Button>
           </div>
           {selectedList.length === 0 && (
@@ -259,7 +259,7 @@ export default function AddCharacter(props) {
             onClick={addCharacters}
             color="primary"
           >
-            Add Characters
+             Add To Initiative
           </Button>
         </DialogActions>
       </Dialog>

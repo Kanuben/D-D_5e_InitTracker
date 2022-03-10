@@ -177,13 +177,15 @@ export default function EditMonster(props) {
                                 )}
                             />
                         </Box>
-                        <MonsterForm
-                            monsterList={props.monsterList}
-                            updateMonsterList={props.updateMonsterList}
-                            selectedMon={selectedMon}
-                            onClose={handleClose}
-                            handleFormDirty={handleFormDirty}
-                        ></MonsterForm>
+                        {selectedMon &&
+                            <MonsterForm
+                                monsterList={props.monsterList}
+                                updateMonsterList={props.updateMonsterList}
+                                selectedMon={selectedMon}
+                                onClose={handleClose}
+                                handleFormDirty={handleFormDirty}
+                            ></MonsterForm>
+                        }
                     </div>
 
                 </DialogContent>

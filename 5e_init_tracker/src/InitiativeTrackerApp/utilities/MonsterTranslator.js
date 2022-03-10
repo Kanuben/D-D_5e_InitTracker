@@ -196,13 +196,13 @@ export const translateMonsters = (monsters) => {
     }
 
     if (monster.lair_actions) {
-      translatedMonster.lair_actions = [];
-      monster.lair_actions.forEach((element) => {
-        translatedMonster.lair_actions.push({
-          name: element.name,
-          desc: element.desc,
-        });
-      });
+      translatedMonster.lair_actions = "";
+      // monster.lair_actions.forEach((element) => {
+      //   translatedMonster.lair_actions.push({
+      //     name: element.name,
+      //     desc: element.desc,
+      //   });
+      // });
     }
     translatedMons.push(translatedMonster);
   });

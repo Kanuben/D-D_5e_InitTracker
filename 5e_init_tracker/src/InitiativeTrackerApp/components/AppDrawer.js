@@ -244,10 +244,6 @@ export default function PersistentDrawerLeft() {
     let newList = [];
     Object.assign(newList, monsterList);
     appendList.forEach((monster) => {
-      monster.initiative = 0;
-      monster.isPlayer = false;
-      monster.statuses = [];
-      monster.damage = 0;
       if (newList.filter(e => isEqual(e, monster)).length === 0) {
         newList.push(monster);
       }
@@ -586,7 +582,7 @@ export default function PersistentDrawerLeft() {
           <CreateMonster
             onClose={handleCreateMonsterClose}
             openCreateMonster={openCreateMonster}
-            handleAppendMonsterList={handleAppendMonsterList}
+             updateMonsterList={updateMonsterList}
             monsterList={monsterList}
           />
           <EditMonster

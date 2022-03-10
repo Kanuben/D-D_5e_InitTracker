@@ -208,7 +208,7 @@ export default function AddMonster(props) {
               variant="outlined"
               sx={{ width: 100 }}
             >
-              Add
+              Select
             </Button>
           </div>
           {selectedList.length === 0 &&
@@ -252,7 +252,7 @@ export default function AddMonster(props) {
             onClick={addMonsters}
             color="primary"
           >
-            Add Characters
+            Add To Initiative
           </Button>
         </DialogActions>
       </Dialog>

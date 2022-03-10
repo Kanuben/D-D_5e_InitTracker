@@ -41,4 +41,8 @@ export class Monster {
     lair_actions = "";
     bg_color = "";
     user_created = false;
+    isPlayer=false;
+    damage= 0;
+    initiative= 0;
+    statuses=[];
 }

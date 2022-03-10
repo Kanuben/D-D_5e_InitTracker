@@ -7,10 +7,12 @@ import makeStyles from '@mui/styles/makeStyles';
 import SvgIcon from "@mui/material/SvgIcon";
 import TextField from "@mui/material/TextField";
 import Autocomplete from '@mui/material/Autocomplete';
-import React from "react";
+import React, { useEffect } from "react";
 import SpellCard from "./SpellCard";
 import { loadSpellData } from "../../services/SpellService";
 import { grey } from "@mui/material/colors";
+import DeleteIcon from "@mui/icons-material/Delete";
+import IconButton from '@mui/material/IconButton';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -57,23 +59,18 @@ export default function AddSpell(props) {
   const [selectedList, setSelectedList] = React.useState([]);
   const [id, setId] = React.useState("s0");
 
+  useEffect(() => {
+    setSelectedList(props.selectedSpells)
+  }, [props.selectedSpells]);
+
   const classes = useStyles();
 
   const handleSelectedSpell = (e, val) => {
     setSelectedSpell(val);
   };
 
-  //   const addCharacters = () => {
-  //     let newList = [];
-  //     Object.assign(newList, props.initList);
-  //     newList.push(...selectedList);
-  //     props.setInitiativeList(newList);
-  //     setSelectedList([]);
-  //     setId("c0");
-  //     handleClose();
-  //   };
-
   const addToSelectedList = (selectedSpell) => {
+    props.handleFormDirty(true);
     let tempList = Object.create(selectedList);
     let filteredSpellList = [];
     filteredSpellList = props.spells.filter(
@@ -87,6 +84,7 @@ export default function AddSpell(props) {
           name: spellData.name,
           level: spellData.level,
           url: spellData.url,
+          id: generateId()
         };
         tempList.push(tempSpell);
         setSelectedList(tempList);
@@ -97,23 +95,26 @@ export default function AddSpell(props) {
     }
   };
 
-  //   const removeFromSelectedList = (character) => {
-  //     const newList = selectedList.filter((item) => item !== character);
-  //     setSelectedList(newList);
-  //   };
+  const removeFromSelectedList = (character) => {
+    props.handleFormDirty(true);
+    const newList = selectedList.filter((item) => item !== character);
+    setSelectedList(newList);
+  };
 
-  // function generateId() {
-  //   let tempId = parseInt(id.substring(1));
-  //   props.initList.forEach((char) => {
-  //     let charId = parseInt(char.id.substring(1));
-  //     if (charId > tempId) {
-  //       tempId = parseInt(char.id.substring(1));
-  //     }
-  //   });
-  //   tempId++;
-  //   setId("s" + tempId);
-  //   return "s" + tempId;
-  // }
+  function generateId() {
+    let tempId = parseInt(id.substring(1));
+    props.spells.forEach((spell) => {
+      let spellId = 0
+      if (spell.id)
+        spellId = parseInt(spell.id.substring(1));
+      if (spellId > tempId) {
+        tempId = parseInt(spell.id.substring(1));
+      }
+    });
+    tempId++;
+    setId("s" + tempId);
+    return "s" + tempId;
+  }
 
   return (
     <div>
@@ -153,21 +154,30 @@ export default function AddSpell(props) {
         </Button>
       </div>
       {selectedList.length === 0 && <div className={classes.placeholder}></div>}
-      {props.selectedSpells.length !== 0 && (
+      {selectedList.length !== 0 && (
         <Card className={classes.card}>
           <CardContent className={classes.spellList}>
             <List>
-              {props.selectedSpells.map((spell, index) => (
+              {selectedList.map((spell, index) => (
                 <Slide direction="up" in={true} mountOnEnter>
                   <ListItem>
                     <SpellCard
                       spell={spell}
                       index={index}
                       selected={true}
-                    //removeFromSelectedList={removeFromSelectedList}
+                      removeFromSelectedList={removeFromSelectedList}
                     />
+                    <IconButton
+                      onClick={() => {
+                        removeFromSelectedList(spell);
+                      }}
+                      aria-label="delete"
+                      size="large">
+                      <DeleteIcon fontSize="large" />
+                    </IconButton>
                   </ListItem>
                 </Slide>
+
               ))}
             </List>
           </CardContent>

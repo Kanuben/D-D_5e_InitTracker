@@ -1,31 +1,25 @@
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
-import CloseIcon from "@mui/icons-material/Close";
 import Autocomplete from '@mui/material/Autocomplete';
-import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Checkbox from "@mui/material/Checkbox";
-import Dialog from '@mui/material/Dialog';
-import MuiDialogActions from "@mui/material/DialogActions";
-import MuiDialogContent from "@mui/material/DialogContent";
-import MuiDialogTitle from "@mui/material/DialogTitle";
 import Grid from "@mui/material/Grid";
-import IconButton from "@mui/material/IconButton";
-import SvgIcon from '@mui/material/SvgIcon';
 import TextField from '@mui/material/TextField';
-import Typography from "@mui/material/Typography";
 import makeStyles from '@mui/styles/makeStyles';
-import withStyles from '@mui/styles/withStyles';
+import { toLower } from "lodash";
 import React, { useEffect } from 'react';
-import { ReactComponent as Demo } from '../../../assets/demo.svg';
-import AddSpell from "../../AddSpell";
 import { ajax } from "rxjs/ajax";
 import { loadConditions } from "../../../../services/ConditionService";
 import { loadSpells } from "../../../../services/SpellService";
-import { toLower } from "lodash";
+import AddSpell from "../../AddSpell";
+import Button from '@mui/material/Button';
+import { Editor, EditorState } from 'draft-js';
+import { draft } from 'draft-js/dist/Draft.css';
+import ReactDOM from 'react-dom';
+import { Monster } from "../../../templates/monster";
+import Divider from "@mui/material/Divider";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -37,9 +31,6 @@ const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
     },
-    padding16: {
-        padding: "16px",
-    },
     menuButton: {
         marginRight: theme.spacing(2),
     },
@@ -49,6 +40,12 @@ const useStyles = makeStyles(theme => ({
         [theme.breakpoints.up("sm")]: {
             display: "block",
         },
+    },
+    padding16: {
+        padding: "16px",
+    },
+    divider:{
+        paddingTop: "16px",
     },
     flex: {
         display: "flex",
@@ -89,6 +86,7 @@ export default function MonsterForm(props) {
     const [monSize, setMonSize] = React.useState([]);
     const [monAlignment, setMonAlignment] = React.useState([]);
     const [monCR, setMonCR] = React.useState();
+    const [monXP, setMonXP] = React.useState();
     const [monAC, setMonAC] = React.useState();
     const [monAvgHP, setMonAvgHP] = React.useState();
     const [monHitDieCount, setMonHitDieCount] = React.useState();
@@ -123,9 +121,11 @@ export default function MonsterForm(props) {
     const [isLegendary, setIsLegendary] = React.useState(false);
     const [hasLair, setHasLair] = React.useState(false);
 
-    const [anchorSkills, setAnchorSkills] = React.useState(null);
     const classes = useStyles();
-    const containerRef = React.useRef(null);
+
+    const [editorState, setEditorState] = React.useState(
+        () => EditorState.createEmpty(),
+    );
 
     let monsterTypes = [];
     let monsterSubtypes = [];
@@ -167,7 +167,7 @@ export default function MonsterForm(props) {
             setSpells(spells.results);
         });
         if (props.selectedMon) {
-            if(props.selectedMon.spell_casting.spells.length > 0){
+            if (props.selectedMon.spell_casting.spells.length > 0) {
                 setIsSpellCaster(true)
             }
             setMonName(props.selectedMon.name)
@@ -176,6 +176,7 @@ export default function MonsterForm(props) {
             setMonSize(props.selectedMon.size)
             setMonAlignment(props.selectedMon.alignment)
             setMonCR(props.selectedMon.challenge_rating)
+            setMonXP(props.selectedMon.xp)
             setMonAC(props.selectedMon.armor_class)
             setMonAvgHP(props.selectedMon.hit_points)
             setMonHitDieCount(props.selectedMon.hit_dice_count)
@@ -221,8 +222,8 @@ export default function MonsterForm(props) {
         props.handleFormDirty(true);
     };
 
-    const handleTypeChange = (e) => {
-        setMonType(e.target.value);
+    const handleTypeChange = (e, value) => {
+        setMonType(value);
         props.handleFormDirty(true);
     };
 
@@ -243,6 +244,11 @@ export default function MonsterForm(props) {
 
     const handleMonCRChange = (e) => {
         setMonCR(e.target.value);
+        props.handleFormDirty(true);
+    };
+
+    const handleMonXPChange = (e) => {
+        setMonXP(e.target.value);
         props.handleFormDirty(true);
     };
 
@@ -308,7 +314,7 @@ export default function MonsterForm(props) {
     };
 
     const handleMonSkillsChange = (e) => {
-        setMonSkills(parseSkillsDescription(e.target.value));
+        setMonSkills(e.target.value);
         props.handleFormDirty(true);
     }
 
@@ -353,7 +359,7 @@ export default function MonsterForm(props) {
     };
 
     const handleMonReactionsChange = (e, value) => {
-        setMonActions(e.target.value);
+        setMonReactions(e.target.value);
         props.handleFormDirty(true);
     };
 
@@ -384,49 +390,60 @@ export default function MonsterForm(props) {
     };
 
     const handleSubmit = (e) => {
-        e.preventDefault()
+        e.preventDefault();
+
+        let tempMonster = new Monster();
+        tempMonster.name = monName
+        tempMonster.index = toLower(monName);
+        tempMonster.type = monType
+        tempMonster.subtype = monSubType
+        tempMonster.size = monSize
+        tempMonster.alignment = monAlignment
+        tempMonster.challenge_rating = monCR
+        tempMonster.armor_class = monAC
+        tempMonster.hit_points = monAvgHP
+        tempMonster.hit_dice_count = monHitDieCount
+        tempMonster.hit_die = monHitDie
+        tempMonster.speed = monSpeed
+        tempMonster.stats.strength = monStr
+        tempMonster.stats.dexterity = monDex
+        tempMonster.stats.constitution = monCon
+        tempMonster.stats.intelligence = monInt
+        tempMonster.stats.wisdom = monWis
+        tempMonster.stats.charisma = monCha
+        tempMonster.saving_throws = monSavingThrows
+        tempMonster.proficiencies = parseSkillsDescription(monSkills)
+        tempMonster.senses = monSenses
+        tempMonster.languages = monLanguages
+        tempMonster.damage_immunities = damageImmunities
+        tempMonster.damage_vulnerabilities = damageVulnerabilties
+        tempMonster.damage_resistances = damageResistances
+        tempMonster.condition_immunities = condidtionImmunities
+        tempMonster.special_abilities = parseTextDescription(monSpecialTraits)
+        tempMonster.actions = parseTextDescription(monActions)
+        tempMonster.reactions = parseTextDescription(monReactions)
+        tempMonster.legendary_actions.actions = parseTextDescription(monLegendaryActions)
+        tempMonster.lair_actions = monLairActions
+
         let newMonList = JSON.parse(JSON.stringify(props.monsterList))
-        newMonList.forEach(monster => {
-            if (monster.index == props.selectedMon.index) {
-                monster.name = monName
-                monster.index = toLower(monName);
-                monster.type = monType
-                monster.subtype = monSubType
-                monster.size = monSize
-                monster.alignment = monAlignment
-                monster.challenge_rating = monCR
-                monster.armor_class = monAC
-                monster.hit_points = monAvgHP
-                monster.hit_dice_count = monHitDieCount
-                monster.hit_die = monHitDie
-                monster.speed = monSpeed
-                monster.stats.strength = monStr
-                monster.stats.dexterity = monDex
-                monster.stats.constitution = monCon
-                monster.stats.intelligence = monInt
-                monster.stats.wisdom = monWis
-                monster.stats.charisma = monCha
-                monster.saving_throws = monSavingThrows
-                monster.proficiencies = parseSkillsDescription(monSkills)
-                monster.senses = monSenses
-                monster.languages = monLanguages
-                monster.damage_immunities = damageImmunities
-                monster.damage_vulnerabilities = damageVulnerabilties
-                monster.damage_resistances = damageResistances
-                monster.condition_immunities = condidtionImmunities
-                monster.special_abilities = parseTextDescription(monSpecialTraits)
-                monster.actions = parseTextDescription(monActions)
-                monster.reactions = parseTextDescription(monReactions)
-                monster.legendary_actions.actions = parseTextDescription(monLegendaryActions)
-                monster.lair_actions = parseTextDescription(monLairActions)
-            }
-        })
+        if (props.selectedMon) {
+            newMonList.forEach((mon, index) => {
+                if (mon.index == props.selectedMon.index) {
+                    newMonList[index] = tempMonster;
+                }
+            })
+        } else {
+            newMonList.push(tempMonster)
+        }
         props.updateMonsterList(newMonList)
         props.handleFormDirty(false);
         handleClose();
     }
 
     function convertToText(array) {
+        if (array == undefined || array.length == 0) {
+            return '';
+        }
         var text = '';
         array.forEach((action, index) => {
             text += action.name + '. ' + action.desc;
@@ -437,9 +454,10 @@ export default function MonsterForm(props) {
     }
 
     function parseTextDescription(text) {
-        if (text == '') {
+        if (text == undefined || text == '') {
             return [];
         }
+        text = text.trim()
         let sections = text.split(/[\r\n]+/);
         let parsedSections = [];
         sections.forEach((section) => {
@@ -448,14 +466,14 @@ export default function MonsterForm(props) {
                 desc: "",
             };
             sectionObject.name = section.substring(0, section.indexOf("."));
-            sectionObject.desc = section.substring(section.indexOf(".") + 1);
+            sectionObject.desc = section.substring(section.indexOf(".") + 1).trim();
             parsedSections.push(sectionObject);
         });
         return parsedSections;
     }
 
     function parseSkillsDescription(text) {
-        if (text == '') {
+        if (text == undefined || text == '') {
             return [];
         }
         let sections = text.split(',')
@@ -481,18 +499,17 @@ export default function MonsterForm(props) {
 
     return (
         <div>
+
             <Card>
                 <form onSubmit={handleSubmit} id='my-form'>
                     <Box
                         className={classes.padding16}
-                        component="form"
-                        onSubmit={handleSubmit}
                         sx={{
                             '& .MuiTextField-root': { m: 1 },
                         }}
                     >
                         <Grid container spacing={3}>
-                            <Grid item xs={4}>
+                            <Grid item xs={6}>
                                 <TextField
                                     className={classes.textField}
                                     id="outlined-basic"
@@ -504,7 +521,7 @@ export default function MonsterForm(props) {
                                     required
                                 />
                             </Grid>
-                            <Grid item xs={4}>
+                            <Grid item xs={6}>
                                 <Autocomplete
                                     freeSolo
                                     id="combo-box-demo"
@@ -525,7 +542,7 @@ export default function MonsterForm(props) {
                                     )}
                                 />
                             </Grid>
-                            <Grid item xs={4}>
+                            <Grid item xs={6}>
                                 <Autocomplete
                                     freeSolo
                                     id="combo-box-demo"
@@ -556,6 +573,25 @@ export default function MonsterForm(props) {
                                     )}
                                 />
                             </Grid>
+                            <Grid item xs={6}>
+                                <Autocomplete
+                                    freeSolo
+                                    id="combo-box-demo"
+                                    options={monsterAlignments}
+                                    getOptionLabel={(option) => option}
+                                    onChange={handleMonAlignmentChange}
+                                    value={monAlignment}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            label="Alignment"
+                                            variant="outlined"
+                                            name="alignment"
+                                        />
+                                    )}
+                                />
+                            </Grid>
+
                             <Grid item xs={4}>
                                 <Autocomplete
                                     freeSolo
@@ -575,37 +611,9 @@ export default function MonsterForm(props) {
                                     )}
                                 />
                             </Grid>
-
-                            <Grid item xs={8}>
-                                <Autocomplete
-                                    freeSolo
-                                    id="combo-box-demo"
-                                    options={monsterAlignments}
-                                    getOptionLabel={(option) => option}
-                                    onChange={handleMonAlignmentChange}
-                                    value={monAlignment}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            label="Alignment"
-                                            variant="outlined"
-                                            name="alignment"
-                                        />
-                                    )}
-                                />
-                            </Grid>
-                            <Grid item xs={4}>
-                                <TextField
-                                    className={classes.textField}
-                                    id="outlined-basic"
-                                    label="Challenge Rating"
-                                    variant="outlined"
-                                    name="challenge_rating"
-                                    onChange={handleMonCRChange}
-                                    value={monCR || ''}
-                                    required
-                                />
-                            </Grid>
+                        </Grid>
+                        <Divider  className={classes.divider}/>
+                        <Grid className={classes.divider} container spacing={3}>
                             <Grid item xs={4}>
                                 <TextField
                                     className={classes.textField}
@@ -673,7 +681,8 @@ export default function MonsterForm(props) {
                                 />
                             </Grid>
                         </Grid>
-                        <Grid container spacing={3}>
+                        <Divider className={classes.divider}/>
+                        <Grid className={classes.divider} container spacing={3}>
                             <Grid item xs={4}>
                                 <TextField
                                     className={classes.textField}
@@ -710,8 +719,6 @@ export default function MonsterForm(props) {
                                     required
                                 />
                             </Grid>
-                        </Grid>
-                        <Grid container spacing={3}>
                             <Grid item xs={4}>
                                 <TextField
                                     className={classes.textField}
@@ -749,7 +756,8 @@ export default function MonsterForm(props) {
                                 />
                             </Grid>
                         </Grid>
-                        <Grid container spacing={3}>
+                        <Divider className={classes.divider}/>
+                        <Grid className={classes.divider} container spacing={3}>
                             <Grid item xs={6}>
                                 <Autocomplete
                                     id="combo-box-demo"
@@ -791,30 +799,6 @@ export default function MonsterForm(props) {
                                     value={monSkills || ''}
                                 />
                             </Grid>
-                            <Grid item xs={6}>
-                                <TextField
-                                    className={classes.textField}
-                                    id="outlined-basic"
-                                    label="Senses"
-                                    variant="outlined"
-                                    name="senses"
-                                    onChange={handleMonSensesChange}
-                                    value={monSenses || ''}
-                                />
-                            </Grid>
-                            <Grid item xs={6}>
-                                <TextField
-                                    className={classes.textField}
-                                    id="outlined-basic"
-                                    label="Languages"
-                                    variant="outlined"
-                                    name="languages"
-                                    onChange={handleMonLanguagesChange}
-                                    value={monLanguages || ''}
-                                />
-                            </Grid>
-                        </Grid>
-                        <Grid container spacing={3}>
                             <Grid item xs={6}>
                                 <Autocomplete
                                     id="combo-box-demo"
@@ -879,6 +863,7 @@ export default function MonsterForm(props) {
                                 <Autocomplete
                                     id="combo-box-demo"
                                     multiple
+                                    freeSolo
                                     disableCloseOnSelect
                                     options={damageTypes}
                                     getOptionLabel={(option) => option}
@@ -935,8 +920,54 @@ export default function MonsterForm(props) {
                                     )}
                                 />
                             </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    className={classes.textField}
+                                    id="outlined-basic"
+                                    label="Senses"
+                                    variant="outlined"
+                                    name="senses"
+                                    onChange={handleMonSensesChange}
+                                    value={monSenses || ''}
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    className={classes.textField}
+                                    id="outlined-basic"
+                                    label="Languages"
+                                    variant="outlined"
+                                    name="languages"
+                                    onChange={handleMonLanguagesChange}
+                                    value={monLanguages || ''}
+                                />
+                            </Grid>
+                            <Grid item xs={4}>
+                                <TextField
+                                    className={classes.textField}
+                                    id="outlined-basic"
+                                    label="Challenge Rating"
+                                    variant="outlined"
+                                    name="challenge_rating"
+                                    onChange={handleMonCRChange}
+                                    value={monCR || ''}
+                                    required
+                                />
+                            </Grid>
+                            <Grid item xs={4}>
+                                <TextField
+                                    className={classes.textField}
+                                    id="outlined-basic"
+                                    label="XP"
+                                    variant="outlined"
+                                    name="xp"
+                                    onChange={handleMonXPChange}
+                                    value={monXP || ''}
+                                />
+                            </Grid>
                         </Grid>
-                        <Grid container spacing={3}>
+                        <Divider className={classes.divider} />
+                        <Grid container spacing={3} className={classes.divider}>
                             <Grid item xs={12}>
                                 <TextField
                                     className={classes.textField}
@@ -950,15 +981,13 @@ export default function MonsterForm(props) {
                                     value={monSpecialTraits || ''}
                                 />
                             </Grid>
-                            {isSpellCaster === true && (
                             <Grid item xs={12}>
                                 <Card>
                                     <CardContent>
-                                        <AddSpell setSelectedSpells={setSelectedSpells} selectedSpells={selectedSpells} spells={spells}></AddSpell>
+                                        <AddSpell handleFormDirty={props.handleFormDirty} setSelectedSpells={setSelectedSpells} selectedSpells={selectedSpells} spells={spells}></AddSpell>
                                     </CardContent>
                                 </Card>
                             </Grid>
-                            )}
                         </Grid>
                         <Grid container spacing={3}>
                             <Grid item xs={12}>
@@ -1001,18 +1030,18 @@ export default function MonsterForm(props) {
                                 />
                             </Grid>
                             <Grid item xs={12}>
-
                                 <TextField
                                     className={classes.textField}
                                     id="outlined-multiline-static"
-                                    label="LAIR AND LAIR ACTIONS DESCRIPTION"
+                                    label="LAIR ACTIONS DESCRIPTION"
                                     multiline
                                     rows={6}
                                     variant="outlined"
                                     name="lair_actions_description"
                                     onChange={handleMonLairActionsChange}
                                     value={monLairActions || ''}
-                                />
+                                >
+                                </TextField>
                             </Grid>
                         </Grid>
                     </Box>

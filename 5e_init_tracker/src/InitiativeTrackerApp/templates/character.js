@@ -14,4 +14,5 @@ export class Character {
       dexterity: 0
     };
     bg_color= "";
+    isPlayer=true;
 }

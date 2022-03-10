@@ -196,8 +196,8 @@ export default function MainStats(props) {
     <div>
       <div>Armor Class {props.monster.armor_class}</div>
       <div>
-        Hit Points {props.monster.hit_points} ({props.monster.hit_dice}+
-        {parseInt(props.monster.hit_dice) *
+        Hit Points {props.monster.hit_points} ({props.monster.hit_dice_count}{props.monster.hit_die}+
+        {parseInt(props.monster.hit_dice_count) *
           Math.floor((props.monster.stats.constitution - 10) / 2)}
         )
       </div>
@@ -223,7 +223,6 @@ export default function MainStats(props) {
           direction="row"
           justifyContent="center"
           alignItems="flex-start"
-          container
           spacing={1}
         >
           <Grid item xs={2}>
@@ -252,7 +251,6 @@ export default function MainStats(props) {
           direction="row"
           justifyContent="center"
           alignItems="flex-start"
-          container
           spacing={1}
         >
           <Grid item xs={2}>
@@ -294,7 +292,6 @@ export default function MainStats(props) {
             direction="row"
             justifyContent="center"
             alignItems="flex-start"
-            container
             spacing={1}
           >
             {savingThrows.map((savingThrow, index) => (
@@ -338,7 +335,7 @@ export default function MainStats(props) {
             <div className={classes.proficienciesDesc}>
               {damageVulnerabilties.map((vulnerabilties, index) => (
                 <Typography variant="body2">
-                  {vulnerabilties} {index >= 0 && damageVulnerabilties.length != index+1 ? ', ' : ' '}
+                  {vulnerabilties} {index >= 0 && damageVulnerabilties.length != index + 1 ? ', ' : ' '}
                 </Typography>
               ))}
             </div>
@@ -354,7 +351,7 @@ export default function MainStats(props) {
             <div className={classes.proficienciesDesc}>
               {damageResistances.map((resistance, index) => (
                 <Typography variant="body2">
-                  {resistance} {index >= 0 && damageResistances.length != index+1 ? ', ' : ' '}
+                  {resistance} {index >= 0 && damageResistances.length != index + 1 ? ', ' : ' '}
                 </Typography>
               ))}
             </div>
@@ -370,7 +367,7 @@ export default function MainStats(props) {
             <div className={classes.proficienciesDesc}>
               {damageImmunities.map((immunities, index) => (
                 <Typography variant="body2">
-                  {immunities}{index > 0 && damageImmunities.length != index+1 ? ',' : ' '}
+                  {immunities}{index > 0 && damageImmunities.length != index + 1 ? ',' : ' '}
                 </Typography>
               ))}
             </div>
@@ -386,7 +383,7 @@ export default function MainStats(props) {
             <div className={classes.proficienciesDesc}>
               {condidtionImmunities.map((immunities, index) => (
                 <Typography variant="body2">
-                  {immunities} {index >= 0 && condidtionImmunities.length != index+1 ? ', ' : ' '}
+                  {immunities} {index >= 0 && condidtionImmunities.length != index + 1 ? ', ' : ' '}
                 </Typography>
               ))}
             </div>
