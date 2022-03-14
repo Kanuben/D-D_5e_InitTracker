@@ -235,9 +235,27 @@ export default function PersistentDrawerLeft() {
     setInitiativeList(newList);
   };
 
-  const updateMonsterList = (updateList) => {
+  const updateMonsterList = (updateList, monster) => {
     writeMonsterFile(updateList);
     setMonsterList(updateList);
+
+    let newList = [];
+    Object.assign(newList, initiativeList);
+    let newMonster = JSON.parse(JSON.stringify(monster));
+
+    let tempList = newList.filter(mon => mon.index == monster.index);
+    tempList.forEach((tempMon, index) => {
+      newMonster.id = tempMon.id;
+      newMonster.initiative = tempMon.initiative;
+      newMonster.damage = tempMon.damage;
+      newMonster.statuses = tempMon.statuses;
+      newMonster.name = tempMon.name;
+      newList[index] = JSON.parse(JSON.stringify(newMonster));
+    });
+    if (tempList.length > 0) {
+      setInitiativeList(newList);
+      setSelectedCharacter(newList[0]);
+    }
   };
 
   const handleAppendMonsterList = (appendList) => {
@@ -582,7 +600,7 @@ export default function PersistentDrawerLeft() {
           <CreateMonster
             onClose={handleCreateMonsterClose}
             openCreateMonster={openCreateMonster}
-             updateMonsterList={updateMonsterList}
+            updateMonsterList={updateMonsterList}
             monsterList={monsterList}
           />
           <EditMonster
@@ -640,14 +658,14 @@ export default function PersistentDrawerLeft() {
             )}
             {initiativeList.length === 0 && (
               <div className={classes.placeholder}>
-                  <div>
-                    <SvgIcon
-                      style={{ width: "65vw", height: "65vh" }}
-                      color="action"
-                    >
-                      <Dragon />
-                    </SvgIcon>
-                  </div>
+                <div>
+                  <SvgIcon
+                    style={{ width: "65vw", height: "65vh" }}
+                    color="action"
+                  >
+                    <Dragon />
+                  </SvgIcon>
+                </div>
                 <div>
                   <p style={{ fontSize: "2em" }}>
                     The inn is empty. Recruit some more adventurers.
