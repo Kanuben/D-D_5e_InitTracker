@@ -424,6 +424,7 @@ export default function MonsterForm(props) {
         tempMonster.reactions = parseTextDescription(monReactions)
         tempMonster.legendary_actions.actions = parseTextDescription(monLegendaryActions)
         tempMonster.lair_actions = monLairActions
+        tempMonster.spell_casting.spells = selectedSpells;
 
         let newMonList = JSON.parse(JSON.stringify(props.monsterList))
         if (props.selectedMon) {

@@ -154,9 +154,9 @@ export default function SpellCasting(props) {
                 </div>
               </ListItem>
             ))}
+            <Divider />
           </div>}
       </List>
-      <Divider />
 
     </div>
   );
