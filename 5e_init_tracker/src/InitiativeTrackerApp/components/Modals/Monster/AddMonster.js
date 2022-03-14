@@ -129,14 +129,13 @@ export default function AddMonster(props) {
 
   const addToSelectedList = selectedMon => {
     let tempList = selectedList;
-    let tempChar = JSON.parse(JSON.stringify(selectedMon))
-    let filteredList = tempList.filter((char) => char.index === tempChar.index);
+    let tempMon = JSON.parse(JSON.stringify(selectedMon))
+    let filteredList = tempList.filter((char) => char.index === tempMon.index);
     if (filteredList.length > 0) {
-      tempChar.name += ' ' + filteredList.length;
+      tempMon.name += ' (' + filteredList.length +')';
     }
-    tempChar.id = generateId();
-    tempChar.numberOfOthers = 0;
-    tempList.push(tempChar);
+    tempMon.id = generateId();
+    tempList.push(tempMon);
     setSelectedList(tempList);
   };
 
@@ -186,7 +185,7 @@ export default function AddMonster(props) {
                       <Demo />
                     </SvgIcon>
                   </Avatar>
-                  <span style={{ padding: "1em" }}>{option.name}</span>
+                  <span style={{ padding: "1em" }}>{option.name} ({option.source})</span>
                 </li>
               )}
               style={{ width: '85%' }}

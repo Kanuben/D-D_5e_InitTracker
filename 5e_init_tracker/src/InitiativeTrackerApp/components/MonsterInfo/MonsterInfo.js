@@ -77,9 +77,9 @@ export default function MonsterInfo(props) {
   const isSubtype = () => {
     let subtype = "";
     if (props.monster) {
-      if (props.monster.subtype)
+      if (props.monster.subtype.length > 0)
         subtype = subtype.concat("(" + props.monster.subtype + ")");
-    } else if (monster.subtype) {
+    } else if (monster.subtype > 0) {
       subtype = subtype.concat("(" + monster.subtype + ")");
     }
     return subtype;
@@ -115,29 +115,13 @@ export default function MonsterInfo(props) {
                   {isSubtype()}, {props.monster.alignment} )
                 </Typography>
               </div>
-            }>
-          </CardHeader>}
-        {monster &&
-          <CardHeader className={classes.cardheader}
-            title={
-              <div className={classes.cardheader}>
-                <Typography variant="h4">
-                  {/* <SvgIcon
-                    style={{ "font-size": "1.5em" }}
-                    color="action"
-                  >
-                    <Monster />
-                  </SvgIcon> */}
-                </Typography>
-                <Typography variant="h4" gutterBottom>
-                  {monster.name}
-                </Typography>
-                <Typography variant="body1" gutterBottom>
-                  &nbsp;( {monster.size} - {monster.type}
-                  {isSubtype()}, {monster.alignment} )
-                </Typography>
-              </div>
-            }>
+            }
+            subheader={
+            <Typography variant="subtitle2" gutterBottom>
+              Source: {props.monster.source}
+            </Typography>}
+          >
+
           </CardHeader>}
         {props.monster &&
           <CardContent>

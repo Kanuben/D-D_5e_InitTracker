@@ -95,29 +95,29 @@ export default function CharacterCard(props) {
                 </SvgIcon>
               </Avatar>
               <Popover
-                    id={props.character.name}
-                    className={classes.popover}
-                    classes={{
-                      paper: classes.paper,
-                    }}
-                    open={openedPopoverId === props.character.name}
-                    anchorEl={anchorEl}
-                    anchorOrigin={{
-                      vertical: 'bottom',
-                      horizontal: 'left',
-                    }}
-                    transformOrigin={{
-                      vertical: 'top',
-                      horizontal: 'left',
-                    }}
-                    PaperProps={{
-                      style: { maxWidth: '800px' },
-                    }}
-                    onClose={handlePopoverClose}
-                    disableRestoreFocus
-                  >
-                    <MonsterInfo monster={props.character} />
-                  </Popover>
+                id={props.character.name}
+                className={classes.popover}
+                classes={{
+                  paper: classes.paper,
+                }}
+                open={openedPopoverId === props.character.name}
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'left',
+                }}
+                PaperProps={{
+                  style: { maxWidth: '800px' },
+                }}
+                onClose={handlePopoverClose}
+                disableRestoreFocus
+              >
+                <MonsterInfo monster={props.character} />
+              </Popover>
               <div className={classes.charname}>
                 <Typography variant="h6" gutterBottom>
                   {props.character.name}
@@ -133,6 +133,13 @@ export default function CharacterCard(props) {
                   )}
                 </Typography>
               </div>
+            </Grid>
+            <Grid className={classes.col} item xs>
+              {props.character.isPlayer === false &&
+                <Typography variant="h6" gutterBottom>
+                  Source: {props.character.source}
+                </Typography>
+              }
             </Grid>
           </Grid>
         </div>

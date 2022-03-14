@@ -111,6 +111,7 @@ export default function MonsterForm(props) {
     const [monReactions, setMonReactions] = React.useState([]);
     const [monLegendaryActions, setMonLegendaryActions] = React.useState([]);
     const [monLairActions, setMonLairActions] = React.useState('');
+    const [monSource, setMonSource] = React.useState('');
 
     const [damageTypes, setDamageTypes] = React.useState([]);
     const [conditions, setConditions] = React.useState([]);
@@ -209,6 +210,7 @@ export default function MonsterForm(props) {
             setMonReactions(convertToText(props.selectedMon.reactions))
             setMonLegendaryActions(convertToText(props.selectedMon.legendary_actions.actions))
             setMonLairActions(props.selectedMon.lair_actions)
+            setMonSource(props.selectedMon.source);
         }
 
     }, [props.selectedMon]);
@@ -373,6 +375,11 @@ export default function MonsterForm(props) {
         props.handleFormDirty(true);
     };
 
+    const handleMonSourceChange = (e, value) => {
+        setMonSource(e.target.value);
+        props.handleFormDirty(true);
+    };
+
     const handleCreateMonsterClicked = (e) => {
         document.getElementById("submitButton").click();
     };
@@ -425,18 +432,22 @@ export default function MonsterForm(props) {
         tempMonster.legendary_actions.actions = parseTextDescription(monLegendaryActions)
         tempMonster.lair_actions = monLairActions
         tempMonster.spell_casting.spells = selectedSpells;
+        tempMonster.source = monSource;
 
         let newMonList = JSON.parse(JSON.stringify(props.monsterList))
         if (props.selectedMon) {
+            tempMonster.user_created = props.selectedMon.user_created;
             newMonList.forEach((mon, index) => {
                 if (mon.index == props.selectedMon.index) {
                     newMonList[index] = tempMonster;
                 }
             })
         } else {
+            tempMonster.user_created = true;
             newMonList.push(tempMonster)
         }
-        props.updateMonsterList(newMonList)
+
+        props.updateMonsterList(newMonList, tempMonster)
         props.handleFormDirty(false);
         handleClose();
     }
@@ -514,7 +525,7 @@ export default function MonsterForm(props) {
                                 <TextField
                                     className={classes.textField}
                                     id="outlined-basic"
-                                    label="Monster Name"
+                                    label="Name"
                                     variant="outlined"
                                     name="name"
                                     onChange={handleNameChange}
@@ -533,7 +544,7 @@ export default function MonsterForm(props) {
                                     renderInput={(params) => (
                                         <TextField
                                             {...params}
-                                            label="Monster Type"
+                                            label="Type"
                                             variant="outlined"
                                             name="type"
                                             onChange={handleTypeChange}
@@ -568,7 +579,7 @@ export default function MonsterForm(props) {
                                         <TextField
                                             {...params}
                                             variant="outlined"
-                                            label="Monster Sub-Type(s)"
+                                            label="Sub-Type(s)"
                                             name="sub_types"
                                         />
                                     )}
@@ -593,7 +604,7 @@ export default function MonsterForm(props) {
                                 />
                             </Grid>
 
-                            <Grid item xs={4}>
+                            <Grid item xs={6}>
                                 <Autocomplete
                                     freeSolo
                                     id="combo-box-demo"
@@ -610,6 +621,19 @@ export default function MonsterForm(props) {
                                             required
                                         />
                                     )}
+                                />
+                            </Grid>
+
+                            <Grid item xs={6}>
+                                <TextField
+                                    className={classes.textField}
+                                    id="outlined-basic"
+                                    label="Source"
+                                    variant="outlined"
+                                    name="source"
+                                    onChange={handleMonSourceChange}
+                                    value={monSource || 'Custom'}
+                                    required
                                 />
                             </Grid>
                         </Grid>

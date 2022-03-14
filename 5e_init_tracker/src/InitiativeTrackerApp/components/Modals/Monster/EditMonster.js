@@ -153,7 +153,7 @@ export default function EditMonster(props) {
                             <Autocomplete
                                 id="combo-box-demo"
                                 disableClearable
-                                options={props.monsterList.filter((a) => a.user_created == false).sort((a, b) => a.name.localeCompare(b.name))}
+                                options={props.monsterList.filter((a) => a.user_created == true).sort((a, b) => a.name.localeCompare(b.name))}
                                 getOptionLabel={(mon) => mon.name}
                                 onChange={handleSelectedMon}
                                 renderOption={(props, option, { selected }) => (

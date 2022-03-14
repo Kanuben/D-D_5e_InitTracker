@@ -93,6 +93,7 @@ export default function ActionsReactions(props) {
               </ListItem>
             ))}
           </List>
+          <Divider />
         </div>}
 
       {reactions.length !== 0 &&
@@ -109,8 +110,8 @@ export default function ActionsReactions(props) {
                 </div>
               </ListItem>
             ))}
-            <Divider />
           </List>
+          <Divider />
         </div>}
     </div>
   );

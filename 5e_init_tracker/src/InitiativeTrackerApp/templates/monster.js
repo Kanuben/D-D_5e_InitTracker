@@ -45,4 +45,5 @@ export class Monster {
     damage= 0;
     initiative= 0;
     statuses=[];
+    source="";
 }

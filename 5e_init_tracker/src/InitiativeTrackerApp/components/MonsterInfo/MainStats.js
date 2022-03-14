@@ -436,8 +436,10 @@ export default function MainStats(props) {
                   <Typography variant="body2"> {item.desc} </Typography>
                 </div>
               </ListItem>
+
             ))}
           </List>
+          <Divider />
         </div>
       )}
     </div>

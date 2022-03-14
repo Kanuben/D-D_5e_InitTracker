@@ -14,29 +14,30 @@ if (isElectron()) {
 export const translateMonsters = (monsters) => {
   let translatedMons = [];
   monsters.forEach((monster) => {
-    let translatedMonster = new Monster();
+    let tempMonster = new Monster();
+    tempMonster.source = "SRD"
     if (monster.img) {
-      translatedMonster.img = monster.img;
+      tempMonster.img = monster.img;
     }
-    translatedMonster.name = monster.name;
-    translatedMonster.index = toLower(monster.name);
-    translatedMonster.size = monster.size;
-    translatedMonster.type = monster.type;
+    tempMonster.name = monster.name;
+    tempMonster.index = toLower(monster.name);
+    tempMonster.size = monster.size;
+    tempMonster.type = monster.type;
     if (monster.subtype)
-      translatedMonster.subtype = monster.subtype.split(',');
-    translatedMonster.alignment = monster.alignment;
-    translatedMonster.armor_class = monster.armor_class;
-    translatedMonster.hit_points = monster.hit_points;
-    translatedMonster.hit_dice_count = monster.hit_dice.substring(0, monster.hit_dice.indexOf('d'));
-    translatedMonster.hit_die = monster.hit_dice.substring(monster.hit_dice.indexOf('d'));
+      tempMonster.subtype = monster.subtype.split(',');
+    tempMonster.alignment = monster.alignment;
+    tempMonster.armor_class = monster.armor_class;
+    tempMonster.hit_points = monster.hit_points;
+    tempMonster.hit_dice_count = monster.hit_dice.substring(0, monster.hit_dice.indexOf('d'));
+    tempMonster.hit_die = monster.hit_dice.substring(monster.hit_dice.indexOf('d'));
 
     if (monster.speed.walk) {
       if (monster.speed.fly || monster.speed.climb || monster.speed.swim || monster.speed.burrow) {
-        translatedMonster.speed = translatedMonster.speed.concat(
+        tempMonster.speed = tempMonster.speed.concat(
           monster.speed.walk + ", "
         );
       } else {
-        translatedMonster.speed = translatedMonster.speed.concat(
+        tempMonster.speed = tempMonster.speed.concat(
           monster.speed.walk
         );
       }
@@ -44,11 +45,11 @@ export const translateMonsters = (monsters) => {
 
     if (monster.speed.fly) {
       if (monster.speed.climb || monster.speed.swim || monster.speed.burrow) {
-        translatedMonster.speed = translatedMonster.speed.concat(
+        tempMonster.speed = tempMonster.speed.concat(
           "fly " + monster.speed.fly + ", "
         );
       } else {
-        translatedMonster.speed = translatedMonster.speed.concat(
+        tempMonster.speed = tempMonster.speed.concat(
           "fly " + monster.speed.fly
         );
       }
@@ -57,11 +58,11 @@ export const translateMonsters = (monsters) => {
 
     if (monster.speed.climb) {
       if (monster.speed.swim || monster.speed.burrow) {
-        translatedMonster.speed = translatedMonster.speed.concat(
+        tempMonster.speed = tempMonster.speed.concat(
           "climb " + monster.speed.climb + ", "
         );
       } else {
-        translatedMonster.speed = translatedMonster.speed.concat(
+        tempMonster.speed = tempMonster.speed.concat(
           "climb " + monster.speed.climb
         );
       }
@@ -69,79 +70,79 @@ export const translateMonsters = (monsters) => {
 
     if (monster.speed.swim) {
       if (monster.speed.burrow) {
-        translatedMonster.speed = translatedMonster.speed.concat(
+        tempMonster.speed = tempMonster.speed.concat(
           "swim " + monster.speed.swim + ", "
         );
       } else {
-        translatedMonster.speed = translatedMonster.speed.concat(
+        tempMonster.speed = tempMonster.speed.concat(
           "swim " + monster.speed.swim
         );
       }
     }
 
     if (monster.speed.burrow) {
-      translatedMonster.speed = translatedMonster.speed.concat(
+      tempMonster.speed = tempMonster.speed.concat(
         "burrow " + monster.speed.burrow
       );
     }
 
-    translatedMonster.stats = {};
-    if (monster.strength) translatedMonster.stats.strength = monster.strength;
+    tempMonster.stats = {};
+    if (monster.strength) tempMonster.stats.strength = monster.strength;
     if (monster.dexterity)
-      translatedMonster.stats.dexterity = monster.dexterity;
+      tempMonster.stats.dexterity = monster.dexterity;
     if (monster.constitution)
-      translatedMonster.stats.constitution = monster.constitution;
+      tempMonster.stats.constitution = monster.constitution;
     if (monster.intelligence)
-      translatedMonster.stats.intelligence = monster.intelligence;
-    if (monster.wisdom) translatedMonster.stats.wisdom = monster.wisdom;
-    if (monster.charisma) translatedMonster.stats.charisma = monster.charisma;
+      tempMonster.stats.intelligence = monster.intelligence;
+    if (monster.wisdom) tempMonster.stats.wisdom = monster.wisdom;
+    if (monster.charisma) tempMonster.stats.charisma = monster.charisma;
     if (monster.saving_throws)
-      translatedMonster.saving_throws = monster.saving_throws;
-    translatedMonster.proficiencies = [];
-    translatedMonster.saving_throws = [];
+      tempMonster.saving_throws = monster.saving_throws;
+    tempMonster.proficiencies = [];
+    tempMonster.saving_throws = [];
     monster.proficiencies.forEach((element) => {
       if (element.proficiency) {
         if (element.proficiency.name.includes("Saving Throw:")) {
-          translatedMonster.saving_throws.push(
+          tempMonster.saving_throws.push(
             element.proficiency.name.replace("Saving Throw: ", "")
           );
         } else {
-          translatedMonster.proficiencies.push({
+          tempMonster.proficiencies.push({
             name: element.proficiency.name.substring(element.proficiency.name.indexOf(':') + 1),
             value: element.value,
           });
         }
       }
     });
-    translatedMonster.damage_resistances = monster.damage_resistances;
-    translatedMonster.damage_immunities = monster.damage_immunities;
-    translatedMonster.damage_vulnerabilities = monster.damage_vulnerabilities;
-    translatedMonster.condition_immunities = monster.condition_immunities.map((immunity) => immunity.name);
-    translatedMonster.senses = "";
+    tempMonster.damage_resistances = monster.damage_resistances;
+    tempMonster.damage_immunities = monster.damage_immunities;
+    tempMonster.damage_vulnerabilities = monster.damage_vulnerabilities;
+    tempMonster.condition_immunities = monster.condition_immunities.map((immunity) => immunity.name);
+    tempMonster.senses = "";
     Object.entries(monster.senses).forEach((element, index) => {
-      if ( Object.entries(monster.senses).length === index + 1) {
-        translatedMonster.senses = translatedMonster.senses.concat(
+      if (Object.entries(monster.senses).length === index + 1) {
+        tempMonster.senses = tempMonster.senses.concat(
           element[0].replace("_", " ") + " " + element[1]
         );
       } else {
-        translatedMonster.senses = translatedMonster.senses.concat(
+        tempMonster.senses = tempMonster.senses.concat(
           element[0].replace("_", " ") + " " + element[1] + ", "
         );
       }
     });
     if (monster.languages.length > 0)
-      translatedMonster.languages = monster.languages;
-    translatedMonster.challenge_rating = monster.challenge_rating;
-    translatedMonster.xp = monster.xp;
-    translatedMonster.special_abilities = [];
+      tempMonster.languages = monster.languages;
+    tempMonster.challenge_rating = monster.challenge_rating;
+    tempMonster.xp = monster.xp;
+    tempMonster.special_abilities = [];
     if (monster.special_abilities) {
       monster.special_abilities.forEach((element) => {
         if (element.name === "Spellcasting") {
-          translatedMonster.spell_casting = {};
-          translatedMonster.spell_casting.spells = [];
-          translatedMonster.spell_casting.slots = [];
+          tempMonster.spell_casting = {};
+          tempMonster.spell_casting.spells = [];
+          tempMonster.spell_casting.slots = [];
           element.spellcasting.spells.forEach((spell) => {
-            translatedMonster.spell_casting.spells.push({
+            tempMonster.spell_casting.spells.push({
               name: spell.name,
               level: spell.level,
               url: spell.url,
@@ -152,42 +153,42 @@ export const translateMonsters = (monsters) => {
             for (let i = 0; i < slot; i++) {
               tempArray.push("X");
             }
-            translatedMonster.spell_casting.slots.push(tempArray);
+            tempMonster.spell_casting.slots.push(tempArray);
           });
         }
-        translatedMonster.special_abilities.push({
+        tempMonster.special_abilities.push({
           name: element.name,
           desc: element.desc,
         });
       });
     }
-    translatedMonster.actions = [];
+    tempMonster.actions = [];
     if (monster.actions) {
       monster.actions.forEach((element) => {
-        translatedMonster.actions.push({
+        tempMonster.actions.push({
           name: element.name,
           desc: element.desc,
         });
       });
     }
-    translatedMonster.reactions = [];
+    tempMonster.reactions = [];
     if (monster.reactions) {
       monster.reactions.forEach((element) => {
-        translatedMonster.reactions.push({
+        tempMonster.reactions.push({
           name: element.name,
           desc: element.desc,
         });
       });
     }
     if (monster.legendary_actions) {
-      translatedMonster.legendary_actions = {};
-      translatedMonster.legendary_actions.actions = [];
+      tempMonster.legendary_actions = {};
+      tempMonster.legendary_actions.actions = [];
       if (monster.legendary_actions.actions) {
-        translatedMonster.legendary_actions.actions =
+        tempMonster.legendary_actions.actions =
           monster.legendary_actions.actions;
       } else {
         monster.legendary_actions.forEach((element) => {
-          translatedMonster.legendary_actions.actions.push({
+          tempMonster.legendary_actions.actions.push({
             name: element.name,
             desc: element.desc,
           });
@@ -196,15 +197,15 @@ export const translateMonsters = (monsters) => {
     }
 
     if (monster.lair_actions) {
-      translatedMonster.lair_actions = "";
+      tempMonster.lair_actions = "";
       // monster.lair_actions.forEach((element) => {
-      //   translatedMonster.lair_actions.push({
+      //   tempMonster.lair_actions.push({
       //     name: element.name,
       //     desc: element.desc,
       //   });
       // });
     }
-    translatedMons.push(translatedMonster);
+    translatedMons.push(tempMonster);
   });
   return translatedMons;
 };
@@ -236,11 +237,11 @@ export function readMonsterFile() {
   }
 }
 
-export function writeMonsterFile(translatedMonster) {
+export function writeMonsterFile(tempMonster) {
   try {
     let filePath = "monsters.json";
     if (isElectron()) {
-      fs.writeFileSync(filePath, JSON.stringify(translatedMonster));
+      fs.writeFileSync(filePath, JSON.stringify(tempMonster));
     }
   } catch (e) {
     console.error(e.message);
