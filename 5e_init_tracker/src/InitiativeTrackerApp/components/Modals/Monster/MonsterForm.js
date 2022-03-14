@@ -44,7 +44,7 @@ const useStyles = makeStyles(theme => ({
     padding16: {
         padding: "16px",
     },
-    divider:{
+    divider: {
         paddingTop: "16px",
     },
     flex: {
@@ -80,28 +80,28 @@ const styles = (theme) => ({
 
 export default function MonsterForm(props) {
     const onClose = props.onClose;
-    const [monName, setMonName] = React.useState();
-    const [monType, setMonType] = React.useState();
+    const [monName, setMonName] = React.useState('');
+    const [monType, setMonType] = React.useState('');
     const [monSubType, setMonSubType] = React.useState([]);
     const [monSize, setMonSize] = React.useState([]);
     const [monAlignment, setMonAlignment] = React.useState([]);
-    const [monCR, setMonCR] = React.useState();
-    const [monXP, setMonXP] = React.useState();
-    const [monAC, setMonAC] = React.useState();
-    const [monAvgHP, setMonAvgHP] = React.useState();
+    const [monCR, setMonCR] = React.useState('');
+    const [monXP, setMonXP] = React.useState('');
+    const [monAC, setMonAC] = React.useState('');
+    const [monAvgHP, setMonAvgHP] = React.useState('');
     const [monHitDieCount, setMonHitDieCount] = React.useState();
     const [monHitDie, setMonHitDie] = React.useState([]);
-    const [monSpeed, setMonSpeed] = React.useState();
-    const [monStr, setMonStr] = React.useState();
-    const [monDex, setMonDex] = React.useState();
-    const [monCon, setMonCon] = React.useState();
-    const [monInt, setMonInt] = React.useState();
-    const [monWis, setMonWis] = React.useState();
-    const [monCha, setMonCha] = React.useState();
+    const [monSpeed, setMonSpeed] = React.useState('');
+    const [monStr, setMonStr] = React.useState('');
+    const [monDex, setMonDex] = React.useState('');
+    const [monCon, setMonCon] = React.useState('');
+    const [monInt, setMonInt] = React.useState('');
+    const [monWis, setMonWis] = React.useState('');
+    const [monCha, setMonCha] = React.useState('');
     const [monSavingThrows, setMonSavingThrows] = React.useState([]);
-    const [monSkills, setMonSkills] = React.useState();
-    const [monSenses, setMonSenses] = React.useState();
-    const [monLanguages, setMonLanguages] = React.useState();
+    const [monSkills, setMonSkills] = React.useState('');
+    const [monSenses, setMonSenses] = React.useState('');
+    const [monLanguages, setMonLanguages] = React.useState('');
     const [damageImmunities, setDamageImmunities] = React.useState([]);
     const [damageVulnerabilties, setDamageVulnerabilties] = React.useState([]);
     const [damageResistances, setDamageResistances] = React.useState([]);
@@ -110,7 +110,7 @@ export default function MonsterForm(props) {
     const [monActions, setMonActions] = React.useState([]);
     const [monReactions, setMonReactions] = React.useState([]);
     const [monLegendaryActions, setMonLegendaryActions] = React.useState([]);
-    const [monLairActions, setMonLairActions] = React.useState();
+    const [monLairActions, setMonLairActions] = React.useState('');
 
     const [damageTypes, setDamageTypes] = React.useState([]);
     const [conditions, setConditions] = React.useState([]);
@@ -612,7 +612,7 @@ export default function MonsterForm(props) {
                                 />
                             </Grid>
                         </Grid>
-                        <Divider  className={classes.divider}/>
+                        <Divider className={classes.divider} />
                         <Grid className={classes.divider} container spacing={3}>
                             <Grid item xs={4}>
                                 <TextField
@@ -681,7 +681,7 @@ export default function MonsterForm(props) {
                                 />
                             </Grid>
                         </Grid>
-                        <Divider className={classes.divider}/>
+                        <Divider className={classes.divider} />
                         <Grid className={classes.divider} container spacing={3}>
                             <Grid item xs={4}>
                                 <TextField
@@ -756,7 +756,7 @@ export default function MonsterForm(props) {
                                 />
                             </Grid>
                         </Grid>
-                        <Divider className={classes.divider}/>
+                        <Divider className={classes.divider} />
                         <Grid className={classes.divider} container spacing={3}>
                             <Grid item xs={6}>
                                 <Autocomplete
