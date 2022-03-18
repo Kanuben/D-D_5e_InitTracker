@@ -47,6 +47,8 @@ import EmptyReminder from "./Modals/EmptyReminder";
 import AddMonster from "./Modals/Monster/AddMonster";
 import CreateMonster from "./Modals/Monster/CreateMonster";
 import EditMonster from "./Modals/Monster/EditMonster";
+import ViewSidebarIcon from '@mui/icons-material/ViewSidebar';
+import ViewSidebarOutlinedIcon from '@mui/icons-material/ViewSidebarOutlined';
 
 function LinearProgressWithLabel(props) {
   return (
@@ -118,7 +120,6 @@ const useStyles = makeStyles((theme) => ({
   mainToolbar: {
     width: '100%',
     display: 'flex',
-    justifyContent: 'space-between',
     alignItems: 'center',
   },
   initToolbar: {
@@ -169,6 +170,7 @@ export default function PersistentDrawerLeft() {
   const [selectedCharacter, setSelectedCharacter] = React.useState({});
   const [monsterProgress, setMonsterProgress] = React.useState(0);
   const [spellProgress, setSpellProgress] = React.useState(0);
+  const [showMonsterInfo, setShowMonsterInfo] = React.useState(true);
 
   useEffect(() => {
     let tasks = [];
@@ -398,6 +400,10 @@ export default function PersistentDrawerLeft() {
     setSelectedCharacter(newList[0]);
   };
 
+  const handleShowMonsterInfo = () => {
+    setShowMonsterInfo(!showMonsterInfo)
+  }
+
   const sortInitList = (list) => {
     list.sort(function (a, b) {
       return b.initiative - a.initiative;
@@ -485,6 +491,16 @@ export default function PersistentDrawerLeft() {
                 Advance
               </Button>
             </div>
+          </div>
+          <div>
+            {!showMonsterInfo &&
+              <Button onClick={() => { handleShowMonsterInfo() }} disabled={initiativeList.length == 0} style={{ float: "right" }} color="inherit" endIcon={<ViewSidebarIcon style={{ fontSize: 40 }} />}>
+              </Button>
+            }
+            {showMonsterInfo &&
+              <Button onClick={() => { handleShowMonsterInfo() }} disabled={initiativeList.length == 0} style={{ float: "right" }} color="inherit" endIcon={<ViewSidebarOutlinedIcon style={{ fontSize: 40 }} />}>
+              </Button>
+            }
           </div>
         </Toolbar>
       </AppBar>
@@ -670,6 +686,7 @@ export default function PersistentDrawerLeft() {
                   setInitiativeList={setInitiativeList}
                   selectedCharacter={selectedCharacter}
                   setSelectedCharacter={setSelectedCharacter}
+                  showMonsterInfo={showMonsterInfo}
                 />
               </Box>
             )}
