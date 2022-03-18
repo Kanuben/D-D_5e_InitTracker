@@ -84,11 +84,15 @@ export default function LegendaryLair(props) {
       <List>
         {legendaryActions.map((item, index) => (
           <ListItem dense={true}>
-            <div>
-              <Typography variant="body1" className={classes.headingColor}>
-                {item.name}:
 
-              </Typography>
+            <div>
+              {item.name &&
+                <div >
+                  <Typography variant="body1" className={classes.headingColor}>
+                    {item.name}:
+                  </Typography>
+                </div>}
+
               <Typography variant="body2"> {item.desc} </Typography>
             </div>
           </ListItem>

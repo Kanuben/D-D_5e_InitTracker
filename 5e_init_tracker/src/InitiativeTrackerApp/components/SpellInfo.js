@@ -185,7 +185,6 @@ export default function SpellInfo(props) {
                   </Grid>
                 )}
               </Grid>
-              <Divider />
               <p>
                 {spell.desc.map((description, index) => (
                   <div>

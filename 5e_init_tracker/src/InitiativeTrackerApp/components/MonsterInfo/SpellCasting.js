@@ -122,8 +122,8 @@ export default function SpellCasting(props) {
               <ExpandLessIcon></ExpandLessIcon>
             </IconButton>}
         </div>}
-      <List>
-        {showSpells && props.monster.spell_casting.spells.length !== 0 &&
+      {showSpells && props.monster.spell_casting.spells.length !== 0 &&
+        <List>
           <div>
             {props.monster.spell_casting.spells.map((item, index) => (
               <ListItem>
@@ -178,10 +178,9 @@ export default function SpellCasting(props) {
                 </div>
               </ListItem>
             ))}
-
-          </div>}
-      </List>
-      <Divider />
+          </div>
+        </List>}
+        <Divider />
     </div>
   );
 }
