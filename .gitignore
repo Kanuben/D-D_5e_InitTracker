@@ -3,3 +3,16 @@
 5e_init_tracker/out
 5e_init_tracker/monsters.json
 5e_init_tracker/characters.json
+5e_init_tracker/Curse Of Strahd.book
+5e_init_tracker/Elemental Evil.book
+5e_init_tracker/Lost Mine Of Phandelver.book
+5e_init_tracker/Monster Manual.book
+5e_init_tracker/monsterList.json
+5e_init_tracker/newmonsterList.json
+5e_init_tracker/Out Of The Abyss.book
+5e_init_tracker/Storm Kings Thunder.book
+5e_init_tracker/Tales From The Yawning Portal.book
+5e_init_tracker/Tome Of Beasts.book
+5e_init_tracker/Tyranny Of Dragons.book
+5e_init_tracker/Volo's Guide.book
+5e_init_tracker/src/InitiativeTrackerApp/utilities/NewMonsterTranslator.js
