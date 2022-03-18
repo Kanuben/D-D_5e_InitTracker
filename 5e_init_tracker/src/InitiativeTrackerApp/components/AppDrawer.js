@@ -458,6 +458,7 @@ export default function PersistentDrawerLeft() {
             size="large"
             endIcon={<MenuOpenIcon style={{ fontSize: 40 }} />}>
           </Button>
+          <Divider orientation="vertical" variant="middle" flexItem />
           <div className={classes.mainToolbar}>
             <div>
               <Typography variant="h4" noWrap>
@@ -687,6 +688,7 @@ export default function PersistentDrawerLeft() {
                   selectedCharacter={selectedCharacter}
                   setSelectedCharacter={setSelectedCharacter}
                   showMonsterInfo={showMonsterInfo}
+                  open={open}
                 />
               </Box>
             )}

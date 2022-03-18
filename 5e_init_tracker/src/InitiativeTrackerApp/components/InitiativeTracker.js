@@ -10,7 +10,6 @@ import makeStyles from '@mui/styles/makeStyles';
 import { default as React, useEffect } from "react";
 import CharacterCard from "./CharacterCard";
 import MonsterInfo from "./MonsterInfo/MonsterInfo";
-import ViewSidebarIcon from '@mui/icons-material/ViewSidebar';
 
 const useStyles = makeStyles((theme) => ({
   toolbar: {
@@ -71,7 +70,7 @@ export default function InitiativeTracker(props) {
             {props.showMonsterInfo || props.selectedCharacter.isPlayer == false && (
               <Grow in={!props.selectedCharacter.isPlayer}>
                 <Grid item xs={4}>
-                  <div style={{ paddingTop: "1em" }}>
+                  <div style={{ paddingTop: "1em", width: props.open ?  "29vw" : "32vw", position: "fixed" }}>
                     <MonsterInfo monster={props.selectedCharacter}>
                     </MonsterInfo>
                   </div>
