@@ -20,6 +20,7 @@ import React from 'react';
 import { ReactComponent as Demo } from '../../../assets/demo.svg';
 import { ReactComponent as Dragon } from '../../../assets/dragon.svg';
 import SimpleCharacterCard from '../../SimpleCharacterCard';
+import { Icon } from '@mui/material';
 
 
 const useStyles = makeStyles(theme => ({

@@ -13,7 +13,6 @@ import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
-import Grow from "@mui/material/Grow";
 import IconButton from "@mui/material/IconButton";
 import LinearProgress from "@mui/material/LinearProgress";
 import List from "@mui/material/List";
@@ -31,22 +30,16 @@ import PropTypes from "prop-types";
 import { default as React, useEffect } from "react";
 import { forkJoin } from "rxjs";
 import { map } from "rxjs/operators";
-import { loadMonsterFile, loadCharacterFile } from "../../services/FileService";
+import { loadCharacterFile, loadMonsterFile } from "../../services/FileService";
 import { loadMonsterData, loadMonsters } from "../../services/MonsterService";
 import { ReactComponent as Logo } from "../assets/download.svg";
 import { ReactComponent as Dragon } from "../assets/dragon.svg";
-import { Icon } from "../assets/logo.js";
 import { characterFileExists, readCharacterFile, writeCharacterFile } from "../utilities/CharacterReader";
 import {
   monsterFileExists,
   readMonsterFile, translateMonsters,
   writeMonsterFile
 } from "../utilities/MonsterTranslator";
-import {
-  newMonsterFileExists,
-  newReadMonsterFile, newTranslateMonsters,
-  newWriteMonsterFile
-} from "../utilities/NewMonsterTranslator";
 import InitiativeTracker from "./InitiativeTracker";
 import AddCharacter from "./Modals/Character/AddCharacter";
 import CreateChar from "./Modals/Character/CreateChar";
@@ -212,7 +205,6 @@ export default function PersistentDrawerLeft() {
       );
     } else {
       setMonsterList(readMonsterFile());
-      newTranslateMonsters(newReadMonsterFile());
       setLoaded(true);
       setOpen(true);
     }

@@ -6,10 +6,13 @@ import Popover from '@mui/material/Popover';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import makeStyles from '@mui/styles/makeStyles';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { map } from "rxjs/operators";
 import { loadSpellData } from "../../../services/SpellService";
 import SpellInfo from '../SpellInfo';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import IconButton from "@mui/material/IconButton";
 
 const useStyles = makeStyles(theme => ({
   popover: {
@@ -64,6 +67,11 @@ export default function SpellCasting(props) {
   const theme = useTheme();
   const classes = useStyles(theme);
 
+  const [anchorEl, setAnchorEl] = React.useState({});
+  const [openedPopoverId, setOpenedPopoverId] = React.useState({});
+  const [selectedSpell, setSelectedSpell] = React.useState({});
+  const [showSpells, setShowSpells] = React.useState(true);
+
   if (props.monster) {
     props.monster.spell_casting.spells.forEach(spell => {
       if (spell.url) {
@@ -72,9 +80,13 @@ export default function SpellCasting(props) {
     });
   }
 
-  const [anchorEl, setAnchorEl] = React.useState({});
-  const [openedPopoverId, setOpenedPopoverId] = React.useState({});
-  const [selectedSpell, setSelectedSpell] = React.useState({});
+  useEffect(() => {
+    setShowSpells(true)
+  }, [props.monster]);
+
+  const toggleSection = () => {
+    setShowSpells(!showSpells);
+  }
 
   const handlePopoverOpen = (event, popoverItem) => {
     setAnchorEl(event.currentTarget);
@@ -98,8 +110,20 @@ export default function SpellCasting(props) {
 
   return (
     <div>
+      {(props.monster.spell_casting.spells.length) !== 0 &&
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <Typography variant="h6">Spells</Typography>
+          {!showSpells &&
+            <IconButton onClick={toggleSection} size="large">
+              <ExpandMoreIcon></ExpandMoreIcon>
+            </IconButton>}
+          {showSpells &&
+            <IconButton onClick={toggleSection} size="large">
+              <ExpandLessIcon></ExpandLessIcon>
+            </IconButton>}
+        </div>}
       <List>
-        {props.monster.spell_casting.spells.length !== 0 &&
+        {showSpells && props.monster.spell_casting.spells.length !== 0 &&
           <div>
             {props.monster.spell_casting.spells.map((item, index) => (
               <ListItem>
@@ -154,10 +178,10 @@ export default function SpellCasting(props) {
                 </div>
               </ListItem>
             ))}
-            <Divider />
+
           </div>}
       </List>
-
+      <Divider />
     </div>
   );
 }
