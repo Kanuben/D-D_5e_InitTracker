@@ -134,7 +134,7 @@ export default function MonsterForm(props) {
     let monsterAlignments = [];
     let monsterCRs = [];
     let monsterHitDiceValues = ["d4", "d6", "d8", "d10", "d12", "d20"];
-    let monsterStatTypes = ["CHA", "CON", "DEX", "INT", "STR", "WIS"];
+    let monsterStatTypes = ["STR", "DEX", "CON", "INT", "WIS", "CHA"];
 
     props.monsterList.forEach((element) => {
         if (!monsterTypes.includes(element.type)) monsterTypes.push(element.type);

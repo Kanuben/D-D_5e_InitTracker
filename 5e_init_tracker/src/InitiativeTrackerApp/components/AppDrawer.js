@@ -31,7 +31,7 @@ import PropTypes from "prop-types";
 import { default as React, useEffect } from "react";
 import { forkJoin } from "rxjs";
 import { map } from "rxjs/operators";
-import loadFile from "../../services/FileService";
+import { loadMonsterFile, loadCharacterFile } from "../../services/FileService";
 import { loadMonsterData, loadMonsters } from "../../services/MonsterService";
 import { ReactComponent as Logo } from "../assets/download.svg";
 import { ReactComponent as Dragon } from "../assets/dragon.svg";
@@ -42,6 +42,11 @@ import {
   readMonsterFile, translateMonsters,
   writeMonsterFile
 } from "../utilities/MonsterTranslator";
+import {
+  newMonsterFileExists,
+  newReadMonsterFile, newTranslateMonsters,
+  newWriteMonsterFile
+} from "../utilities/NewMonsterTranslator";
 import InitiativeTracker from "./InitiativeTracker";
 import AddCharacter from "./Modals/Character/AddCharacter";
 import CreateChar from "./Modals/Character/CreateChar";
@@ -178,7 +183,7 @@ export default function PersistentDrawerLeft() {
       setCharacterList(readCharacterFile());
     }
     if (monsterFileExists() === false) {
-      tasks.push(getAllMonster());
+      tasks.push(getAllMonsters());
       forkJoin(tasks).subscribe(
         (tasksResult) => {
           forkJoin(tasksResult.flat()).subscribe(
@@ -207,12 +212,13 @@ export default function PersistentDrawerLeft() {
       );
     } else {
       setMonsterList(readMonsterFile());
+      newTranslateMonsters(newReadMonsterFile());
       setLoaded(true);
       setOpen(true);
     }
   }, []);
 
-  const getAllMonster = () => {
+  const getAllMonsters = () => {
     return loadMonsters().pipe(
       map((monsterList) => {
         let count = 0;
@@ -406,19 +412,27 @@ export default function PersistentDrawerLeft() {
     });
   };
 
-  const handleLoadFile = () => {
-    loadFile((result) => {
-      let monsterArr = [];
+  const handleLoadCharacterFile = () => {
+    loadCharacterFile((result) => {
       let charArr = [];
       result.forEach((item) => {
+        charArr.push(item);
+      });
+      handleAppendCharacterList(charArr);
+    });
+  };
+
+  const handleLoadMonsterFile = () => {
+    loadMonsterFile((result) => {
+      let monsterArr = [];
+      result.forEach((item) => {
         if (item.isPlayer === false) {
-          monsterArr.push(item);
-        } else {
-          charArr.push(item);
+          if (monsterList.findIndex(x => x.name == item.name) == -1) {
+            monsterArr.push(item);
+          }
         }
       });
       handleAppendMonsterList(monsterArr);
-      handleAppendCharacterList(charArr);
     });
   };
 
@@ -506,14 +520,25 @@ export default function PersistentDrawerLeft() {
         <Divider />
         <List>
           {["Import Characters"].map((text, index) => (
-            <ListItem button key={text} onClick={handleLoadFile}>
+            <ListItem button key={text} onClick={handleLoadCharacterFile}>
               <ListItemIcon>
                 <PublishIcon />
               </ListItemIcon>
               <ListItemText primary={text} />
             </ListItem>
           ))}
-          <input type="file" id="my_file" style={{ display: "none" }} />
+          <input type="file" id="my_character" accept=".party" style={{ display: "none" }} />
+        </List>
+        <List>
+          {["Import Monsters"].map((text, index) => (
+            <ListItem button key={text} onClick={handleLoadMonsterFile}>
+              <ListItemIcon>
+                <PublishIcon />
+              </ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItem>
+          ))}
+          <input type="file" id="my_monster" accept=".book" style={{ display: "none" }} />
         </List>
         <Divider variant="middle" />
         <List>

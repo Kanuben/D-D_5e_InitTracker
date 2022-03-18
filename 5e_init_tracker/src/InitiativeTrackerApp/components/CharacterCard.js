@@ -251,8 +251,8 @@ export default function CharacterCard(props) {
       style={{ background: props.character.bg_color }}
     >
       <Box sx={{ border: borderVal }}>
-        <CardContent>
-          <div className={classes.align_center}>
+        <CardContent >
+          <div className={classes.align_center}  onClick={handleOpenNewMonsterWindow}> 
             <Grid container spacing={5}>
               <Grid className={classes.col} item xs>
                 <PaletteIcon
