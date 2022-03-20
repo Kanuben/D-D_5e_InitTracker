@@ -3,8 +3,8 @@ import MuiDialogActions from "@mui/material/DialogActions";
 import MuiDialogContent from "@mui/material/DialogContent";
 import MuiDialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
-import makeStyles from '@mui/styles/makeStyles';
-import withStyles from '@mui/styles/withStyles';
+import makeStyles from "@mui/styles/makeStyles";
+import withStyles from "@mui/styles/withStyles";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import React from "react";
@@ -51,7 +51,8 @@ const DialogTitle = withStyles(styles)((props) => {
           aria-label="close"
           className={classes.closeButton}
           onClick={onClose}
-          size="large">
+          size="large"
+        >
           <CloseIcon />
         </IconButton>
       ) : null}

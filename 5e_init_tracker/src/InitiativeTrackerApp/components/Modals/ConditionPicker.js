@@ -1,18 +1,18 @@
 import Button from "@mui/material/Button";
-import Checkbox from '@mui/material/Checkbox';
+import Checkbox from "@mui/material/Checkbox";
 import Dialog from "@mui/material/Dialog";
 import MuiDialogActions from "@mui/material/DialogActions";
 import MuiDialogContent from "@mui/material/DialogContent";
 import MuiDialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
-import makeStyles from '@mui/styles/makeStyles';
-import withStyles from '@mui/styles/withStyles';
+import makeStyles from "@mui/styles/makeStyles";
+import withStyles from "@mui/styles/withStyles";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CloseIcon from "@mui/icons-material/Close";
-import Autocomplete from '@mui/material/Autocomplete';
+import Autocomplete from "@mui/material/Autocomplete";
 import React, { useEffect } from "react";
 import { map } from "rxjs/operators";
 import { loadConditions } from "../../../services/ConditionService";
@@ -63,7 +63,8 @@ const DialogTitle = withStyles(styles)((props) => {
           aria-label="close"
           className={classes.closeButton}
           onClick={onClose}
-          size="large">
+          size="large"
+        >
           <CloseIcon />
         </IconButton>
       ) : null}
@@ -99,11 +100,11 @@ export default function ConditionPicker(props) {
       if (character.id === props.character.id) {
         let tempStatuses = [];
         Object.assign(tempStatuses, character.statuses);
-        selectedConditions.map(condition => {
+        selectedConditions.map((condition) => {
           if (!tempStatuses.includes(condition)) {
-            tempStatuses.push(condition)
+            tempStatuses.push(condition);
           }
-        })
+        });
         character.statuses = tempStatuses;
       }
     });
@@ -128,7 +129,7 @@ export default function ConditionPicker(props) {
 
   const handleConditionSelected = (e, val) => {
     setSelectedConditions(val);
-  }
+  };
 
   return (
     <div>

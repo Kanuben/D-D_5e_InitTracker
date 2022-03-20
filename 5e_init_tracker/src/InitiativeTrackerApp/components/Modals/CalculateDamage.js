@@ -1,55 +1,55 @@
-import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
-import TextField from '@mui/material/TextField';
-import React from 'react';
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import TextField from "@mui/material/TextField";
+import React from "react";
 
 export default function CalculateDamage(props) {
-  const [damage, setDamage] = React.useState('');
+  const [damage, setDamage] = React.useState("");
 
-  const handleNumClick = e => {
+  const handleNumClick = (e) => {
     let num = e.target.textContent;
-    let temp = '';
+    let temp = "";
     setDamage(temp.concat(damage, num));
   };
 
-  const handleSign = e => {
+  const handleSign = (e) => {
     let sign = e.target.textContent;
     let signValue = undefined;
     if (damage !== undefined) {
       signValue = damage.charAt(0);
     }
-    let tempDamage = '';
+    let tempDamage = "";
 
     if (signValue !== undefined) {
-      if (sign !== '+' && sign !== '-') {
+      if (sign !== "+" && sign !== "-") {
         setDamage(tempDamage.concat(sign, damage));
-      } else if (signValue === '-' && sign === '+') {
-        setDamage(damage.replace('-', '+'));
-      } else if (signValue === '+' && sign === '+') {
-      } else if (signValue === '+' && sign === '-') {
-        setDamage(damage.replace('+', '-'));
-      } else if (signValue === '-' && sign === '-') {
+      } else if (signValue === "-" && sign === "+") {
+        setDamage(damage.replace("-", "+"));
+      } else if (signValue === "+" && sign === "+") {
+      } else if (signValue === "+" && sign === "-") {
+        setDamage(damage.replace("+", "-"));
+      } else if (signValue === "-" && sign === "-") {
       } else {
-        setDamage(''.concat(sign, damage));
+        setDamage("".concat(sign, damage));
       }
     }
   };
 
   const handleNeg = () => {
-    let value = '-';
+    let value = "-";
 
-    if (damage.charAt(0) !== '-') {
+    if (damage.charAt(0) !== "-") {
       value = value.concat(damage);
       setDamage(value);
     }
   };
 
   const handleClear = () => {
-    setDamage('');
+    setDamage("");
   };
 
   const enterDamage = () => {
-    props.handleDamageChange(damage)
+    props.handleDamageChange(damage);
     closePop();
   };
 
@@ -58,8 +58,7 @@ export default function CalculateDamage(props) {
   };
 
   return (
-    <div style={{ maxWidth: '200px', minHeight: '250px', padding: '2%' }}>
-
+    <div style={{ maxWidth: "200px", minHeight: "250px", padding: "2%" }}>
       <TextField disabled="true" value={damage} />
       <Grid container spacing={1} justifyContent="center">
         <Grid item xs={12}>
@@ -92,7 +91,6 @@ export default function CalculateDamage(props) {
           <Button onClick={enterDamage}>enter</Button>
         </Grid>
       </Grid>
-
     </div>
   );
 }

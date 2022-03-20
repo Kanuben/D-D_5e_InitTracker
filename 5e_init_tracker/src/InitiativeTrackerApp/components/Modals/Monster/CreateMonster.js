@@ -1,7 +1,7 @@
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CloseIcon from "@mui/icons-material/Close";
-import Autocomplete from '@mui/material/Autocomplete';
+import Autocomplete from "@mui/material/Autocomplete";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -14,15 +14,15 @@ import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import makeStyles from '@mui/styles/makeStyles';
-import withStyles from '@mui/styles/withStyles';
+import makeStyles from "@mui/styles/makeStyles";
+import withStyles from "@mui/styles/withStyles";
 import React, { useEffect } from "react";
 import { ajax } from "rxjs/ajax";
 import { loadConditions } from "../../../../services/ConditionService";
 import { loadSpells } from "../../../../services/SpellService";
 import { Monster } from "../../../templates/monster";
 import AddSpell from "../../AddSpell";
-import Box from '@mui/material/Box';
+import Box from "@mui/material/Box";
 import { toLower } from "lodash";
 import MonsterForm from "./MonsterForm";
 
@@ -90,7 +90,8 @@ const DialogTitle = withStyles(styles)((props) => {
           aria-label="close"
           className={classes.closeButton}
           onClick={onClose}
-          size="large">
+          size="large"
+        >
           <CloseIcon />
         </IconButton>
       ) : null}
@@ -116,8 +117,7 @@ export default function CreateMonster(props) {
   const open = props.openCreateMonster;
   const onClose = props.onClose;
 
-  const handleFormDirty = (isDirty) => {
-  };
+  const handleFormDirty = (isDirty) => {};
 
   //Reset states on close
   const handleClose = () => {
@@ -143,10 +143,9 @@ export default function CreateMonster(props) {
           handleFormDirty={handleFormDirty}
         ></MonsterForm>
       </DialogContent>
-
       <DialogActions>
         <Button
-          form='my-form'
+          form="my-form"
           type="submit"
           variant="contained"
           autoFocus
@@ -155,7 +154,7 @@ export default function CreateMonster(props) {
           Create
         </Button>
       </DialogActions>
-    </Dialog >
+    </Dialog>
   );
 
   // function getNumberWithOrdinal(n) {
@@ -163,5 +162,4 @@ export default function CreateMonster(props) {
   //     v = n % 100;
   //   return n + (s[(v - 20) % 10] || s[v] || s[0]);
   // }
-
 }

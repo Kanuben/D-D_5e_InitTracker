@@ -2,7 +2,7 @@ import Avatar from "@mui/material/Avatar";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Grid from "@mui/material/Grid";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import SvgIcon from "@mui/material/SvgIcon";
 import Typography from "@mui/material/Typography";
 import React from "react";
@@ -50,20 +50,13 @@ const useStyles = makeStyles((theme) => ({
 export default function SpellCard(props) {
   const classes = useStyles();
 
-
-
   return (
-    <Card
-      className={classes.cardwidth}
-    >
+    <Card className={classes.cardwidth}>
       <CardContent>
         <div className={classes.align_center}>
           <Grid container spacing={5}>
             <Grid className={classes.col} item xs>
-              <Avatar
-                className={classes.char_portrait}
-                src={props.spell.img}
-              >
+              <Avatar className={classes.char_portrait} src={props.spell.img}>
                 <SvgIcon>
                   <Demo />
                 </SvgIcon>

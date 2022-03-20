@@ -2,7 +2,7 @@ import Avatar from "@mui/material/Avatar";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Grid from "@mui/material/Grid";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import React, { useEffect } from "react";
@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     width: "inherit",
   },
   selected: {
-    border: '10'
+    border: "10",
   },
   root: {
     flexGrow: 1,
@@ -82,10 +82,10 @@ export default function CharacterCard(props) {
   useEffect(() => {
     setDamage(props.character.damage);
     setInitiative(props.character.initiative);
-    if(props.character == props.selectedCharacter){
-      setBorderVal(1)
-    } else{
-      setBorderVal(0)
+    if (props.character == props.selectedCharacter) {
+      setBorderVal(1);
+    } else {
+      setBorderVal(0);
     }
   });
 
@@ -99,7 +99,7 @@ export default function CharacterCard(props) {
 
   const handleOpenNewMonsterWindow = () => {
     props.setSelectedCharacter(props.character);
-    setBorderVal(1)
+    setBorderVal(1);
   };
 
   const handleVisibilityFullDamage = () => {
@@ -251,8 +251,11 @@ export default function CharacterCard(props) {
       style={{ background: props.character.bg_color }}
     >
       <Box sx={{ border: borderVal }}>
-        <CardContent >
-          <div className={classes.align_center}  onClick={handleOpenNewMonsterWindow}> 
+        <CardContent>
+          <div
+            className={classes.align_center}
+            onClick={handleOpenNewMonsterWindow}
+          >
             <Grid container spacing={5}>
               <Grid className={classes.col} item xs>
                 <PaletteIcon
@@ -318,7 +321,11 @@ export default function CharacterCard(props) {
                     <Typography variant="subtitle2" gutterBottom>
                       Status
                     </Typography>
-                    <IconButton onClick={handleConditionPickerOpen} aria-label="delete" size="large">
+                    <IconButton
+                      onClick={handleConditionPickerOpen}
+                      aria-label="delete"
+                      size="large"
+                    >
                       <AddCircleOutlineIcon />
                     </IconButton>
                   </div>
@@ -421,7 +428,8 @@ export default function CharacterCard(props) {
                       style={{ padding: "0px" }}
                       onClick={handleVisibilityFullDamage}
                       aria-label="delete"
-                      size="large">
+                      size="large"
+                    >
                       <VisibilityIcon />
                     </IconButton>
                   </div>
@@ -467,14 +475,19 @@ export default function CharacterCard(props) {
                       alignItems: "center",
                     }}
                   >
-                    <Typography style={{ paddingRight: "12px" }} variant="subtitle2" gutterBottom>
+                    <Typography
+                      style={{ paddingRight: "12px" }}
+                      variant="subtitle2"
+                      gutterBottom
+                    >
                       Initiative
                     </Typography>
                     <IconButton
                       style={{ padding: "0px" }}
                       onClick={handleInitiativeRoll}
                       aria-label="delete"
-                      size="large">
+                      size="large"
+                    >
                       <CasinoIcon />
                     </IconButton>
                   </div>

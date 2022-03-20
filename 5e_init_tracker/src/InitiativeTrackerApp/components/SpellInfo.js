@@ -3,7 +3,7 @@ import CardContent from "@mui/material/CardContent";
 import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
 import { useTheme } from "@mui/material/styles";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import React, { useEffect } from "react";
@@ -56,8 +56,6 @@ export default function SpellInfo(props) {
   const classes = useStyles(theme);
   const [spell, setSpell] = React.useState();
 
-
-
   useEffect(() => {
     if (props.match) {
       loadSpellData(props.match.params.id)
@@ -68,7 +66,7 @@ export default function SpellInfo(props) {
         )
         .subscribe();
     } else if (props.id) {
-      setSpell(props.selectedSpell)
+      setSpell(props.selectedSpell);
     }
   }, props);
 
@@ -82,10 +80,7 @@ export default function SpellInfo(props) {
         <div>
           <Toolbar className={classes.background}>
             <Typography variant="h4">
-              <SvgIcon
-                style={{ "font-size": "1.5em" }}
-                color="action"
-              >
+              <SvgIcon style={{ "font-size": "1.5em" }} color="action">
                 <Fireball />
               </SvgIcon>
             </Typography>
@@ -108,7 +103,6 @@ export default function SpellInfo(props) {
                 direction="row"
                 justifyContent="center"
                 alignItems="flex-start"
-                container
                 spacing={1}
               >
                 <Grid item xs={3}>
@@ -143,7 +137,6 @@ export default function SpellInfo(props) {
                 direction="row"
                 justifyContent="center"
                 alignItems="flex-start"
-                container
                 spacing={1}
               >
                 <Grid item xs={3}>

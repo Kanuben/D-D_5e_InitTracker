@@ -1,59 +1,59 @@
-import Divider from '@mui/material/Divider';
-import ListItem from '@mui/material/ListItem';
-import { useTheme } from '@mui/material/styles';
-import makeStyles from '@mui/styles/makeStyles';
-import Typography from '@mui/material/Typography';
-import React, { useEffect } from 'react';
-import List from '@mui/material/List';
-import Checkbox from '@mui/material/Checkbox';
-import TextField from '@mui/material/TextField';
+import Divider from "@mui/material/Divider";
+import ListItem from "@mui/material/ListItem";
+import { useTheme } from "@mui/material/styles";
+import makeStyles from "@mui/styles/makeStyles";
+import Typography from "@mui/material/Typography";
+import React, { useEffect } from "react";
+import List from "@mui/material/List";
+import Checkbox from "@mui/material/Checkbox";
+import TextField from "@mui/material/TextField";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   popover: {
-    pointerEvents: 'none',
+    pointerEvents: "none",
   },
   link: {
     color: theme.palette.secondary.main,
   },
   cardwidth: {
-    width: 'inherit',
+    width: "inherit",
   },
   root: {
     flexGrow: 1,
   },
   char: {
-    display: 'flex',
-    'align-items': 'center',
+    display: "flex",
+    "align-items": "center",
   },
   charname: {
-    padding: '.5em',
-    'font-size': '1em',
+    padding: ".5em",
+    "font-size": "1em",
   },
   col: {
     padding: theme.spacing(2),
     color: theme.palette.text.secondary,
-    'align-items': 'center',
-    display: 'inline-flex',
-    'justify-items': 'center',
-    'white-space': 'nowrap',
+    "align-items": "center",
+    display: "inline-flex",
+    "justify-items": "center",
+    "white-space": "nowrap",
   },
   char_portrait: {
     width: theme.spacing(8),
     height: theme.spacing(8),
-    'border-style': 'solid',
-    'border-color': 'darkgrey',
-    'border-width': '.25em',
+    "border-style": "solid",
+    "border-color": "darkgrey",
+    "border-width": ".25em",
   },
   paper_padding: {
-    padding: '1em',
+    padding: "1em",
   },
 
   background_blue: {
-    'background-color': 'blue',
+    "background-color": "blue",
   },
   headingColor: {
     color: theme.palette.secondary.main,
-    'font-weight': 'bold',
+    "font-weight": "bold",
   },
 }));
 
@@ -65,7 +65,7 @@ export default function LegendaryLair(props) {
 
   if (props.monster) {
     if (props.monster.legendary_actions.actions !== undefined) {
-      props.monster.legendary_actions.actions.forEach(item => {
+      props.monster.legendary_actions.actions.forEach((item) => {
         legendaryActions.push(item);
       });
     }
@@ -73,25 +73,26 @@ export default function LegendaryLair(props) {
 
   return (
     <div>
-      {legendaryActions.length !== 0 &&
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+      {legendaryActions.length !== 0 && (
+        <div style={{ display: "flex", alignItems: "center" }}>
           <Typography variant="h6">Legendary Actions</Typography>
 
           {/* {props.monster.legendary_actions.actions_per_turn.map(
             (item, index) => <Checkbox />
           )} */}
-        </div>}
+        </div>
+      )}
       <List>
         {legendaryActions.map((item, index) => (
           <ListItem dense={true}>
-
             <div>
-              {item.name &&
-                <div >
+              {item.name && (
+                <div>
                   <Typography variant="body1" className={classes.headingColor}>
                     {item.name}:
                   </Typography>
-                </div>}
+                </div>
+              )}
 
               <Typography variant="body2"> {item.desc} </Typography>
             </div>
@@ -99,22 +100,23 @@ export default function LegendaryLair(props) {
         ))}
       </List>
       {props.monster.lair_actions.length !== 0 && (
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div style={{ display: "flex", alignItems: "center" }}>
           <Divider />
           <Typography variant="h6">Lair Actions</Typography>
-        </div>)}
+        </div>
+      )}
       {props.monster.lair_actions.length !== 0 && (
         <List>
           <ListItem dense={true}>
             <TextField
-              style={{ width: '100%' }}
+              style={{ width: "100%" }}
               multiline
               value={props.monster.lair_actions}
               disabled
-            >
-            </TextField>
+            ></TextField>
           </ListItem>
         </List>
-      )}</div>
+      )}
+    </div>
   );
 }

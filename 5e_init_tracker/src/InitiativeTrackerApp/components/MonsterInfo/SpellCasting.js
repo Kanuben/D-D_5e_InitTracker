@@ -1,65 +1,64 @@
-import { ListItemText } from '@mui/material';
-import Divider from '@mui/material/Divider';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import Popover from '@mui/material/Popover';
-import { useTheme } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
-import makeStyles from '@mui/styles/makeStyles';
-import React, { useEffect } from 'react';
+import { ListItemText } from "@mui/material";
+import Divider from "@mui/material/Divider";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import Popover from "@mui/material/Popover";
+import { useTheme } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import makeStyles from "@mui/styles/makeStyles";
+import React, { useEffect } from "react";
 import { map } from "rxjs/operators";
 import { loadSpellData } from "../../../services/SpellService";
-import SpellInfo from '../SpellInfo';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import SpellInfo from "../SpellInfo";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import IconButton from "@mui/material/IconButton";
 
-const useStyles = makeStyles(theme => ({
-  popover: {
-  },
+const useStyles = makeStyles((theme) => ({
+  popover: {},
   link: {
-    color: 'white',
-    cursor: 'pointer',
-    textDecoration: 'underline'
+    color: "white",
+    cursor: "pointer",
+    textDecoration: "underline",
   },
   cardwidth: {
-    width: 'inherit',
+    width: "inherit",
   },
   root: {
     flexGrow: 1,
   },
   char: {
-    display: 'flex',
-    'align-items': 'center',
+    display: "flex",
+    "align-items": "center",
   },
   charname: {
-    padding: '.5em',
-    'font-size': '1em',
+    padding: ".5em",
+    "font-size": "1em",
   },
   col: {
     padding: theme.spacing(2),
     color: theme.palette.text.secondary,
-    'align-items': 'center',
-    display: 'inline-flex',
-    'justify-items': 'center',
-    'white-space': 'nowrap',
+    "align-items": "center",
+    display: "inline-flex",
+    "justify-items": "center",
+    "white-space": "nowrap",
   },
   char_portrait: {
     width: theme.spacing(8),
     height: theme.spacing(8),
-    'border-style': 'solid',
-    'border-color': 'darkgrey',
-    'border-width': '.25em',
+    "border-style": "solid",
+    "border-color": "darkgrey",
+    "border-width": ".25em",
   },
   paper_padding: {
-    padding: '1em',
+    padding: "1em",
   },
   headingColor: {
     color: theme.palette.secondary.main,
     "font-weight": "bold",
   },
   background_blue: {
-    'background-color': 'blue',
+    "background-color": "blue",
   },
 }));
 
@@ -73,7 +72,7 @@ export default function SpellCasting(props) {
   const [showSpells, setShowSpells] = React.useState(true);
 
   if (props.monster) {
-    props.monster.spell_casting.spells.forEach(spell => {
+    props.monster.spell_casting.spells.forEach((spell) => {
       if (spell.url) {
         spell.url = spell.url.substring(spell.url.lastIndexOf("/") + 1);
       }
@@ -81,12 +80,12 @@ export default function SpellCasting(props) {
   }
 
   useEffect(() => {
-    setShowSpells(true)
+    setShowSpells(true);
   }, [props.monster]);
 
   const toggleSection = () => {
     setShowSpells(!showSpells);
-  }
+  };
 
   const handlePopoverOpen = (event, popoverItem) => {
     setAnchorEl(event.currentTarget);
@@ -98,7 +97,6 @@ export default function SpellCasting(props) {
         })
       )
       .subscribe();
-
   };
 
   const handlePopoverClose = (event) => {
@@ -110,44 +108,59 @@ export default function SpellCasting(props) {
 
   return (
     <div>
-      {(props.monster.spell_casting.spells.length) !== 0 &&
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+      {props.monster.spell_casting.spells.length !== 0 && (
+        <div style={{ display: "flex", alignItems: "center" }}>
           <Typography variant="h6">Spells</Typography>
-          {!showSpells &&
+          {!showSpells && (
             <IconButton onClick={toggleSection} size="large">
               <ExpandMoreIcon></ExpandMoreIcon>
-            </IconButton>}
-          {showSpells &&
+            </IconButton>
+          )}
+          {showSpells && (
             <IconButton onClick={toggleSection} size="large">
               <ExpandLessIcon></ExpandLessIcon>
-            </IconButton>}
-        </div>}
-      {showSpells && props.monster.spell_casting.spells.length !== 0 &&
+            </IconButton>
+          )}
+        </div>
+      )}
+      {showSpells && props.monster.spell_casting.spells.length !== 0 && (
         <List>
           <div>
             {props.monster.spell_casting.spells.map((item, index) => (
               <ListItem>
                 <div>
-                  {index == 0 &&
+                  {index == 0 && (
                     <ListItemText>
                       <div>
-                        <Typography className={classes.headingColor} variant="body1">{item.level > 0 ? 'Level ' + item.level : 'Cantrips:'}</Typography>
+                        <Typography
+                          className={classes.headingColor}
+                          variant="body1"
+                        >
+                          {item.level > 0 ? "Level " + item.level : "Cantrips:"}
+                        </Typography>
                       </div>
                     </ListItemText>
-                  }
-                  {index > 0 && props.monster.spell_casting.spells[index - 1].level != item.level &&
-                    <ListItemText>
-                      <div>
-                        <Typography className={classes.headingColor} variant="body1">Level {item.level}:</Typography>
-                      </div>
-                    </ListItemText>
-                  }
+                  )}
+                  {index > 0 &&
+                    props.monster.spell_casting.spells[index - 1].level !=
+                      item.level && (
+                      <ListItemText>
+                        <div>
+                          <Typography
+                            className={classes.headingColor}
+                            variant="body1"
+                          >
+                            Level {item.level}:
+                          </Typography>
+                        </div>
+                      </ListItemText>
+                    )}
                   <span>&nbsp;</span>
                   <a
                     className={classes.link}
-                    aria-owns={open ? 'mouse-over-popover' : undefined}
+                    aria-owns={open ? "mouse-over-popover" : undefined}
                     aria-haspopup="true"
-                    onClick={e => handlePopoverOpen(e, item)}
+                    onClick={(e) => handlePopoverOpen(e, item)}
                   >
                     {item.name}
                   </a>
@@ -160,15 +173,15 @@ export default function SpellCasting(props) {
                     open={openedPopoverId === item.name}
                     anchorEl={anchorEl}
                     anchorOrigin={{
-                      vertical: 'bottom',
-                      horizontal: 'left',
+                      vertical: "bottom",
+                      horizontal: "left",
                     }}
                     transformOrigin={{
-                      vertical: 'top',
-                      horizontal: 'left',
+                      vertical: "top",
+                      horizontal: "left",
                     }}
                     PaperProps={{
-                      style: { maxWidth: '800px' },
+                      style: { maxWidth: "800px" },
                     }}
                     onClose={handlePopoverClose}
                     disableRestoreFocus
@@ -179,8 +192,9 @@ export default function SpellCasting(props) {
               </ListItem>
             ))}
           </div>
-        </List>}
-        <Divider />
+        </List>
+      )}
+      <Divider />
     </div>
   );
 }

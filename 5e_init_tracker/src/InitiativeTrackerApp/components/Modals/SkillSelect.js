@@ -1,21 +1,20 @@
+import { Grid, Typography } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
+import React from "react";
+import Checkbox from "@mui/material/Checkbox";
+import Button from "@mui/material/Button";
 
-import { Grid, Typography } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
-import React from 'react';
-import Checkbox from '@mui/material/Checkbox';
-import Button from '@mui/material/Button';
-
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   inLine: {
-    display: 'inline-flex',
+    display: "inline-flex",
   },
 
   gridText: {
-    'align-self': 'center',
+    "align-self": "center",
   },
 
   width: {
-    width: '350px',
+    width: "350px",
   },
 }));
 
@@ -23,32 +22,32 @@ export default function ColorSelect(props) {
   const classes = useStyles();
 
   const [proficiencies, setProficiencies] = React.useState([
-    { name: 'Acrobatics', proficiency: false, expertise: true },
-    { name: 'Animal Handling', proficiency: false, expertise: false },
-    { name: 'Arcana', proficiency: false, expertise: false },
-    { name: 'Athletics', proficiency: false, expertise: false },
-    { name: 'Deception', proficiency: false, expertise: false },
-    { name: 'History', proficiency: false, expertise: false },
-    { name: 'Insight', proficiency: false, expertise: false },
-    { name: 'Intimidation', proficiency: false, expertise: false },
-    { name: 'Investigation', proficiency: false, expertise: false },
-    { name: 'Medicine', proficiency: false, expertise: false },
-    { name: 'Nature', proficiency: false, expertise: false },
-    { name: 'Perception', proficiency: false, expertise: false },
-    { name: 'Preformance', proficiency: false, expertise: false },
-    { name: 'Persuasion', proficiency: false, expertise: false },
-    { name: 'Religion', proficiency: false, expertise: false },
-    { name: 'Slight of Hand', proficiency: false, expertise: false },
-    { name: 'Sealth', proficiency: false, expertise: false },
-    { name: 'Survival', proficiency: false, expertise: false },
-    { name: 'Pwning Newbs', proficiency: false, expertise: false },
+    { name: "Acrobatics", proficiency: false, expertise: true },
+    { name: "Animal Handling", proficiency: false, expertise: false },
+    { name: "Arcana", proficiency: false, expertise: false },
+    { name: "Athletics", proficiency: false, expertise: false },
+    { name: "Deception", proficiency: false, expertise: false },
+    { name: "History", proficiency: false, expertise: false },
+    { name: "Insight", proficiency: false, expertise: false },
+    { name: "Intimidation", proficiency: false, expertise: false },
+    { name: "Investigation", proficiency: false, expertise: false },
+    { name: "Medicine", proficiency: false, expertise: false },
+    { name: "Nature", proficiency: false, expertise: false },
+    { name: "Perception", proficiency: false, expertise: false },
+    { name: "Preformance", proficiency: false, expertise: false },
+    { name: "Persuasion", proficiency: false, expertise: false },
+    { name: "Religion", proficiency: false, expertise: false },
+    { name: "Slight of Hand", proficiency: false, expertise: false },
+    { name: "Sealth", proficiency: false, expertise: false },
+    { name: "Survival", proficiency: false, expertise: false },
+    { name: "Pwning Newbs", proficiency: false, expertise: false },
   ]);
 
-  const handleProChecked = e => {
+  const handleProChecked = (e) => {
     let tempSkills = [];
     Object.assign(tempSkills, proficiencies);
 
-    tempSkills.forEach(item => {
+    tempSkills.forEach((item) => {
       if (item.name === e.target.value) {
         item.proficiency = e.target.checked;
       }
@@ -56,11 +55,11 @@ export default function ColorSelect(props) {
     setProficiencies(tempSkills);
   };
 
-  const handleExpChecked = e => {
+  const handleExpChecked = (e) => {
     let tempSkills = [];
     Object.assign(tempSkills, proficiencies);
 
-    tempSkills.forEach(item => {
+    tempSkills.forEach((item) => {
       if (item.name === e.target.value) {
         item.expertise = e.target.checked;
       }
@@ -71,7 +70,7 @@ export default function ColorSelect(props) {
   function TableDescription(props) {
     return (
       <React.Fragment>
-        <Grid item xs={4} style={{ display: 'inline' }}>
+        <Grid item xs={4} style={{ display: "inline" }}>
           <Typography>{props.skillName}</Typography>
         </Grid>
 
@@ -92,7 +91,7 @@ export default function ColorSelect(props) {
         <Grid
           item
           xs={4}
-          style={{ display: 'inline' }}
+          style={{ display: "inline" }}
           className={classes.gridText}
         >
           <Typography>{props.skillName}</Typography>
@@ -119,7 +118,7 @@ export default function ColorSelect(props) {
 
   return (
     <div className={classes.width}>
-      <Grid container spacing={1} style={{ margin: '1%' }}>
+      <Grid container spacing={1} style={{ margin: "1%" }}>
         <Grid container item xs={12} spacing={3}>
           <TableDescription
             skillName="SKILL NAME"
@@ -128,7 +127,7 @@ export default function ColorSelect(props) {
           />
         </Grid>
 
-        {proficiencies.map(item => (
+        {proficiencies.map((item) => (
           <Grid container item xs={12} spacing={3}>
             <Skill
               skillName={item.name}
@@ -137,10 +136,7 @@ export default function ColorSelect(props) {
             />
           </Grid>
         ))}
-
-
       </Grid>
-
     </div>
   );
 }

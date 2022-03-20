@@ -1,24 +1,24 @@
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import CloseIcon from '@mui/icons-material/Close';
-import { Grid } from '@mui/material';
-import Autocomplete from '@mui/material/Autocomplete';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
-import Dialog from '@mui/material/Dialog';
-import MuiDialogActions from '@mui/material/DialogActions';
-import MuiDialogContent from '@mui/material/DialogContent';
-import MuiDialogTitle from '@mui/material/DialogTitle';
-import IconButton from '@mui/material/IconButton';
-import Skeleton from '@mui/material/Skeleton';
-import { styled } from '@mui/material/styles';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import makeStyles from '@mui/styles/makeStyles';
-import withStyles from '@mui/styles/withStyles';
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import CloseIcon from "@mui/icons-material/Close";
+import { Grid } from "@mui/material";
+import Autocomplete from "@mui/material/Autocomplete";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Checkbox from "@mui/material/Checkbox";
+import Dialog from "@mui/material/Dialog";
+import MuiDialogActions from "@mui/material/DialogActions";
+import MuiDialogContent from "@mui/material/DialogContent";
+import MuiDialogTitle from "@mui/material/DialogTitle";
+import IconButton from "@mui/material/IconButton";
+import Skeleton from "@mui/material/Skeleton";
+import { styled } from "@mui/material/styles";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import makeStyles from "@mui/styles/makeStyles";
+import withStyles from "@mui/styles/withStyles";
 import { default as React } from "react";
-import { Character } from '../../../templates/character';
+import { Character } from "../../../templates/character";
 import { isElectron } from "../../../utilities/ElectronHelper";
 
 let fs;
@@ -27,15 +27,13 @@ let path;
 if (isElectron()) {
   fs = window.require("fs");
   path = window.require("path");
-  const app = window.require('electron')
+  const app = window.require("electron");
 } else {
-
-
 }
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
@@ -44,20 +42,20 @@ const useStyles = makeStyles(theme => ({
   },
   title: {
     flexGrow: 1,
-    display: 'none',
-    [theme.breakpoints.up('sm')]: {
-      display: 'block',
+    display: "none",
+    [theme.breakpoints.up("sm")]: {
+      display: "block",
     },
   },
   flex: {
-    display: 'flex',
-    justifyContent: 'space-between',
+    display: "flex",
+    justifyContent: "space-between",
   },
   placeholder: {
-    display: 'flex',
-    'justify-content': 'center',
-    'align-items': 'center',
-    'flex-direction': 'column',
+    display: "flex",
+    "justify-content": "center",
+    "align-items": "center",
+    "flex-direction": "column",
   },
   dialogSize: {
     minHeight: "600px",
@@ -65,58 +63,59 @@ const useStyles = makeStyles(theme => ({
     maxHeight: "65%",
   },
   textField: {
-    width: '100%',
+    width: "100%",
   },
   padBot: {
-    'padding-bottom': '2%',
+    "padding-bottom": "2%",
   },
   centerImg: {
-    'margin-left': 'auto',
-    'margin-right': ' auto',
-    width: '30%',
-    display: 'block',
-    'border-radius': '10%',
+    "margin-left": "auto",
+    "margin-right": " auto",
+    width: "30%",
+    display: "block",
+    "border-radius": "10%",
   },
 }));
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     margin: 0,
     padding: theme.spacing(2),
   },
   closeButton: {
-    position: 'absolute',
+    position: "absolute",
     right: theme.spacing(1),
     top: theme.spacing(1),
     color: theme.palette.grey[500],
   },
 });
 
-const DialogTitle = withStyles(styles)(props => {
+const DialogTitle = withStyles(styles)((props) => {
   const { children, classes, onClose, ...other } = props;
   return (
     <MuiDialogTitle className={classes.root} {...other}>
       <Typography variant="h6">{children}</Typography>
-      {onClose
-        ? <IconButton
+      {onClose ? (
+        <IconButton
           aria-label="close"
           className={classes.closeButton}
           onClick={onClose}
-          size="large">
+          size="large"
+        >
           <CloseIcon />
         </IconButton>
-        : null}
+      ) : null}
     </MuiDialogTitle>
   );
 });
 
-const DialogContent = withStyles(theme => ({
+const DialogContent = withStyles((theme) => ({
   root: {
     padding: theme.spacing(2),
   },
 }))(MuiDialogContent);
 
-const DialogActions = withStyles(theme => ({
+const DialogActions = withStyles((theme) => ({
   root: {
     margin: 0,
     padding: theme.spacing(1),
@@ -125,30 +124,28 @@ const DialogActions = withStyles(theme => ({
 
 export default function CreateChar(props) {
   //Imported classes for class select
-  const [characterClasses, setCharacterClasses] = React.useState(
-    [
-      "Barbarian",
-      "Bard",
-      "Cleric",
-      "Druid",
-      "Fighter",
-      "Monk",
-      "Paladin",
-      "Ranger",
-      "Rogue",
-      "Sorcerer",
-      "Warlock",
-      "Wizard",
-      "Artificer"
-    ]
-  );
+  const [characterClasses, setCharacterClasses] = React.useState([
+    "Barbarian",
+    "Bard",
+    "Cleric",
+    "Druid",
+    "Fighter",
+    "Monk",
+    "Paladin",
+    "Ranger",
+    "Rogue",
+    "Sorcerer",
+    "Warlock",
+    "Wizard",
+    "Artificer",
+  ]);
   //Entryfield States
-  const [name, setName] = React.useState('');
-  const [hp, setHp] = React.useState('');
-  const [ac, setAc] = React.useState('');
-  const [initBonus, setInitBonus] = React.useState('');
-  const [level, setLevel] = React.useState('');
-  const [selectedClasses, setSelectedClasses] = React.useState('none');
+  const [name, setName] = React.useState("");
+  const [hp, setHp] = React.useState("");
+  const [ac, setAc] = React.useState("");
+  const [initBonus, setInitBonus] = React.useState("");
+  const [level, setLevel] = React.useState("");
+  const [selectedClasses, setSelectedClasses] = React.useState("none");
   const [image, setImage] = React.useState();
   const [imageLoaded, setImageLoaded] = React.useState(false);
 
@@ -163,20 +160,19 @@ export default function CreateChar(props) {
   const open = props.openCreateCharacter;
   const onClose = props.onClose;
 
-
-  const Input = styled('input')({
-    display: 'none',
+  const Input = styled("input")({
+    display: "none",
   });
 
   //Reset states on close
   const handleClose = () => {
-    setName('');
-    setHp('');
-    setAc('');
-    setInitBonus('');
-    setSelectedClasses('');
+    setName("");
+    setHp("");
+    setAc("");
+    setInitBonus("");
+    setSelectedClasses("");
     setImageLoaded(false);
-    setLevel('');
+    setLevel("");
     onClose();
   };
 
@@ -197,43 +193,42 @@ export default function CreateChar(props) {
     handleClose();
   };
 
-  const handleCharacterNameChange = e => {
+  const handleCharacterNameChange = (e) => {
     setName(e.target.value);
   };
 
-  const handleCharacterLevelChange = e => {
-    setLevel(e.target.value)
-  }
+  const handleCharacterLevelChange = (e) => {
+    setLevel(e.target.value);
+  };
 
-  const handleCharacterHpChange = e => {
+  const handleCharacterHpChange = (e) => {
     setHp(e.target.value);
   };
 
-  const handleCharacterAcChange = e => {
+  const handleCharacterAcChange = (e) => {
     setAc(e.target.value);
   };
 
-  const handleCharacterInitChange = e => {
+  const handleCharacterInitChange = (e) => {
     setInitBonus(e.target.value);
   };
 
-  const handleFileUpload = e => {
+  const handleFileUpload = (e) => {
     setImageLoaded(true);
-    let img = document.getElementById('charImg');
+    let img = document.getElementById("charImg");
     img.style.display = "";
     if (isElectron()) {
       const data = fs.readFileSync(e.target.files[0].path);
-      setImage('data:' + e.target.files[0].type + ';base64,' + data.toString('base64'));
+      setImage(
+        "data:" + e.target.files[0].type + ";base64," + data.toString("base64")
+      );
       img.setAttribute(
-        'src',
-        'data:' + e.target.files[0].type + ';base64,' + data.toString('base64')
+        "src",
+        "data:" + e.target.files[0].type + ";base64," + data.toString("base64")
       );
     } else {
       setImage(URL.createObjectURL(e.target.files[0]));
-      img.setAttribute(
-        'src',
-        URL.createObjectURL(e.target.files[0]),
-      );
+      img.setAttribute("src", URL.createObjectURL(e.target.files[0]));
     }
   };
 
@@ -265,22 +260,39 @@ export default function CreateChar(props) {
         </DialogTitle>
         <DialogContent>
           <div>
-            <Grid sx={{ paddingTop: '16px' }} container spacing={3}>
+            <Grid sx={{ paddingTop: "16px" }} container spacing={3}>
               <Grid item xs={6}>
                 <Box>
-                  <img id='charImg' style={{
-                    height: '40vh',
-                    width: '100%',
-                    display: 'none'
-                  }}></img>
-                  {!imageLoaded &&
-                    <Skeleton animation={false} variant="rectangular" height={'40vh'} />
-                  }
+                  <img
+                    id="charImg"
+                    style={{
+                      height: "40vh",
+                      width: "100%",
+                      display: "none",
+                    }}
+                  ></img>
+                  {!imageLoaded && (
+                    <Skeleton
+                      animation={false}
+                      variant="rectangular"
+                      height={"40vh"}
+                    />
+                  )}
                 </Box>
-                <Box sx={{ paddingTop: '16px' }}>
+                <Box sx={{ paddingTop: "16px" }}>
                   <label htmlFor="contained-button-file">
-                    <Input onChange={handleFileUpload} accept="image/*" id="contained-button-file" multiple type="file" />
-                    <Button color="secondary" variant="outlined" component="span">
+                    <Input
+                      onChange={handleFileUpload}
+                      accept="image/*"
+                      id="contained-button-file"
+                      multiple
+                      type="file"
+                    />
+                    <Button
+                      color="secondary"
+                      variant="outlined"
+                      component="span"
+                    >
                       Upload
                     </Button>
                   </label>
@@ -295,8 +307,8 @@ export default function CreateChar(props) {
                       id="NewCharacterName"
                       helperText={
                         nameError && name.length > 0
-                          ? '*must contain only letters'
-                          : ''
+                          ? "*must contain only letters"
+                          : ""
                       }
                       onChange={handleCharacterNameChange}
                       error={nameError && name.length > 0 ? true : false}
@@ -310,13 +322,14 @@ export default function CreateChar(props) {
                       label="Level"
                       id="NewCharacterLevel"
                       helperText={
-                        hpError && level.length > 0 ? '*must contain only numbers' : ''
+                        hpError && level.length > 0
+                          ? "*must contain only numbers"
+                          : ""
                       }
                       error={hpError && hp.length > 0 ? true : false}
                       value={level}
                       onChange={handleCharacterLevelChange}
                     />
-
                   </div>
 
                   <div className={classes.padBot}>
@@ -325,13 +338,14 @@ export default function CreateChar(props) {
                       label="Max HP"
                       id="NewCharacterHp"
                       helperText={
-                        hpError && hp.length > 0 ? '*must contain only numbers' : ''
+                        hpError && hp.length > 0
+                          ? "*must contain only numbers"
+                          : ""
                       }
                       error={hpError && hp.length > 0 ? true : false}
                       value={hp}
                       onChange={handleCharacterHpChange}
                     />
-
                   </div>
 
                   <div className={classes.padBot}>
@@ -341,7 +355,9 @@ export default function CreateChar(props) {
                       id="NewCharacterAC"
                       error={acError && ac.length > 0 ? true : false}
                       helperText={
-                        acError && ac.length > 0 ? '*must contain only numbers' : ''
+                        acError && ac.length > 0
+                          ? "*must contain only numbers"
+                          : ""
                       }
                       onChange={handleCharacterAcChange}
                       value={ac}
@@ -353,11 +369,13 @@ export default function CreateChar(props) {
                       className={classes.textField}
                       label="Initiative Bonus"
                       id="NewcharacterInitBonus"
-                      error={initBonusError && initBonus.length > 0 ? true : false}
+                      error={
+                        initBonusError && initBonus.length > 0 ? true : false
+                      }
                       helperText={
                         initBonusError && initBonus.length > 0
-                          ? '*must contain only numbers and + or -, example +5 or -5'
-                          : ''
+                          ? "*must contain only numbers and + or -, example +5 or -5"
+                          : ""
                       }
                       onChange={handleCharacterInitChange}
                       value={initBonus}
@@ -370,9 +388,9 @@ export default function CreateChar(props) {
                       multiple
                       disableCloseOnSelect
                       options={characterClasses}
-                      getOptionLabel={characterClasses => characterClasses}
+                      getOptionLabel={(characterClasses) => characterClasses}
                       onChange={handleCharClassSelected}
-                      style={{ width: '100%' }}
+                      style={{ width: "100%" }}
                       renderOption={(props, option, { selected }) => (
                         <li {...props}>
                           <Checkbox
@@ -384,8 +402,12 @@ export default function CreateChar(props) {
                           {option}
                         </li>
                       )}
-                      renderInput={params => (
-                        <TextField {...params} variant="outlined" label="Classes" />
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          variant="outlined"
+                          label="Classes"
+                        />
                       )}
                     />
                   </div>
@@ -406,7 +428,6 @@ export default function CreateChar(props) {
           </Button>
         </DialogActions>
       </Dialog>
-
     </div>
   );
 }

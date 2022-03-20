@@ -1,10 +1,10 @@
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import EditIcon from '@mui/icons-material/Edit';
+import EditIcon from "@mui/icons-material/Edit";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import MenuOpenIcon from "@mui/icons-material/MenuOpen";
-import NoteAddIcon from '@mui/icons-material/NoteAdd';
+import NoteAddIcon from "@mui/icons-material/NoteAdd";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import PublishIcon from "@mui/icons-material/Publish";
 import AppBar from "@mui/material/AppBar";
@@ -23,9 +23,9 @@ import { useTheme } from "@mui/material/styles";
 import SvgIcon from "@mui/material/SvgIcon";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import clsx from "clsx";
-import { isEqual } from 'lodash';
+import { isEqual } from "lodash";
 import PropTypes from "prop-types";
 import { default as React, useEffect } from "react";
 import { forkJoin } from "rxjs";
@@ -34,11 +34,16 @@ import { loadCharacterFile, loadMonsterFile } from "../../services/FileService";
 import { loadMonsterData, loadMonsters } from "../../services/MonsterService";
 import { ReactComponent as Logo } from "../assets/download.svg";
 import { ReactComponent as Dragon } from "../assets/dragon.svg";
-import { characterFileExists, readCharacterFile, writeCharacterFile } from "../utilities/CharacterReader";
+import {
+  characterFileExists,
+  readCharacterFile,
+  writeCharacterFile,
+} from "../utilities/CharacterReader";
 import {
   monsterFileExists,
-  readMonsterFile, translateMonsters,
-  writeMonsterFile
+  readMonsterFile,
+  translateMonsters,
+  writeMonsterFile,
 } from "../utilities/MonsterTranslator";
 import InitiativeTracker from "./InitiativeTracker";
 import AddCharacter from "./Modals/Character/AddCharacter";
@@ -47,8 +52,8 @@ import EmptyReminder from "./Modals/EmptyReminder";
 import AddMonster from "./Modals/Monster/AddMonster";
 import CreateMonster from "./Modals/Monster/CreateMonster";
 import EditMonster from "./Modals/Monster/EditMonster";
-import ViewSidebarIcon from '@mui/icons-material/ViewSidebar';
-import ViewSidebarOutlinedIcon from '@mui/icons-material/ViewSidebarOutlined';
+import ViewSidebarIcon from "@mui/icons-material/ViewSidebar";
+import ViewSidebarOutlinedIcon from "@mui/icons-material/ViewSidebarOutlined";
 
 function LinearProgressWithLabel(props) {
   return (
@@ -114,16 +119,14 @@ const useStyles = makeStyles((theme) => ({
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
     justifyContent: "flex-end",
-    justifyContent: 'space-around',
-
+    justifyContent: "space-around",
   },
   mainToolbar: {
-    width: '100%',
-    display: 'flex',
-    alignItems: 'center',
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
   },
-  initToolbar: {
-  },
+  initToolbar: {},
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
@@ -147,7 +150,6 @@ const useStyles = makeStyles((theme) => ({
     height: "80vh",
     "flex-direction": "column",
   },
-
 }));
 
 export default function PersistentDrawerLeft() {
@@ -243,7 +245,7 @@ export default function PersistentDrawerLeft() {
     Object.assign(newList, initiativeList);
     let newMonster = JSON.parse(JSON.stringify(monster));
 
-    let tempList = newList.filter(mon => mon.index == monster.index);
+    let tempList = newList.filter((mon) => mon.index == monster.index);
     tempList.forEach((tempMon, index) => {
       newMonster.id = tempMon.id;
       newMonster.initiative = tempMon.initiative;
@@ -262,7 +264,7 @@ export default function PersistentDrawerLeft() {
     let newList = [];
     Object.assign(newList, monsterList);
     appendList.forEach((monster) => {
-      if (newList.filter(e => isEqual(e, monster)).length === 0) {
+      if (newList.filter((e) => isEqual(e, monster)).length === 0) {
         newList.push(monster);
       }
     });
@@ -275,11 +277,11 @@ export default function PersistentDrawerLeft() {
     Object.assign(newList, characterList);
     appendList.forEach((character) => {
       character.initiative = 0;
-      if (newList.filter(e => isEqual(e, character)).length === 0) {
+      if (newList.filter((e) => isEqual(e, character)).length === 0) {
         newList.push(character);
       }
     });
-    writeCharacterFile(newList)
+    writeCharacterFile(newList);
     setCharacterList(newList);
   };
 
@@ -401,8 +403,8 @@ export default function PersistentDrawerLeft() {
   };
 
   const handleShowMonsterInfo = () => {
-    setShowMonsterInfo(!showMonsterInfo)
-  }
+    setShowMonsterInfo(!showMonsterInfo);
+  };
 
   const sortInitList = (list) => {
     list.sort(function (a, b) {
@@ -425,7 +427,7 @@ export default function PersistentDrawerLeft() {
       let monsterArr = [];
       result.forEach((item) => {
         if (item.isPlayer === false) {
-          if (monsterList.findIndex(x => x.name == item.name) == -1) {
+          if (monsterList.findIndex((x) => x.name == item.name) == -1) {
             monsterArr.push(item);
           }
         }
@@ -456,14 +458,12 @@ export default function PersistentDrawerLeft() {
             edge="start"
             className={clsx(classes.menuButton, open && classes.hide)}
             size="large"
-            endIcon={<MenuOpenIcon style={{ fontSize: 40 }} />}>
-          </Button>
+            endIcon={<MenuOpenIcon style={{ fontSize: 40 }} />}
+          ></Button>
           <Divider orientation="vertical" variant="middle" flexItem />
           <div className={classes.mainToolbar}>
             <div>
-              <Typography variant="h4" noWrap>
-
-              </Typography>
+              <Typography variant="h4" noWrap></Typography>
             </div>
             <div className={classes.initToolbar}>
               <Button
@@ -473,9 +473,11 @@ export default function PersistentDrawerLeft() {
                   handleRollInit();
                 }}
                 size="large"
-                endIcon={<SvgIcon style={{ fontSize: 40 }}>
-                  <Logo />
-                </SvgIcon>}
+                endIcon={
+                  <SvgIcon style={{ fontSize: 40 }}>
+                    <Logo />
+                  </SvgIcon>
+                }
               >
                 Roll
               </Button>
@@ -487,21 +489,37 @@ export default function PersistentDrawerLeft() {
                 }}
                 aria-label="advance"
                 size="large"
-                endIcon={<ArrowUpwardIcon style={{ fontSize: 40 }} ></ArrowUpwardIcon>}
+                endIcon={
+                  <ArrowUpwardIcon style={{ fontSize: 40 }}></ArrowUpwardIcon>
+                }
               >
                 Advance
               </Button>
             </div>
           </div>
           <div>
-            {!showMonsterInfo &&
-              <Button onClick={() => { handleShowMonsterInfo() }} disabled={initiativeList.length == 0} style={{ float: "right" }} color="inherit" endIcon={<ViewSidebarIcon style={{ fontSize: 40 }} />}>
-              </Button>
-            }
-            {showMonsterInfo &&
-              <Button onClick={() => { handleShowMonsterInfo() }} disabled={initiativeList.length == 0} style={{ float: "right" }} color="inherit" endIcon={<ViewSidebarOutlinedIcon style={{ fontSize: 40 }} />}>
-              </Button>
-            }
+            {!showMonsterInfo && (
+              <Button
+                onClick={() => {
+                  handleShowMonsterInfo();
+                }}
+                disabled={initiativeList.length == 0}
+                style={{ float: "right" }}
+                color="inherit"
+                endIcon={<ViewSidebarIcon style={{ fontSize: 40 }} />}
+              ></Button>
+            )}
+            {showMonsterInfo && (
+              <Button
+                onClick={() => {
+                  handleShowMonsterInfo();
+                }}
+                disabled={initiativeList.length == 0}
+                style={{ float: "right" }}
+                color="inherit"
+                endIcon={<ViewSidebarOutlinedIcon style={{ fontSize: 40 }} />}
+              ></Button>
+            )}
           </div>
         </Toolbar>
       </AppBar>
@@ -536,7 +554,12 @@ export default function PersistentDrawerLeft() {
               <ListItemText primary={text} />
             </ListItem>
           ))}
-          <input type="file" id="my_character" accept=".party" style={{ display: "none" }} />
+          <input
+            type="file"
+            id="my_character"
+            accept=".party"
+            style={{ display: "none" }}
+          />
         </List>
         <List>
           {["Import Monsters"].map((text, index) => (
@@ -547,7 +570,12 @@ export default function PersistentDrawerLeft() {
               <ListItemText primary={text} />
             </ListItem>
           ))}
-          <input type="file" id="my_monster" accept=".book" style={{ display: "none" }} />
+          <input
+            type="file"
+            id="my_monster"
+            accept=".book"
+            style={{ display: "none" }}
+          />
         </List>
         <Divider variant="middle" />
         <List>
@@ -641,8 +669,8 @@ export default function PersistentDrawerLeft() {
             onClose={handleEditMonsterClose}
             openEditMonster={openEditMonster}
             updateMonsterList={updateMonsterList}
-            monsterList={monsterList}>
-          </EditMonster>
+            monsterList={monsterList}
+          ></EditMonster>
         </List>
         <Divider />
         <List>
@@ -662,10 +690,7 @@ export default function PersistentDrawerLeft() {
         <div className={classes.drawerHeader} />
         {appLoaded === false && (
           <div className={classes.placeholder}>
-            <SvgIcon
-              style={{ width: "65vw", height: "65vh" }}
-              color="action"
-            >
+            <SvgIcon style={{ width: "65vw", height: "65vh" }} color="action">
               <Dragon />
             </SvgIcon>
             <div style={{ width: "45vw" }}>

@@ -3,16 +3,16 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import List from "@mui/material/List";
 import Slide from "@mui/material/Slide";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import SvgIcon from "@mui/material/SvgIcon";
 import TextField from "@mui/material/TextField";
-import Autocomplete from '@mui/material/Autocomplete';
+import Autocomplete from "@mui/material/Autocomplete";
 import React, { useEffect } from "react";
 import SpellCard from "./SpellCard";
 import { loadSpellData } from "../../services/SpellService";
 import { grey } from "@mui/material/colors";
 import DeleteIcon from "@mui/icons-material/Delete";
-import IconButton from '@mui/material/IconButton';
+import IconButton from "@mui/material/IconButton";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,8 +43,8 @@ const useStyles = makeStyles((theme) => ({
     overflow: "auto",
   },
   card: {
-    backgroundColor: grey[800]
-  }
+    backgroundColor: grey[800],
+  },
 }));
 
 const styles = (theme) => ({
@@ -60,7 +60,7 @@ export default function AddSpell(props) {
   const [id, setId] = React.useState("s0");
 
   useEffect(() => {
-    setSelectedList(props.selectedSpells)
+    setSelectedList(props.selectedSpells);
   }, [props.selectedSpells]);
 
   const classes = useStyles();
@@ -73,18 +73,16 @@ export default function AddSpell(props) {
     props.handleFormDirty(true);
     let tempList = Object.create(selectedList);
     let filteredSpellList = [];
-    filteredSpellList = props.spells.filter(
-      (spell) => spell === selectedSpell
-    );
+    filteredSpellList = props.spells.filter((spell) => spell === selectedSpell);
     if (filteredSpellList.length !== 0) {
       let tempSpell = {};
       Object.assign(tempSpell, ...filteredSpellList);
-      loadSpellData(tempSpell.index).subscribe(spellData => {
+      loadSpellData(tempSpell.index).subscribe((spellData) => {
         tempSpell = {
           name: spellData.name,
           level: spellData.level,
           url: spellData.url,
-          id: generateId()
+          id: generateId(),
         };
         tempList.push(tempSpell);
         setSelectedList(tempList);
@@ -104,9 +102,8 @@ export default function AddSpell(props) {
   function generateId() {
     let tempId = parseInt(id.substring(1));
     props.spells.forEach((spell) => {
-      let spellId = 0
-      if (spell.id)
-        spellId = parseInt(spell.id.substring(1));
+      let spellId = 0;
+      if (spell.id) spellId = parseInt(spell.id.substring(1));
       if (spellId > tempId) {
         tempId = parseInt(spell.id.substring(1));
       }
@@ -128,8 +125,7 @@ export default function AddSpell(props) {
           onChange={handleSelectedSpell}
           renderOption={(props, option, { selected }) => (
             <li {...props}>
-              <Avatar>
-              </Avatar>
+              <Avatar></Avatar>
               <span style={{ padding: "1em" }}>{option.name}</span>
             </li>
           )}
@@ -172,12 +168,12 @@ export default function AddSpell(props) {
                         removeFromSelectedList(spell);
                       }}
                       aria-label="delete"
-                      size="large">
+                      size="large"
+                    >
                       <DeleteIcon fontSize="large" />
                     </IconButton>
                   </ListItem>
                 </Slide>
-
               ))}
             </List>
           </CardContent>

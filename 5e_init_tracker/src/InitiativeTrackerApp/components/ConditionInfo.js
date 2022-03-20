@@ -1,7 +1,7 @@
 import AppBar from "@mui/material/AppBar";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import React, { useEffect } from "react";

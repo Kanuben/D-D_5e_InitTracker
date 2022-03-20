@@ -2,13 +2,13 @@ import Avatar from "@mui/material/Avatar";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Grid from "@mui/material/Grid";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import SvgIcon from "@mui/material/SvgIcon";
 import Typography from "@mui/material/Typography";
 import React from "react";
 import { ReactComponent as Demo } from "../assets/demo.svg";
 import MonsterInfo from "./MonsterInfo/MonsterInfo";
-import Popover from '@mui/material/Popover';
+import Popover from "@mui/material/Popover";
 
 const useStyles = makeStyles((theme) => ({
   cardwidth: {
@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
     "border-style": "solid",
     "border-color": "darkgrey",
     "border-width": ".25em",
-    cursor: "pointer"
+    cursor: "pointer",
   },
   paper_padding: {
     padding: "1em",
@@ -103,15 +103,15 @@ export default function CharacterCard(props) {
                 open={openedPopoverId === props.character.name}
                 anchorEl={anchorEl}
                 anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'left',
+                  vertical: "bottom",
+                  horizontal: "left",
                 }}
                 transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'left',
+                  vertical: "top",
+                  horizontal: "left",
                 }}
                 PaperProps={{
-                  style: { maxWidth: '800px' },
+                  style: { maxWidth: "800px" },
                 }}
                 onClose={handlePopoverClose}
                 disableRestoreFocus
@@ -135,11 +135,11 @@ export default function CharacterCard(props) {
               </div>
             </Grid>
             <Grid className={classes.col} item xs>
-              {props.character.isPlayer === false &&
+              {props.character.isPlayer === false && (
                 <Typography variant="h6" gutterBottom>
                   Source: {props.character.source}
                 </Typography>
-              }
+              )}
             </Grid>
           </Grid>
         </div>

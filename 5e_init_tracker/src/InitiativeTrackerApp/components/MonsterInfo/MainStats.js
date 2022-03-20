@@ -6,7 +6,7 @@ import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
 import ListItem from "@mui/material/ListItem";
 import { useTheme } from "@mui/material/styles";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import List from "@mui/material/List";
 import { bindNodeCallback } from "rxjs";
 import { ReactComponent as Monster } from "../../assets/monster.svg";
@@ -64,6 +64,7 @@ const useStyles = makeStyles((theme) => ({
   },
   proficienciesDesc: {
     display: "inline-flex",
+    flexWrap: "wrap",
   },
 }));
 
@@ -156,7 +157,9 @@ export default function MainStats(props) {
 
     props.monster.saving_throws.forEach((element) => {
       let index = savingThrows.findIndex((item) => item.name === element);
-      savingThrows[index].value += getProficiencyBonus(parseInt(props.monster.challenge_rating));
+      savingThrows[index].value += getProficiencyBonus(
+        parseInt(props.monster.challenge_rating)
+      );
     });
 
     props.monster.proficiencies.forEach((element) => {
@@ -196,7 +199,8 @@ export default function MainStats(props) {
     <div>
       <div>Armor Class {props.monster.armor_class}</div>
       <div>
-        Hit Points {props.monster.hit_points} ({props.monster.hit_dice_count}{props.monster.hit_die}+
+        Hit Points {props.monster.hit_points} ({props.monster.hit_dice_count}
+        {props.monster.hit_die}+
         {parseInt(props.monster.hit_dice_count) *
           Math.floor((props.monster.stats.constitution - 10) / 2)}
         )
@@ -255,32 +259,32 @@ export default function MainStats(props) {
         >
           <Grid item xs={2}>
             {props.monster.stats.strength} (
-            <span>{props.monster.stats.strength > 10 ? '+' : ''}</span>
+            <span>{props.monster.stats.strength > 10 ? "+" : ""}</span>
             {Math.floor((props.monster.stats.strength - 10) / 2)})
           </Grid>
           <Grid item xs={2}>
             {props.monster.stats.dexterity} (
-            {props.monster.stats.dexterity > 10 ? '+' : ''}
+            {props.monster.stats.dexterity > 10 ? "+" : ""}
             {Math.floor((props.monster.stats.dexterity - 10) / 2)})
           </Grid>
           <Grid item xs={2}>
             {props.monster.stats.constitution} (
-            {props.monster.stats.constitution > 10 ? '+' : ''}
+            {props.monster.stats.constitution > 10 ? "+" : ""}
             {Math.floor((props.monster.stats.constitution - 10) / 2)})
           </Grid>
           <Grid item xs={2}>
             {props.monster.stats.intelligence} (
-            {props.monster.stats.intelligence > 10 ? '+' : ''}
+            {props.monster.stats.intelligence > 10 ? "+" : ""}
             {Math.floor((props.monster.stats.intelligence - 10) / 2)})
           </Grid>
           <Grid item xs={2}>
             {props.monster.stats.wisdom} (
-            {props.monster.stats.wisdom > 10 ? '+' : ''}
+            {props.monster.stats.wisdom > 10 ? "+" : ""}
             {Math.floor((props.monster.stats.wisdom - 10) / 2)})
           </Grid>
           <Grid item xs={2}>
             {props.monster.stats.charisma} (
-            {props.monster.stats.charisma > 10 ? '+' : ''}
+            {props.monster.stats.charisma > 10 ? "+" : ""}
             {Math.floor((props.monster.stats.charisma - 10) / 2)})
           </Grid>
         </Grid>
@@ -297,7 +301,7 @@ export default function MainStats(props) {
             {savingThrows.map((savingThrow, index) => (
               <Grid item xs={2}>
                 <Typography className={classes.textColor}>
-                  {savingThrow.value > 0 ? '+' : ''}
+                  {savingThrow.value > 0 ? "+" : ""}
                   {savingThrow.value}
                 </Typography>
               </Grid>
@@ -335,7 +339,11 @@ export default function MainStats(props) {
             <div className={classes.proficienciesDesc}>
               {damageVulnerabilties.map((vulnerabilties, index) => (
                 <Typography variant="body2">
-                  {vulnerabilties} {index >= 0 && damageVulnerabilties.length != index + 1 ? ', ' : ' '}
+                  <span>&nbsp;</span>
+                  {vulnerabilties}
+                  {index >= 0 && damageVulnerabilties.length != index + 1
+                    ? ", "
+                    : " "}
                 </Typography>
               ))}
             </div>
@@ -351,7 +359,11 @@ export default function MainStats(props) {
             <div className={classes.proficienciesDesc}>
               {damageResistances.map((resistance, index) => (
                 <Typography variant="body2">
-                  {resistance} {index >= 0 && damageResistances.length != index + 1 ? ', ' : ' '}
+                  <span>&nbsp;</span>
+                  {resistance}
+                  {index >= 0 && damageResistances.length != index + 1
+                    ? ", "
+                    : ""}
                 </Typography>
               ))}
             </div>
@@ -367,7 +379,11 @@ export default function MainStats(props) {
             <div className={classes.proficienciesDesc}>
               {damageImmunities.map((immunities, index) => (
                 <Typography variant="body2">
-                  {immunities}{index > 0 && damageImmunities.length != index + 1 ? ',' : ' '}
+                  <span>&nbsp;</span>
+                  {immunities}
+                  {index >= 0 && damageImmunities.length != index + 1
+                    ? ","
+                    : ""}
                 </Typography>
               ))}
             </div>
@@ -378,12 +394,16 @@ export default function MainStats(props) {
         {condidtionImmunities.length !== 0 && (
           <ListItem dense={true}>
             <Typography variant="body1" className={classes.headingColor}>
-              Condition Immun.:<span>&nbsp;&nbsp;</span>
+              Cond. Immun.:<span>&nbsp;&nbsp;</span>
             </Typography>
             <div className={classes.proficienciesDesc}>
               {condidtionImmunities.map((immunities, index) => (
                 <Typography variant="body2">
-                  {immunities} {index >= 0 && condidtionImmunities.length != index + 1 ? ', ' : ' '}
+                  <span>&nbsp;</span>
+                  {immunities}
+                  {index >= 0 && condidtionImmunities.length != index + 1
+                    ? ", "
+                    : ""}
                 </Typography>
               ))}
             </div>
@@ -436,7 +456,6 @@ export default function MainStats(props) {
                   <Typography variant="body2"> {item.desc} </Typography>
                 </div>
               </ListItem>
-
             ))}
           </List>
           <Divider />

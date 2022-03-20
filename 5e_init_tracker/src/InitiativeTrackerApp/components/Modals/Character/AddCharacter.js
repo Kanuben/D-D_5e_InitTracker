@@ -8,13 +8,13 @@ import MuiDialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
 import Slide from "@mui/material/Slide";
-import makeStyles from '@mui/styles/makeStyles';
-import withStyles from '@mui/styles/withStyles';
+import makeStyles from "@mui/styles/makeStyles";
+import withStyles from "@mui/styles/withStyles";
 import SvgIcon from "@mui/material/SvgIcon";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
-import Autocomplete from '@mui/material/Autocomplete';
+import Autocomplete from "@mui/material/Autocomplete";
 import React from "react";
 import { ReactComponent as Dragon } from "../../../assets/dragon.svg";
 import SimpleCharacterCard from "../../../components/SimpleCharacterCard";
@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
   },
   dialogSize: {
     minHeight: "65%",
-    minWidth: "40%",
+    minWidth: "800px",
     maxWidth: "40%",
     maxHeight: "65%",
   },
@@ -76,7 +76,8 @@ const DialogTitle = withStyles(styles)((props) => {
           aria-label="close"
           className={classes.closeButton}
           onClick={onClose}
-          size="large">
+          size="large"
+        >
           <CloseIcon />
         </IconButton>
       ) : null}
@@ -127,7 +128,7 @@ export default function AddCharacter(props) {
 
   const addToSelectedList = (selectedChar) => {
     let tempList = selectedList;
-    let tempChar = JSON.parse(JSON.stringify(selectedChar))
+    let tempChar = JSON.parse(JSON.stringify(selectedChar));
     let filteredCharList = tempList.filter(
       (char) => char.name === selectedChar.name
     );
@@ -204,21 +205,9 @@ export default function AddCharacter(props) {
               variant="outlined"
               sx={{ width: 100 }}
             >
-               Select
+              Select
             </Button>
           </div>
-          {selectedList.length === 0 && (
-            <div className={classes.placeholder}>
-              <div>
-                <SvgIcon
-                  style={{ width: "35vw", height: "45vh" }}
-                  color="action"
-                >
-                  <Dragon />
-                </SvgIcon>
-              </div>
-            </div>
-          )}
           {selectedList.length !== 0 && (
             <div>
               <List>
@@ -241,7 +230,8 @@ export default function AddCharacter(props) {
                           removeFromSelectedList(character);
                         }}
                         aria-label="delete"
-                        size="large">
+                        size="large"
+                      >
                         <DeleteIcon fontSize="large" />
                       </IconButton>
                     </ListItem>
@@ -259,7 +249,7 @@ export default function AddCharacter(props) {
             onClick={addCharacters}
             color="primary"
           >
-             Add To Initiative
+            Add To Initiative
           </Button>
         </DialogActions>
       </Dialog>
