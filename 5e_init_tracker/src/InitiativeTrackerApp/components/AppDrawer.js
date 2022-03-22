@@ -7,6 +7,9 @@ import MenuOpenIcon from "@mui/icons-material/MenuOpen";
 import NoteAddIcon from "@mui/icons-material/NoteAdd";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import PublishIcon from "@mui/icons-material/Publish";
+import ViewSidebarIcon from "@mui/icons-material/ViewSidebar";
+import ViewSidebarOutlinedIcon from "@mui/icons-material/ViewSidebarOutlined";
+import Alert from "@mui/material/Alert";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -19,6 +22,8 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import Snackbar from "@mui/material/Snackbar";
+import Stack from "@mui/material/Stack";
 import { useTheme } from "@mui/material/styles";
 import SvgIcon from "@mui/material/SvgIcon";
 import Toolbar from "@mui/material/Toolbar";
@@ -52,8 +57,6 @@ import EmptyReminder from "./Modals/EmptyReminder";
 import AddMonster from "./Modals/Monster/AddMonster";
 import CreateMonster from "./Modals/Monster/CreateMonster";
 import EditMonster from "./Modals/Monster/EditMonster";
-import ViewSidebarIcon from "@mui/icons-material/ViewSidebar";
-import ViewSidebarOutlinedIcon from "@mui/icons-material/ViewSidebarOutlined";
 
 function LinearProgressWithLabel(props) {
   return (
@@ -157,14 +160,15 @@ export default function PersistentDrawerLeft() {
   const theme = useTheme();
   const [appLoaded, setLoaded] = React.useState(false);
   const [open, setOpen] = React.useState(false);
-  const [openAddCharacter, setOpenAddCharacter] = React.useState(false);
 
+  const [openAddCharacter, setOpenAddCharacter] = React.useState(false);
   const [openCreateCharacter, setOpenCreateCharacter] = React.useState(false);
   const [openEditMonster, setOpenEditMonster] = React.useState(false);
   const [openCreateMonster, setOpenCreateMonster] = React.useState(false);
-
   const [openAddMonster, setOpenAddMonster] = React.useState(false);
   const [openEmptyReminder, setOpenEmptyReminder] = React.useState(false);
+  const [showAlert, setShowAlert] = React.useState({});
+
   const [characterList, setCharacterList] = React.useState([]);
   const [monsterList, setMonsterList] = React.useState([]);
   const [spellList, setSpellList] = React.useState([]);
@@ -365,6 +369,14 @@ export default function PersistentDrawerLeft() {
     setOpenEmptyReminder(false);
   };
 
+  const handleAlertClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setShowAlert({ open: false, message: "" });
+  };
+
   const handleRemove = (character) => {
     const newList = initiativeList.filter((item) => item.id !== character.id);
     setInitiativeList(newList);
@@ -423,16 +435,31 @@ export default function PersistentDrawerLeft() {
   };
 
   const handleLoadMonsterFile = () => {
-    loadMonsterFile((result) => {
+    loadMonsterFile((name, result) => {
       let monsterArr = [];
+      let monstersExist = true;
       result.forEach((item) => {
         if (item.isPlayer === false) {
           if (monsterList.findIndex((x) => x.name == item.name) == -1) {
             monsterArr.push(item);
+            monstersExist = false;
           }
         }
       });
-      handleAppendMonsterList(monsterArr);
+      if (monstersExist) {
+        setShowAlert({
+          open: true,
+          message: "Imported monsters already exist!",
+          severity: "warning"
+        })
+      } else {
+        handleAppendMonsterList(monsterArr);
+        setShowAlert({
+          open: true,
+          message: `Successfully imported: ${name}!`,
+          severity: "success"
+        });
+      }
     });
   };
 
@@ -736,6 +763,22 @@ export default function PersistentDrawerLeft() {
             )}
           </div>
         )}
+        <Stack spacing={2} sx={{ width: "100%" }}>
+          <Snackbar
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+            open={showAlert.open}
+            autoHideDuration={6000}
+            onClose={handleAlertClose}
+          >
+            <Alert
+              severity={showAlert.severity}
+              sx={{ width: "100%" }}
+              onClose={handleAlertClose}
+            >
+              {showAlert.message}
+            </Alert>
+          </Snackbar>
+        </Stack>
       </main>
     </div>
   );

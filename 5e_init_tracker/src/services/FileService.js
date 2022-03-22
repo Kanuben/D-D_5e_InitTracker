@@ -28,11 +28,12 @@ export async function loadMonsterFile(callback) {
     fileList = fileInput.files;
     const reader = new FileReader();
     if (fileList[0]) {
-      reader.readAsText(fileList[0]);
+      let file = fileList[0];
+      reader.readAsText(file);
       reader.onload = async (e) => {
         const text = e.target.result;
         fileInput.value = '';
-        callback(JSON.parse(text));
+        callback(file.name, JSON.parse(text));
       };
     }
   };
