@@ -1,4 +1,7 @@
+import CloseIcon from "@mui/icons-material/Close";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { ListItem } from "@mui/material";
+import Autocomplete from "@mui/material/Autocomplete";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -8,17 +11,14 @@ import MuiDialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
 import Slide from "@mui/material/Slide";
-import makeStyles from "@mui/styles/makeStyles";
-import withStyles from "@mui/styles/withStyles";
-import SvgIcon from "@mui/material/SvgIcon";
+import { useTheme } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import CloseIcon from "@mui/icons-material/Close";
-import Autocomplete from "@mui/material/Autocomplete";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import makeStyles from "@mui/styles/makeStyles";
+import withStyles from "@mui/styles/withStyles";
 import React from "react";
-import { ReactComponent as Dragon } from "../../../assets/dragon.svg";
 import SimpleCharacterCard from "../../../components/SimpleCharacterCard";
-import DeleteIcon from "@mui/icons-material/Delete";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,9 +47,6 @@ const useStyles = makeStyles((theme) => ({
   },
   dialogSize: {
     minHeight: "65%",
-    minWidth: "800px",
-    maxWidth: "40%",
-    maxHeight: "65%",
   },
 }));
 
@@ -104,6 +101,9 @@ export default function AddCharacter(props) {
   const [selectedChar, setSelectedChar] = React.useState({});
   const [selectedList, setSelectedList] = React.useState([]);
   const [id, setId] = React.useState("c0");
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("lg"));
+  const [maxWidth, setMaxWidth] = React.useState("lg");
 
   const classes = useStyles();
   const containerRef = React.useRef(null);
@@ -165,6 +165,8 @@ export default function AddCharacter(props) {
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
         open={open}
+        fullScreen={fullScreen}
+        maxWidth={maxWidth}
         fullWidth={true}
         classes={{ paper: classes.dialogSize }}
       >

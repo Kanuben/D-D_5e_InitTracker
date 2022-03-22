@@ -1,4 +1,7 @@
+import CloseIcon from "@mui/icons-material/Close";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { ListItem } from "@mui/material";
+import Autocomplete from "@mui/material/Autocomplete";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -8,20 +11,16 @@ import MuiDialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
 import Slide from "@mui/material/Slide";
-import makeStyles from "@mui/styles/makeStyles";
-import withStyles from "@mui/styles/withStyles";
+import { useTheme } from "@mui/material/styles";
 import SvgIcon from "@mui/material/SvgIcon";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import CloseIcon from "@mui/icons-material/Close";
-import DeleteIcon from "@mui/icons-material/Delete";
-import Autocomplete from "@mui/material/Autocomplete";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import makeStyles from "@mui/styles/makeStyles";
+import withStyles from "@mui/styles/withStyles";
 import React from "react";
 import { ReactComponent as Demo } from "../../../assets/demo.svg";
-import { ReactComponent as Dragon } from "../../../assets/dragon.svg";
 import SimpleCharacterCard from "../../SimpleCharacterCard";
-import { Icon } from "@mui/material";
-import { ResizableBox } from "react-resizable";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,9 +49,6 @@ const useStyles = makeStyles((theme) => ({
   },
   dialogSize: {
     minHeight: "65%",
-    minWidth: "800px",
-    maxWidth: "40%",
-    maxHeight: "65%",
   },
 }));
 
@@ -107,6 +103,9 @@ export default function AddMonster(props) {
   const [selectedMon, setSelectedMon] = React.useState({});
   const [selectedList, setSelectedList] = React.useState([]);
   const [id, setId] = React.useState("m0");
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("lg"));
+  const [maxWidth, setMaxWidth] = React.useState("lg");
 
   const classes = useStyles();
   const containerRef = React.useRef(null);
@@ -166,6 +165,8 @@ export default function AddMonster(props) {
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
         open={open}
+        fullScreen={fullScreen}
+        maxWidth={maxWidth}
         fullWidth={true}
         classes={{ paper: classes.dialogSize }}
       >
@@ -217,18 +218,6 @@ export default function AddMonster(props) {
               Select
             </Button>
           </div>
-          {selectedList.length === 0 && (
-            <div className={classes.placeholder}>
-              <div>
-                <SvgIcon
-                  style={{ width: "35vw", height: "45vh" }}
-                  color="action"
-                >
-                  <Dragon />
-                </SvgIcon>
-              </div>
-            </div>
-          )}
           {selectedList.length !== 0 && (
             <div>
               <List>

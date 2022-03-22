@@ -17,6 +17,7 @@
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",
     "@mui/icons-material": "^5.4.2",
+    "@mui/lab": "^5.0.0-alpha.74",
     "@mui/material": "^5.4.2",
     "@mui/styles": "^5.4.2",
     "@testing-library/jest-dom": "^5.11.8",

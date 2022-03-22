@@ -5,26 +5,21 @@ import Autocomplete from "@mui/material/Autocomplete";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Checkbox from "@mui/material/Checkbox";
 import Dialog from "@mui/material/Dialog";
 import MuiDialogActions from "@mui/material/DialogActions";
 import MuiDialogContent from "@mui/material/DialogContent";
 import MuiDialogTitle from "@mui/material/DialogTitle";
-import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
+import { useTheme } from "@mui/material/styles";
 import SvgIcon from "@mui/material/SvgIcon";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import makeStyles from "@mui/styles/makeStyles";
 import withStyles from "@mui/styles/withStyles";
-import React, { useEffect } from "react";
+import React from "react";
 import { ReactComponent as Demo } from "../../../assets/demo.svg";
-import AddSpell from "../../AddSpell";
 import MonsterForm from "./MonsterForm";
-import { ReactComponent as Dragon } from "../../../assets/dragon.svg";
-import { ResizableBox } from "react-resizable";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -60,12 +55,7 @@ const useStyles = makeStyles((theme) => ({
     "align-items": "center",
     "flex-direction": "column",
   },
-  dialogSize: {
-    minHeight: "600px",
-    minWidth: "800px",
-    maxWidth: "40%",
-    maxHeight: "65%",
-  },
+  dialogSize: { minHeight: "65%" },
 }));
 
 const styles = (theme) => ({
@@ -118,6 +108,9 @@ export default function EditMonster(props) {
   const onClose = props.onClose;
   const [selectedMon, setSelectedMon] = React.useState();
   const [isDirty, setIsDirty] = React.useState(false);
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("lg"));
+  const [maxWidth, setMaxWidth] = React.useState("lg");
 
   const classes = useStyles();
 
@@ -143,6 +136,8 @@ export default function EditMonster(props) {
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
         open={open}
+        fullScreen={fullScreen}
+        maxWidth={maxWidth}
         fullWidth={true}
         classes={{ paper: classes.dialogSize }}
       >
@@ -186,18 +181,6 @@ export default function EditMonster(props) {
                   />
                 )}
               />
-              {!selectedMon && (
-                <div className={classes.placeholder}>
-                  <div>
-                    <SvgIcon
-                      style={{ width: "35vw", height: "45vh" }}
-                      color="action"
-                    >
-                      <Dragon />
-                    </SvgIcon>
-                  </div>
-                </div>
-              )}
             </Box>
             {selectedMon && (
               <MonsterForm

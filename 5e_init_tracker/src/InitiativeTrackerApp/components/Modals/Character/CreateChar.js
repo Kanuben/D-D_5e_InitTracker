@@ -12,14 +12,18 @@ import MuiDialogContent from "@mui/material/DialogContent";
 import MuiDialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import Skeleton from "@mui/material/Skeleton";
-import { styled } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import makeStyles from "@mui/styles/makeStyles";
 import withStyles from "@mui/styles/withStyles";
 import { default as React } from "react";
 import { Character } from "../../../templates/character";
 import { isElectron } from "../../../utilities/ElectronHelper";
+import Avatar from "@mui/material/Avatar";
+import LoadingButton from "@mui/lab/LoadingButton";
+import Stack from "@mui/material/Stack";
 
 let fs;
 let path;
@@ -58,15 +62,13 @@ const useStyles = makeStyles((theme) => ({
     "flex-direction": "column",
   },
   dialogSize: {
-    minHeight: "600px",
-    minWidth: "800px",
-    maxHeight: "65%",
+    minHeight: "65%",
   },
   textField: {
     width: "100%",
   },
   padBot: {
-    "padding-bottom": "2%",
+    "padding-bottom": "1em",
   },
   centerImg: {
     "margin-left": "auto",
@@ -123,6 +125,11 @@ const DialogActions = withStyles((theme) => ({
 }))(MuiDialogActions);
 
 export default function CreateChar(props) {
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("lg"));
+  const [maxWidth, setMaxWidth] = React.useState("lg");
+  const [animation, setAnimation] = React.useState(false);
+
   //Imported classes for class select
   const [characterClasses, setCharacterClasses] = React.useState([
     "Barbarian",
@@ -147,6 +154,7 @@ export default function CreateChar(props) {
   const [level, setLevel] = React.useState("");
   const [selectedClasses, setSelectedClasses] = React.useState("none");
   const [image, setImage] = React.useState();
+  const [imageLoading, setImageLoading] = React.useState(false);
   const [imageLoaded, setImageLoaded] = React.useState(false);
 
   //Textfield Error States
@@ -213,8 +221,13 @@ export default function CreateChar(props) {
     setInitBonus(e.target.value);
   };
 
+  const handleUploadClicked = (e) => {
+    setImageLoading(true);
+  };
+
   const handleFileUpload = (e) => {
     setImageLoaded(true);
+    setImageLoading(false);
     let img = document.getElementById("charImg");
     img.style.display = "";
     if (isElectron()) {
@@ -222,13 +235,8 @@ export default function CreateChar(props) {
       setImage(
         "data:" + e.target.files[0].type + ";base64," + data.toString("base64")
       );
-      img.setAttribute(
-        "src",
-        "data:" + e.target.files[0].type + ";base64," + data.toString("base64")
-      );
     } else {
       setImage(URL.createObjectURL(e.target.files[0]));
-      img.setAttribute("src", URL.createObjectURL(e.target.files[0]));
     }
   };
 
@@ -252,6 +260,8 @@ export default function CreateChar(props) {
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
         open={open}
+        fullScreen={fullScreen}
+        maxWidth={maxWidth}
         fullWidth={true}
         classes={{ paper: classes.dialogSize }}
       >
@@ -260,160 +270,146 @@ export default function CreateChar(props) {
         </DialogTitle>
         <DialogContent>
           <div>
-            <Grid sx={{ paddingTop: "16px" }} container spacing={3}>
-              <Grid item xs={6}>
-                <Box>
-                  <img
-                    id="charImg"
-                    style={{
-                      height: "40vh",
-                      width: "100%",
-                      display: "none",
-                    }}
-                  ></img>
-                  {!imageLoaded && (
-                    <Skeleton
-                      animation={false}
-                      variant="rectangular"
-                      height={"40vh"}
-                    />
-                  )}
-                </Box>
-                <Box sx={{ paddingTop: "16px" }}>
-                  <label htmlFor="contained-button-file">
-                    <Input
-                      onChange={handleFileUpload}
-                      accept="image/*"
-                      id="contained-button-file"
-                      multiple
-                      type="file"
-                    />
-                    <Button
-                      color="secondary"
-                      variant="outlined"
-                      component="span"
-                    >
-                      Upload
-                    </Button>
-                  </label>
-                </Box>
-              </Grid>
-              <Grid item xs={6}>
-                <form className={classes.root}>
-                  <div className={classes.padBot}>
-                    <TextField
-                      className={classes.textField}
-                      label="Character Name"
-                      id="NewCharacterName"
-                      helperText={
-                        nameError && name.length > 0
-                          ? "*must contain only letters"
-                          : ""
-                      }
-                      onChange={handleCharacterNameChange}
-                      error={nameError && name.length > 0 ? true : false}
-                      value={name}
-                    />
-                  </div>
+            <Stack  direction={{ xs: 'column', sm: 'row' }} sx={{ paddingTop: "16px" }} spacing={3}>
+              <Box>
+                <Avatar
+                  id="charImg"
+                  sx={{ width: 500, height: 500 }}
+                  src={image}
+                ></Avatar>
+                <label htmlFor="contained-button-file">
+                  <Input
+                    onChange={handleFileUpload}
+                    accept="image/*"
+                    id="contained-button-file"
+                    multiple
+                    type="file"
+                  />
+                  <LoadingButton
+                    color="secondary"
+                    variant="outlined"
+                    component="span"
+                    onClick={handleUploadClicked}
+                    loading={imageLoading}
+                  >
+                    Upload
+                  </LoadingButton>
+                </label>
+              </Box>
+              <form className={classes.root}>
+                <div className={classes.padBot}>
+                  <TextField
+                    className={classes.textField}
+                    label="Character Name"
+                    id="NewCharacterName"
+                    helperText={
+                      nameError && name.length > 0
+                        ? "*must contain only letters"
+                        : ""
+                    }
+                    onChange={handleCharacterNameChange}
+                    error={nameError && name.length > 0 ? true : false}
+                    value={name}
+                  />
+                </div>
 
-                  <div className={classes.padBot}>
-                    <TextField
-                      className={classes.textField}
-                      label="Level"
-                      id="NewCharacterLevel"
-                      helperText={
-                        hpError && level.length > 0
-                          ? "*must contain only numbers"
-                          : ""
-                      }
-                      error={hpError && hp.length > 0 ? true : false}
-                      value={level}
-                      onChange={handleCharacterLevelChange}
-                    />
-                  </div>
+                <div className={classes.padBot}>
+                  <TextField
+                    className={classes.textField}
+                    label="Level"
+                    id="NewCharacterLevel"
+                    helperText={
+                      hpError && level.length > 0
+                        ? "*must contain only numbers"
+                        : ""
+                    }
+                    error={hpError && hp.length > 0 ? true : false}
+                    value={level}
+                    onChange={handleCharacterLevelChange}
+                  />
+                </div>
 
-                  <div className={classes.padBot}>
-                    <TextField
-                      className={classes.textField}
-                      label="Max HP"
-                      id="NewCharacterHp"
-                      helperText={
-                        hpError && hp.length > 0
-                          ? "*must contain only numbers"
-                          : ""
-                      }
-                      error={hpError && hp.length > 0 ? true : false}
-                      value={hp}
-                      onChange={handleCharacterHpChange}
-                    />
-                  </div>
+                <div className={classes.padBot}>
+                  <TextField
+                    className={classes.textField}
+                    label="Max HP"
+                    id="NewCharacterHp"
+                    helperText={
+                      hpError && hp.length > 0
+                        ? "*must contain only numbers"
+                        : ""
+                    }
+                    error={hpError && hp.length > 0 ? true : false}
+                    value={hp}
+                    onChange={handleCharacterHpChange}
+                  />
+                </div>
 
-                  <div className={classes.padBot}>
-                    <TextField
-                      className={classes.textField}
-                      label="AC"
-                      id="NewCharacterAC"
-                      error={acError && ac.length > 0 ? true : false}
-                      helperText={
-                        acError && ac.length > 0
-                          ? "*must contain only numbers"
-                          : ""
-                      }
-                      onChange={handleCharacterAcChange}
-                      value={ac}
-                    />
-                  </div>
+                <div className={classes.padBot}>
+                  <TextField
+                    className={classes.textField}
+                    label="AC"
+                    id="NewCharacterAC"
+                    error={acError && ac.length > 0 ? true : false}
+                    helperText={
+                      acError && ac.length > 0
+                        ? "*must contain only numbers"
+                        : ""
+                    }
+                    onChange={handleCharacterAcChange}
+                    value={ac}
+                  />
+                </div>
 
-                  <div className={classes.padBot}>
-                    <TextField
-                      className={classes.textField}
-                      label="Initiative Bonus"
-                      id="NewcharacterInitBonus"
-                      error={
-                        initBonusError && initBonus.length > 0 ? true : false
-                      }
-                      helperText={
-                        initBonusError && initBonus.length > 0
-                          ? "*must contain only numbers and + or -, example +5 or -5"
-                          : ""
-                      }
-                      onChange={handleCharacterInitChange}
-                      value={initBonus}
-                    />
-                  </div>
+                <div className={classes.padBot}>
+                  <TextField
+                    className={classes.textField}
+                    label="Initiative Bonus"
+                    id="NewcharacterInitBonus"
+                    error={
+                      initBonusError && initBonus.length > 0 ? true : false
+                    }
+                    helperText={
+                      initBonusError && initBonus.length > 0
+                        ? "*must contain only numbers and + or -, example +5 or -5"
+                        : ""
+                    }
+                    onChange={handleCharacterInitChange}
+                    value={initBonus}
+                  />
+                </div>
 
-                  <div className={classes.padBot}>
-                    <Autocomplete
-                      id="CharacterClassSelect"
-                      multiple
-                      disableCloseOnSelect
-                      options={characterClasses}
-                      getOptionLabel={(characterClasses) => characterClasses}
-                      onChange={handleCharClassSelected}
-                      style={{ width: "100%" }}
-                      renderOption={(props, option, { selected }) => (
-                        <li {...props}>
-                          <Checkbox
-                            icon={icon}
-                            checkedIcon={checkedIcon}
-                            style={{ marginRight: 8 }}
-                            checked={selected}
-                          />
-                          {option}
-                        </li>
-                      )}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          variant="outlined"
-                          label="Classes"
+                <div className={classes.padBot}>
+                  <Autocomplete
+                    id="CharacterClassSelect"
+                    multiple
+                    disableCloseOnSelect
+                    options={characterClasses}
+                    getOptionLabel={(characterClasses) => characterClasses}
+                    onChange={handleCharClassSelected}
+                    style={{ width: "100%" }}
+                    renderOption={(props, option, { selected }) => (
+                      <li {...props}>
+                        <Checkbox
+                          icon={icon}
+                          checkedIcon={checkedIcon}
+                          style={{ marginRight: 8 }}
+                          checked={selected}
                         />
-                      )}
-                    />
-                  </div>
-                </form>
-              </Grid>
-            </Grid>
+                        {option}
+                      </li>
+                    )}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        variant="outlined"
+                        label="Classes"
+                      />
+                    )}
+                  />
+                </div>
+              </form>
+            </Stack>
           </div>
         </DialogContent>
 

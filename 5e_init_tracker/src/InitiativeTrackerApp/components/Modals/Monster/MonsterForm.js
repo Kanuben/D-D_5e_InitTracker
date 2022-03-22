@@ -58,11 +58,6 @@ const useStyles = makeStyles((theme) => ({
     "align-items": "center",
     "flex-direction": "column",
   },
-  dialogSize: {
-    minWidth: "800px",
-    maxWidth: "40%",
-    maxHeight: "65%",
-  },
 }));
 
 const styles = (theme) => ({
