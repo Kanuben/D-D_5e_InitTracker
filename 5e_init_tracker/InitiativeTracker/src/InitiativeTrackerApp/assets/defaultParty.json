@@ -1,0 +1,34 @@
+[
+  {
+    "isPlayer": true,
+    "img": "https://9b16f79ca967fd0708d1-2713572fef44aa49ec323e813b06d2d9.ssl.cf2.rackcdn.com/300x_a1-1_cTC/6r800k6d-JPG-1579105478.jpg",
+    "name": "Jimbo Jones",
+    "type": "Rogue Plumber",
+    "level": 3,
+    "statuses": [],
+    "armor_class": 3,
+    "hit_points": 60,
+    "damage": 0,
+    "initiative": 12,
+    "initBonus": 0,
+    "stats": {
+      "dexterity": 8
+    }
+  },
+  {
+    "isPlayer": true,
+    "img": "https://i.imgur.com/CrILrEh.jpg",
+    "name": "Frink Frank",
+    "type": "Wizard",
+    "level": 3,
+    "statuses": [],
+    "armor_class": 12,
+    "hit_points": 60,
+    "damage": 5,
+    "initiative": 15,
+    "initBonus": 1,
+    "stats": {
+      "dexterity": 16
+    }
+  }
+]
