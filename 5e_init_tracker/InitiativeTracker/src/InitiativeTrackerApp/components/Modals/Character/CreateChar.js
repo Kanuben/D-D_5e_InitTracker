@@ -62,7 +62,6 @@ const useStyles = makeStyles((theme) => ({
     "flex-direction": "column",
   },
   dialogSize: {
-    minHeight: "65%",
   },
   textField: {
     width: "100%",
@@ -181,6 +180,7 @@ export default function CreateChar(props) {
     setSelectedClasses("");
     setImageLoaded(false);
     setLevel("");
+    setImage()
     onClose();
   };
 

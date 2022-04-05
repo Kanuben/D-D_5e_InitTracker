@@ -1,6 +1,6 @@
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { ListItem } from "@mui/material";
+import { ClickAwayListener, ListItem } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
     "flex-direction": "column",
   },
   dialogSize: {
-    minHeight: "65%",
+    minHeight:"95vh",
   },
 }));
 
@@ -100,7 +100,7 @@ const DialogActions = withStyles((theme) => ({
 export default function AddMonster(props) {
   const open = props.openAddMonster;
   const onClose = props.onClose;
-  const [selectedMon, setSelectedMon] = React.useState({});
+  const [selectedMon, setSelectedMon] = React.useState();
   const [selectedList, setSelectedList] = React.useState([]);
   const [id, setId] = React.useState("m0");
   const theme = useTheme();
@@ -111,7 +111,7 @@ export default function AddMonster(props) {
   const containerRef = React.useRef(null);
 
   const handleClose = () => {
-    setSelectedMon({});
+    setSelectedMon();
     onClose();
   };
 
@@ -211,6 +211,7 @@ export default function AddMonster(props) {
                 addToSelectedList(selectedMon);
               }}
               autoFocus
+              disabled={selectedMon === undefined}
               color="secondary"
               variant="outlined"
               sx={{ width: 100 }}
@@ -218,38 +219,36 @@ export default function AddMonster(props) {
               Select
             </Button>
           </div>
-          {selectedList.length !== 0 && (
-            <div>
-              <List>
-                {selectedList.map((monster, index) => (
-                  <Slide
-                    key={monster.id}
-                    direction="down"
-                    in={true}
-                    container={containerRef.current}
-                    mountOnEnter
-                  >
-                    <ListItem key={monster.id}>
-                      <SimpleCharacterCard
-                        character={monster}
-                        index={index}
-                        selected={true}
-                      />
-                      <IconButton
-                        onClick={() => {
-                          removeFromSelectedList(monster);
-                        }}
-                        aria-label="delete"
-                        size="large"
-                      >
-                        <DeleteIcon fontSize="large" />
-                      </IconButton>
-                    </ListItem>
-                  </Slide>
-                ))}
-              </List>
-            </div>
-          )}
+          <div>
+            <List>
+              {selectedList.map((monster, index) => (
+                <Slide
+                  key={monster.id}
+                  direction="down"
+                  in={true}
+                  container={containerRef.current}
+                  mountOnEnter
+                >
+                  <ListItem key={monster.id}>
+                    <SimpleCharacterCard
+                      character={monster}
+                      index={index}
+                      selected={true}
+                    />
+                    <IconButton
+                      onClick={() => {
+                        removeFromSelectedList(monster);
+                      }}
+                      aria-label="delete"
+                      size="large"
+                    >
+                      <DeleteIcon fontSize="large" />
+                    </IconButton>
+                  </ListItem>
+                </Slide>
+              ))}
+            </List>
+          </div>
         </DialogContent>
         <DialogActions>
           <Button

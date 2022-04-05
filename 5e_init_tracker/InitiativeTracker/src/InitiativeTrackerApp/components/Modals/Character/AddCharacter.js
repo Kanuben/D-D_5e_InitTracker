@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
     "flex-direction": "column",
   },
   dialogSize: {
-    minHeight: "65%",
+    minHeight:"95vh",
   },
 }));
 
@@ -98,7 +98,7 @@ const DialogActions = withStyles((theme) => ({
 export default function AddCharacter(props) {
   const open = props.openAddCharacter;
   const onClose = props.onClose;
-  const [selectedChar, setSelectedChar] = React.useState({});
+  const [selectedChar, setSelectedChar] = React.useState();
   const [selectedList, setSelectedList] = React.useState([]);
   const [id, setId] = React.useState("c0");
   const theme = useTheme();
@@ -109,6 +109,7 @@ export default function AddCharacter(props) {
   const containerRef = React.useRef(null);
 
   const handleClose = () => {
+    setSelectedChar();
     onClose();
   };
 
@@ -203,6 +204,7 @@ export default function AddCharacter(props) {
                 addToSelectedList(selectedChar);
               }}
               autoFocus
+              disabled={selectedChar === undefined}
               color="secondary"
               variant="outlined"
               sx={{ width: 100 }}
