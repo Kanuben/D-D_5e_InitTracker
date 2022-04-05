@@ -58,6 +58,7 @@ import EmptyReminder from "./Modals/EmptyReminder";
 import AddMonster from "./Modals/Monster/AddMonster";
 import CreateMonster from "./Modals/Monster/CreateMonster";
 import EditMonster from "./Modals/Monster/EditMonster";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
 
 function LinearProgressWithLabel(props) {
   return (
@@ -95,6 +96,13 @@ const useStyles = makeStyles((theme) => ({
       duration: theme.transitions.duration.leavingScreen,
     }),
   },
+  bottomAppBar: {
+    background: theme.palette.primary.secondary,
+    transition: theme.transitions.create(["margin", "width"], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+  },
   appBarShift: {
     width: `calc(100% - ${drawerWidth}px)`,
     marginLeft: drawerWidth,
@@ -112,6 +120,7 @@ const useStyles = makeStyles((theme) => ({
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
+    paddingBottom: "3em",
   },
   drawerPaper: {
     width: drawerWidth,
@@ -130,10 +139,10 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
   },
-  initToolbar: {},
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
+    paddingBottom: "6em",
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
@@ -141,6 +150,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: -drawerWidth,
   },
   contentShift: {
+    paddingBottom: "6em",
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
@@ -161,6 +171,7 @@ export default function PersistentDrawerLeft() {
   const theme = useTheme();
   const [appLoaded, setLoaded] = React.useState(false);
   const [open, setOpen] = React.useState(false);
+  const [roundCounter, setRoundCounter] = React.useState();
 
   const [openAddCharacter, setOpenAddCharacter] = React.useState(false);
   const [openCreateCharacter, setOpenCreateCharacter] = React.useState(false);
@@ -240,6 +251,7 @@ export default function PersistentDrawerLeft() {
 
   const handleSetInitList = (newList) => {
     setSelectedCharacter(newList[0]);
+    setRoundCounter(0);
     setInitiativeList(newList);
   };
 
@@ -410,6 +422,10 @@ export default function PersistentDrawerLeft() {
     setShowAlert({ open: false, message: "" });
   };
 
+  const handleResetRoundCounter = (event) => {
+    setRoundCounter(0);
+  };
+
   const handleRemove = (character) => {
     const newList = initiativeList.filter((item) => item.id !== character.id);
     setInitiativeList(newList);
@@ -422,6 +438,8 @@ export default function PersistentDrawerLeft() {
     newList.push(newList.shift());
     setInitiativeList(newList);
     setSelectedCharacter(newList[0]);
+    let tempRound = roundCounter + 1;
+    setRoundCounter(tempRound++);
   };
 
   const handleRollInit = () => {
@@ -445,6 +463,7 @@ export default function PersistentDrawerLeft() {
     sortInitList(newList);
     setInitiativeList(newList);
     setSelectedCharacter(newList[0]);
+    setRoundCounter(0);
   };
 
   const handleShowMonsterInfo = () => {
@@ -525,7 +544,7 @@ export default function PersistentDrawerLeft() {
             <div>
               <Typography variant="h4" noWrap></Typography>
             </div>
-            <div className={classes.initToolbar}>
+            <div>
               <Button
                 color="inherit"
                 disabled={initiativeList.length == 0}
@@ -583,6 +602,32 @@ export default function PersistentDrawerLeft() {
           </div>
         </Toolbar>
       </AppBar>
+      {roundCounter !== undefined && initiativeList.length > 0 && (
+        <AppBar
+          className={clsx(classes.bottomAppBar, {
+            [classes.appBarShift]: open,
+          })}
+          position="fixed"
+          color="primary"
+          sx={{ top: "auto", bottom: 0 }}
+        >
+          <Toolbar
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              textAlign: "center",
+            }}
+          >
+            <Button
+              color="inherit"
+              aria-label="reset round counter"
+              onClick={handleResetRoundCounter}
+              endIcon={<RestartAltIcon style={{ fontSize: 40 }} />}
+            ></Button>
+            <Typography variant="h4">Round: {roundCounter}</Typography>
+          </Toolbar>
+        </AppBar>
+      )}
       <Drawer
         className={classes.drawer}
         variant="persistent"

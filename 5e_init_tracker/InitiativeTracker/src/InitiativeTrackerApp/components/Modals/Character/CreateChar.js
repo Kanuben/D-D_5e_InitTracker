@@ -61,8 +61,7 @@ const useStyles = makeStyles((theme) => ({
     "align-items": "center",
     "flex-direction": "column",
   },
-  dialogSize: {
-  },
+  dialogSize: {},
   textField: {
     width: "100%",
   },
@@ -161,6 +160,7 @@ export default function CreateChar(props) {
   const [hpError, setHpError] = React.useState();
   const [acError, setAcError] = React.useState();
   const [initBonusError, setInitBonusError] = React.useState();
+  const [spellSaveDC, setSpellSaveDC] = React.useState();
   const [buttonDisable, setButtonDisable] = React.useState(true);
 
   const classes = useStyles();
@@ -180,7 +180,7 @@ export default function CreateChar(props) {
     setSelectedClasses("");
     setImageLoaded(false);
     setLevel("");
-    setImage()
+    setImage();
     onClose();
   };
 
@@ -188,7 +188,8 @@ export default function CreateChar(props) {
     setSelectedClasses(val);
   };
 
-  const handleCreateChar = () => {
+  const handleCreateChar = (e) => {
+    e.preventDefault();
     let newCharacter = new Character();
     newCharacter.name = name;
     newCharacter.level = level;
@@ -197,6 +198,7 @@ export default function CreateChar(props) {
     newCharacter.initBonus = parseInt(initBonus);
     newCharacter.type = selectedClasses;
     newCharacter.img = image;
+    newCharacter.spellSaveDC = spellSaveDC;
     props.handleAppendCharacterList([newCharacter]);
     handleClose();
   };
@@ -220,6 +222,11 @@ export default function CreateChar(props) {
   const handleCharacterInitChange = (e) => {
     setInitBonus(e.target.value);
   };
+
+  const handleCharacterSpellSaveDCChange = (e) => {
+    setSpellSaveDC(e.target.value);
+  };
+
 
   const handleUploadClicked = (e) => {
     setImageLoading(true);
@@ -270,7 +277,11 @@ export default function CreateChar(props) {
         </DialogTitle>
         <DialogContent>
           <div>
-            <Stack  direction={{ xs: 'column', sm: 'row' }} sx={{ paddingTop: "16px" }} spacing={3}>
+            <Stack
+              direction={{ xs: "column", sm: "row" }}
+              sx={{ paddingTop: "16px" }}
+              spacing={3}
+            >
               <Box>
                 <Avatar
                   id="charImg"
@@ -296,118 +307,135 @@ export default function CreateChar(props) {
                   </LoadingButton>
                 </label>
               </Box>
-              <form className={classes.root}>
-                <div className={classes.padBot}>
-                  <TextField
-                    className={classes.textField}
-                    label="Character Name"
-                    id="NewCharacterName"
-                    helperText={
-                      nameError && name.length > 0
-                        ? "*must contain only letters"
-                        : ""
-                    }
-                    onChange={handleCharacterNameChange}
-                    error={nameError && name.length > 0 ? true : false}
-                    value={name}
-                  />
-                </div>
+              <form onSubmit={handleCreateChar} id="create-char-form" className={classes.root}>
+                <Box>
+                  <div className={classes.padBot}>
+                    <TextField
+                      className={classes.textField}
+                      label="Character Name"
+                      id="NewCharacterName"
+                      helperText={
+                        nameError && name.length > 0
+                          ? "*must contain only letters"
+                          : ""
+                      }
+                      onChange={handleCharacterNameChange}
+                      error={nameError && name.length > 0 ? true : false}
+                      value={name}
+                      required
+                    />
+                  </div>
 
-                <div className={classes.padBot}>
-                  <TextField
-                    className={classes.textField}
-                    label="Level"
-                    id="NewCharacterLevel"
-                    helperText={
-                      hpError && level.length > 0
-                        ? "*must contain only numbers"
-                        : ""
-                    }
-                    error={hpError && hp.length > 0 ? true : false}
-                    value={level}
-                    onChange={handleCharacterLevelChange}
-                  />
-                </div>
+                  <div className={classes.padBot}>
+                    <TextField
+                      className={classes.textField}
+                      label="Level"
+                      id="NewCharacterLevel"
+                      helperText={
+                        hpError && level.length > 0
+                          ? "*must contain only numbers"
+                          : ""
+                      }
+                      error={hpError && hp.length > 0 ? true : false}
+                      value={level}
+                      onChange={handleCharacterLevelChange}
+                    />
+                  </div>
 
-                <div className={classes.padBot}>
-                  <TextField
-                    className={classes.textField}
-                    label="Max HP"
-                    id="NewCharacterHp"
-                    helperText={
-                      hpError && hp.length > 0
-                        ? "*must contain only numbers"
-                        : ""
-                    }
-                    error={hpError && hp.length > 0 ? true : false}
-                    value={hp}
-                    onChange={handleCharacterHpChange}
-                  />
-                </div>
+                  <div className={classes.padBot}>
+                    <TextField
+                      className={classes.textField}
+                      label="Max HP"
+                      id="NewCharacterHp"
+                      helperText={
+                        hpError && hp.length > 0
+                          ? "*must contain only numbers"
+                          : ""
+                      }
+                      error={hpError && hp.length > 0 ? true : false}
+                      value={hp}
+                      onChange={handleCharacterHpChange}
+                      required
+                    />
+                  </div>
 
-                <div className={classes.padBot}>
-                  <TextField
-                    className={classes.textField}
-                    label="AC"
-                    id="NewCharacterAC"
-                    error={acError && ac.length > 0 ? true : false}
-                    helperText={
-                      acError && ac.length > 0
-                        ? "*must contain only numbers"
-                        : ""
-                    }
-                    onChange={handleCharacterAcChange}
-                    value={ac}
-                  />
-                </div>
+                  <div className={classes.padBot}>
+                    <TextField
+                      className={classes.textField}
+                      label="AC"
+                      id="NewCharacterAC"
+                      error={acError && ac.length > 0 ? true : false}
+                      helperText={
+                        acError && ac.length > 0
+                          ? "*must contain only numbers"
+                          : ""
+                      }
+                      onChange={handleCharacterAcChange}
+                      value={ac}
+                      required
+                    />
+                  </div>
 
-                <div className={classes.padBot}>
-                  <TextField
-                    className={classes.textField}
-                    label="Initiative Bonus"
-                    id="NewcharacterInitBonus"
-                    error={
-                      initBonusError && initBonus.length > 0 ? true : false
-                    }
-                    helperText={
-                      initBonusError && initBonus.length > 0
-                        ? "*must contain only numbers and + or -, example +5 or -5"
-                        : ""
-                    }
-                    onChange={handleCharacterInitChange}
-                    value={initBonus}
-                  />
-                </div>
+                  <div className={classes.padBot}>
+                    <TextField
+                      className={classes.textField}
+                      label="Initiative Bonus"
+                      id="NewcharacterInitBonus"
+                      error={
+                        initBonusError && initBonus.length > 0 ? true : false
+                      }
+                      helperText={
+                        initBonusError && initBonus.length > 0
+                          ? "*must contain only numbers and + or -, example +5 or -5"
+                          : ""
+                      }
+                      onChange={handleCharacterInitChange}
+                      value={initBonus}
+                      required
+                    />
+                  </div>
 
-                <div className={classes.padBot}>
-                  <Autocomplete
-                    id="CharacterClassSelect"
-                    multiple
-                    disableCloseOnSelect
-                    options={characterClasses}
-                    getOptionLabel={(characterClasses) => characterClasses}
-                    onChange={handleCharClassSelected}
-                    style={{ width: "100%" }}
-                    renderOption={(props, option, { selected }) => (
-                      <li {...props}>
-                        <Checkbox
-                          icon={icon}
-                          checkedIcon={checkedIcon}
-                          style={{ marginRight: 8 }}
-                          checked={selected}
+                  <div className={classes.padBot}>
+                    <TextField
+                      className={classes.textField}
+                      label="Spell Save DC"
+                      id="NewcharacterSpellSaveDC"
+                      onChange={handleCharacterSpellSaveDCChange}
+                      value={spellSaveDC}
+                    />
+                  </div>
+
+                  <div className={classes.padBot}>
+                    <Autocomplete
+                    required
+                      id="CharacterClassSelect"
+                      multiple
+                      disableCloseOnSelect
+                      options={characterClasses}
+                      getOptionLabel={(characterClasses) => characterClasses}
+                      onChange={handleCharClassSelected}
+                      style={{ width: "100%" }}
+                      renderOption={(props, option, { selected }) => (
+                        <li {...props}>
+                          <Checkbox
+                            icon={icon}
+                            checkedIcon={checkedIcon}
+                            style={{ marginRight: 8 }}
+                            checked={selected}
+                          />
+                          {option}
+                        </li>
+                      )}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          variant="outlined"
+                          label="Classes"
                         />
-                        {option}
-                      </li>
-                    )}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        variant="outlined"
-                        label="Classes"
-                      />
-                    )}
-                  />
-                </div>
+                      )}
+                    />
+                  </div>
+                </Box>
               </form>
             </Stack>
           </div>
@@ -417,8 +445,9 @@ export default function CreateChar(props) {
           <Button
             variant="contained"
             autoFocus
-            onClick={handleCreateChar}
             color="primary"
+            type="submit"
+            form="create-char-form"
           >
             Create Character
           </Button>

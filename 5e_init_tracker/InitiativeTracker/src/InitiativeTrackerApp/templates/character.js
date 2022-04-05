@@ -14,5 +14,6 @@ export class Character {
     dexterity: 0,
   };
   bg_color = "";
+  spellSaveDC= 0;
   isPlayer = true;
 }

@@ -294,10 +294,8 @@ export default function CharacterCard(props) {
                   onClick={handleOpenNewMonsterWindow}
                 />
                 <div className={classes.charname}>
-                  <Typography variant="h6" gutterBottom>
-                    {props.character.name}
-                  </Typography>
-                  <Typography variant="subtitle2" gutterBottom>
+                  <Typography variant="h6">{props.character.name}</Typography>
+                  <Typography variant="subtitle1">
                     {props.character.type}:{" "}
                     {props.character.isPlayer ? "LVL " : "CR "}
                     {props.character.isPlayer === true && (
@@ -307,6 +305,13 @@ export default function CharacterCard(props) {
                       <span> {props.character.challenge_rating}</span>
                     )}
                   </Typography>
+                  {props.character.spellSaveDC && (
+                    <div>
+                      <Typography variant="subtitle1">
+                        Spell Save DC: {props.character.spellSaveDC}
+                      </Typography>
+                    </div>
+                  )}
                 </div>
               </Grid>
 
@@ -318,9 +323,7 @@ export default function CharacterCard(props) {
                       alignItems: "center",
                     }}
                   >
-                    <Typography variant="subtitle2" gutterBottom>
-                      Status
-                    </Typography>
+                    <Typography variant="subtitle1">Status</Typography>
                     <IconButton
                       onClick={handleConditionPickerOpen}
                       aria-label="delete"
@@ -381,9 +384,9 @@ export default function CharacterCard(props) {
 
               <Grid className={classes.col} item xs>
                 <div>
-                  <Typography variant="subtitle2">AC</Typography>
+                  <Typography variant="subtitle1">AC</Typography>
 
-                  <Typography variant="h4">
+                  <Typography variant="h5">
                     {props.character.armor_class}
                   </Typography>
                 </div>
@@ -399,7 +402,7 @@ export default function CharacterCard(props) {
                   >
                     <Typography
                       style={{ paddingRight: "12px" }}
-                      variant="subtitle2"
+                      variant="subtitle1"
                     >
                       Damage
                     </Typography>
@@ -444,7 +447,7 @@ export default function CharacterCard(props) {
                     {showFullDamage === false && (
                       <Typography
                         Typography
-                        variant="h4"
+                        variant="h5"
                         onClick={handleDamageClick}
                         aria-describedby={idDamage}
                         style={{ cursor: "pointer" }}
@@ -477,8 +480,7 @@ export default function CharacterCard(props) {
                   >
                     <Typography
                       style={{ paddingRight: "12px" }}
-                      variant="subtitle2"
-                      gutterBottom
+                      variant="subtitle1"
                     >
                       Initiative
                     </Typography>

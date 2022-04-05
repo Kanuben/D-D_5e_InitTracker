@@ -106,7 +106,7 @@ export default function MonsterForm(props) {
   const [monReactions, setMonReactions] = React.useState([]);
   const [monLegendaryActions, setMonLegendaryActions] = React.useState([]);
   const [monLairActions, setMonLairActions] = React.useState("");
-  const [monSource, setMonSource] = React.useState("");
+  const [monSource, setMonSource] = React.useState("Custom");
 
   const [damageTypes, setDamageTypes] = React.useState([]);
   const [conditions, setConditions] = React.useState([]);
@@ -132,7 +132,7 @@ export default function MonsterForm(props) {
   let monsterStatTypes = ["STR", "DEX", "CON", "INT", "WIS", "CHA"];
 
   props.monsterList.forEach((element) => {
-    if (!monsterTypes.includes(element.type)) monsterTypes.push(element.type);
+    if (!monsterTypes.includes(element.type.toLowerCase())) monsterTypes.push(element.type.toLowerCase());
     if (
       !monsterSubtypes.includes(element.subtype[0]) &&
       element.subtype[0] !== null
@@ -143,14 +143,9 @@ export default function MonsterForm(props) {
       monsterSizes.push(element.size);
     if (
       !monsterAlignments.includes(element.alignment) &&
-      element.alignment !== null
+      element.alignment.length > 0
     )
       monsterAlignments.push(element.alignment);
-    if (
-      !monsterCRs.includes(element.challenge_rating.toString()) &&
-      element.challenge_rating !== null
-    )
-      monsterCRs.push(element.challenge_rating.toString());
   });
 
   useEffect(() => {
