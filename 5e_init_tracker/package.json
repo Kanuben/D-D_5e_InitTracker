@@ -3,13 +3,14 @@
   "productName": "Goblin Tracker",
   "homepage": "./",
   "main": "./src/electron/main.js",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "private": true,
   "scripts": {
     "start": "electron-forge start",
     "dev": "concurrently \"cd InitiativeTracker && npm start\" \"wait-on http://localhost:3000 && electron-forge start\"",
     "package": "electron-forge package",
-    "make": "cd InitiativeTracker && npm run build && cd .. && electron-forge make",
+    "testmake": "cd InitiativeTracker && npm run build && cd .. && electron-forge make",
+    "make": "cd InitiativeTracker && npm version patch && npm run build && cd .. && npm version patch && electron-forge make",
     "publish": "electron-forge publish",
     "lint": "echo \"No linting configured\""
   },
@@ -50,7 +51,7 @@
             "description": "DND 5e initiative tracker",
             "loadingGif": "./public/goblintracker.gif",
             "setupIcon": "./public/favicon.ico",
-            "iconUrl": "https://raw.githubusercontent.com/Alex-Shockency/Goblin-Tracker/main/5e_init_tracker/Electron/favicon.ico"
+            "iconUrl": "https://raw.githubusercontent.com/Alex-Shockency/Goblin-Tracker/main/5e_init_tracker/public/favicon.ico"
           }
         },
         {
