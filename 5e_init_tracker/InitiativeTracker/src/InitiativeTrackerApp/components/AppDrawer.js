@@ -53,6 +53,7 @@ import {
 import InitiativeTracker from "./InitiativeTracker";
 import AddCharacter from "./Modals/Character/AddCharacter";
 import CreateChar from "./Modals/Character/CreateChar";
+import EditChar from "./Modals/Character/EditChar";
 import EmptyReminder from "./Modals/EmptyReminder";
 import AddMonster from "./Modals/Monster/AddMonster";
 import CreateMonster from "./Modals/Monster/CreateMonster";
@@ -163,6 +164,7 @@ export default function PersistentDrawerLeft() {
 
   const [openAddCharacter, setOpenAddCharacter] = React.useState(false);
   const [openCreateCharacter, setOpenCreateCharacter] = React.useState(false);
+  const [openEditCharacter, setOpenEditCharacter] = React.useState(false);
   const [openEditMonster, setOpenEditMonster] = React.useState(false);
   const [openCreateMonster, setOpenCreateMonster] = React.useState(false);
   const [openAddMonster, setOpenAddMonster] = React.useState(false);
@@ -264,6 +266,29 @@ export default function PersistentDrawerLeft() {
     }
   };
 
+  const updateCharacterList = (updateList, character) => {
+    writeCharacterFile(updateList);
+    setCharacterList(updateList);
+
+    let newList = [];
+    Object.assign(newList, initiativeList);
+    let newChar = JSON.parse(JSON.stringify(character));
+
+    let tempList = newList.filter((char) => char.name === character.name);
+    tempList.forEach((tempMon, index) => {
+      newChar.id = tempMon.id;
+      newChar.initiative = tempMon.initiative;
+      newChar.damage = tempMon.damage;
+      newChar.statuses = tempMon.statuses;
+      newChar.name = tempMon.name;
+      newList[index] = JSON.parse(JSON.stringify(newChar));
+    });
+    if (tempList.length > 0) {
+      setInitiativeList(newList);
+      setSelectedCharacter(newList[0]);
+    }
+  };
+
   const handleAppendMonsterList = (appendList) => {
     let newList = [];
     Object.assign(newList, monsterList);
@@ -335,6 +360,14 @@ export default function PersistentDrawerLeft() {
 
   const handleCreateCharacterClose = () => {
     setOpenCreateCharacter(false);
+  };
+
+  const handleEditCharacterOpen = () => {
+    setOpenEditCharacter(true);
+  };
+
+  const handleEditCharacterClose = () => {
+    setOpenEditCharacter(false);
   };
 
   const handleCreateMonsterOpen = () => {
@@ -450,14 +483,14 @@ export default function PersistentDrawerLeft() {
         setShowAlert({
           open: true,
           message: "Imported monsters already exist!",
-          severity: "warning"
-        })
+          severity: "warning",
+        });
       } else {
         handleAppendMonsterList(monsterArr);
         setShowAlert({
           open: true,
           message: `Successfully imported: ${name}!`,
-          severity: "success"
+          severity: "success",
         });
       }
     });
@@ -620,6 +653,17 @@ export default function PersistentDrawerLeft() {
 
           <ListItem
             button
+            key={"Edit Character"}
+            onClick={handleEditCharacterOpen}
+          >
+            <ListItemIcon>
+              <EditIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Edit Character"} />
+          </ListItem>
+
+          <ListItem
+            button
             key={"Add Character"}
             onClick={handleAddCharacterClick}
           >
@@ -678,6 +722,7 @@ export default function PersistentDrawerLeft() {
             initList={initiativeList}
             charList={characterList.filter((char) => char.isPlayer === true)}
           />
+
           <EmptyReminder
             openEmptyReminder={openEmptyReminder}
             onClose={handleEmptyReminderClose}
@@ -699,6 +744,12 @@ export default function PersistentDrawerLeft() {
             updateMonsterList={updateMonsterList}
             monsterList={monsterList}
           ></EditMonster>
+          <EditChar
+            onClose={handleEditCharacterClose}
+            openEditCharacter={openEditCharacter}
+            updateCharacterList={updateCharacterList}
+            characterList={characterList}
+          ></EditChar>
         </List>
         <Divider />
         <List>

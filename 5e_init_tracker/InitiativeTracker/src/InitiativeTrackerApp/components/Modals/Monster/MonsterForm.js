@@ -437,7 +437,7 @@ export default function MonsterForm(props) {
     if (props.selectedMon) {
       tempMonster.user_created = props.selectedMon.user_created;
       newMonList.forEach((mon, index) => {
-        if (mon.index == props.selectedMon.index) {
+        if (mon.index === props.selectedMon.index) {
           newMonList[index] = tempMonster;
         }
       });
