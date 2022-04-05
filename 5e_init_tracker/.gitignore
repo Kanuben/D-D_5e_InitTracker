@@ -87,3 +87,6 @@ typings/
 
 # Electron-Forge
 out/
+
+characters.json
+monsters.json
