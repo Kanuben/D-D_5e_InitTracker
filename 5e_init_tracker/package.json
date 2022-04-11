@@ -1,42 +1,28 @@
 {
-  "name": "5e_init_tracker",
+  "name": "goblin-tracker",
+  "productName": "Goblin Tracker",
   "homepage": "./",
-  "main": "./electron/main.js",
-  "version": "0.1.0",
+  "main": "./src/electron/main.js",
+  "version": "0.1.7",
   "private": true,
-  "dependencies": {
-    "@material-ui/core": "^4.11.2",
-    "@material-ui/icons": "^4.11.2",
-    "@material-ui/lab": "^4.0.0-alpha.57",
-    "@testing-library/jest-dom": "^5.11.8",
-    "@testing-library/react": "^11.2.3",
-    "@testing-library/user-event": "^12.6.0",
-    "concurrently": "^5.3.0",
-    "electron": "^11.1.1",
-    "electron-builder": "^22.9.1",
-    "electron-is-dev": "^1.2.0",
-    "lodash": "^4.17.21",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "react-router-dom": "^5.2.0",
-    "react-scripts": "^4.0.1",
-    "rxjs": "^6.6.3",
-    "wait-on": "^5.2.1",
-    "web-vitals": "^0.2.4"
-  },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "ebuild": "npm run build && node_modules/.bin/build",
-    "dev": "concurrently \"npm start\" \"wait-on http://localhost:3000 && electron .\""
+    "start": "electron-forge start",
+    "dev": "concurrently \"cd InitiativeTracker && npm start\" \"wait-on http://localhost:3000 && electron-forge start\"",
+    "package": "electron-forge package",
+    "testmake": "cd InitiativeTracker && npm run build && cd .. && electron-forge make",
+    "make": "cd InitiativeTracker && npm version patch && npm run build && cd .. && npm version patch && electron-forge make",
+    "publish": "electron-forge publish",
+    "lint": "echo \"No linting configured\""
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+  "keywords": [],
+  "author": {
+    "name": "alex_shockency",
+    "email": "alexshockency@gmail.com"
+  },
+  "browser": {
+    "fs": false,
+    "path": false,
+    "os": false
   },
   "browserslist": {
     "production": [
@@ -49,5 +35,54 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "license": "MIT",
+  "config": {
+    "forge": {
+      "packagerConfig": {
+        "ignore": "InitiativeTracker"
+      },
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "Goblin-Tracker",
+            "authors": "Gring Software",
+            "description": "DND 5e initiative tracker",
+            "loadingGif": "./public/goblintracker.gif",
+            "setupIcon": "./public/favicon.ico",
+            "iconUrl": "https://raw.githubusercontent.com/Alex-Shockency/Goblin-Tracker/main/5e_init_tracker/public/favicon.ico"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ]
+    }
+  },
+  "dependencies": {
+    "electron-is-dev": "^2.0.0",
+    "electron-squirrel-startup": "^1.0.0"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.63",
+    "@electron-forge/maker-deb": "^6.0.0-beta.63",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.63",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.63",
+    "@electron-forge/maker-zip": "^6.0.0-beta.63",
+    "concurrently": "^7.1.0",
+    "electron": "18.0.1",
+    "wait-on": "^6.0.1"
   }
 }
